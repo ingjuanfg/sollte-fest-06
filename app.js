@@ -109,17 +109,6 @@ const CSV_LOCAL = {
     return out;
   }
   
-  // Función para truncar nombres de equipos
-  function truncateTeamName(name, maxLength = 25) {
-    if (name.length <= maxLength) return name;
-    return name.substring(0, maxLength - 3) + '...';
-  }
-  
-  // Función para obtener el nombre completo como tooltip
-  function getFullTeamName(name) {
-    return name.length > 25 ? `title="${name}"` : '';
-  }
-  
   // ====== RENDER ======
   function renderTable(rows){
     if(rows.length===0){
@@ -156,18 +145,16 @@ const CSV_LOCAL = {
       const rank = i + 1;
       const tval = recalcularChk.checked ? r.__total : r[totalKey];
       const badge = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
-      const fullTeamName = r[equipoKey] || 'Sin nombre';
-      const truncatedName = truncateTeamName(fullTeamName);
-      const tooltipAttr = getFullTeamName(fullTeamName);
+      const teamName = r[equipoKey] || 'Sin nombre';
       
       // Fila principal del equipo
       tableHTML += `
         <tr class="team-row" data-team-index="${i}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
-            <span class="team-name" onclick="toggleTeamDetails(${i})" ${tooltipAttr}>
+            <span class="team-name" onclick="toggleTeamDetails(${i})">
               <span class="expand-icon" id="expand-${i}">▶</span>
-              ${truncatedName}
+              ${teamName}
             </span>
           </td>
           <td><strong>${(typeof tval === 'number' ? tval : parseFloat(tval)) || 0}</strong></td>
