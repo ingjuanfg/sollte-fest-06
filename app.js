@@ -1,12 +1,12 @@
 // ====== CONFIG ======
 // Un CSV por categoría en /data. Deben existir los archivos referenciados.
 const CSV_LOCAL = {
-    "Principiante HH": "data/Principiante HH.csv",
-    "Principiante MM": "data/Principiante MM.csv",
-    "Intermedio HH":  "data/Intermedio HH.csv",
-    "Intermedio MM":  "data/Intermedio MM.csv",
-    "RX":             "data/RX.csv",
-    "Sollte Fest":    "data/Sollte Fest.csv"
+    "Principiante HH": "data/Sollte Fest 06 - Principiante HH.csv",
+    "Principiante MM": "data/Sollte Fest 06 - Principiante MM.csv",
+    "Intermedio HH":  "data/Sollte Fest 06 - Intermedio HH.csv",
+    "Intermedio MM":  "data/Sollte Fest 06 - Intermedio MM.csv",
+    "RX":             "data/Sollte Fest 06 - RX.csv",
+    "Sollte Fest":    "data/Sollte Fest 06 - Sollte Fest.csv"
   };
   
   // Columnas WOD que se sumarán si activas "Recalcular Total" (nombres normalizados).
@@ -215,4 +215,27 @@ const CSV_LOCAL = {
       }
     }
   };
+  
+// ====== PATROCINADORES ======
+document.addEventListener('DOMContentLoaded', cargarPatrocinadores);
+
+function cargarPatrocinadores() {
+  const grid = document.getElementById('patrocinadoresGrid');
+  if (!grid) return;
+  // Lista de archivos detectados en la carpeta (puedes agregar más si subes nuevos logos)
+  const logos = [
+    'cheladas.png',
+    'CALDEBURGER.png',
+    'desayunos.jpg',
+    'MANANTIAL.PNG',
+    'PEREIRA PLAZA.jpg',
+    'ENDURANCE .jpg',
+    'JEN.png'
+  ];
+  grid.innerHTML = logos.map(file => `
+    <div class="patrocinador-logo-box">
+      <img src="assets/patrocinadores/${file}" alt="Patrocinador" class="patrocinador-logo-img" loading="lazy" />
+    </div>
+  `).join('');
+}
   
