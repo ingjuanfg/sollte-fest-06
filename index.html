@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sollte Fest - Resultados</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Resultados en tiempo real de la competencia Sollte Fest" />
+  <meta name="theme-color" content="#f7d23e" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <img src="assets/sollte_logo_nombre_icono.png" alt="Sollte Fest" onerror="this.style.display='none'" />
+        </div>
+        <h2 class="hero-title">Sollte Fest 06 - La Independencia</h2>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="results-header">
+        <h3 class="results-title">Resultados</h3>
+        <div class="results-controls">
+          <label for="categoriaSelect">
+            Categoría:
+            <select id="categoriaSelect" aria-label="Seleccionar categoría"></select>
+          </label>
+          <label class="inline" for="recalcularTotal">
+            <input type="checkbox" id="recalcularTotal" /> Recalcular Total
+          </label>
+          <button id="reloadBtn" title="Recargar datos" aria-label="Recargar datos">⟳</button>
+        </div>
+      </div>
+      
+      <div class="table-wrapper">
+        <div id="loadingIndicator" style="display: none; text-align: center; padding: 2rem; color: var(--text-secondary);">
+          <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Cargando datos...</div>
+          <div style="font-size: 0.8rem;">Por favor espera</div>
+        </div>
+        <table id="tablaResultados">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="update-info">
+          <span id="lastUpdate">—</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>© <span id="year"></span> Sollte Fest. Rankings actualizados en tiempo real.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
