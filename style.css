@@ -138,14 +138,13 @@
   }
   
   .table-wrapper {
-    overflow-x:auto;
     background: var(--panel);
     border:1px solid var(--border);
     border-radius: var(--radius);
     padding:1rem;
     box-shadow:0 6px 22px -10px rgba(0,0,0,.25);
     backdrop-filter: blur(14px) saturate(1.2);
-    max-width: 100%;
+    width: 100%;
     position: relative;
   }
   
@@ -161,31 +160,48 @@
     backdrop-filter: blur(4px);
   }
   
-  /* Tabla */
+  /* Tabla responsiva sin scroll horizontal */
   #tablaResultados { 
     width:100%; 
     border-collapse:collapse; 
     font-size:.9rem; 
-    min-width: 400px;
-    margin-bottom: 2rem;
+    table-layout: fixed;
   }
+  
   #tablaResultados thead th {
     text-align:left; 
     padding:.65rem .6rem;
     background:linear-gradient(135deg, #1b1b1b, #2d2d2d); 
     color:#fff;
-    position:sticky; 
-    top:0;
     font-weight:600; 
     letter-spacing:.5px;
     border-bottom: 2px solid var(--accent);
   }
+  
+  /* Definir anchos de columnas */
+  #tablaResultados th:nth-child(1), 
+  #tablaResultados td:nth-child(1) {
+    width: 60px; /* Columna del ranking */
+  }
+  
+  #tablaResultados th:nth-child(2), 
+  #tablaResultados td:nth-child(2) {
+    width: calc(100% - 120px); /* Columna del equipo (resto del espacio) */
+  }
+  
+  #tablaResultados th:nth-child(3), 
+  #tablaResultados td:nth-child(3) {
+    width: 60px; /* Columna del total */
+    text-align: center;
+  }
+  
   #tablaResultados tbody td {
     padding:.55rem .6rem;
     border-bottom:1px solid var(--border);
-    white-space:nowrap;
     transition: var(--transition);
+    vertical-align: middle;
   }
+  
   #tablaResultados tbody tr:last-child td { border-bottom:none; }
   #tablaResultados tbody tr { 
     transition:var(--transition); 
@@ -210,6 +226,10 @@
     font-weight: 600;
     color: var(--text);
     transition: var(--transition);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .team-name:hover {
@@ -222,6 +242,7 @@
     transition: var(--transition);
     font-weight: bold;
     color: var(--accent);
+    flex-shrink: 0;
   }
   
   .expand-icon.expanded {
@@ -278,37 +299,13 @@
     box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
   }
   
-  /* Responsive */
-  @media (max-width:780px){
+  /* Responsive - Mobile First */
+  @media (max-width:480px){
     .results-header { 
       flex-direction: column;
       align-items: stretch;
     }
     .results-controls { 
-      justify-content: center;
-    }
-    .inline { order:4; }
-    #tablaResultados { font-size:.78rem; }
-    .table-wrapper {
-      padding: 0.5rem;
-      margin: 0 -0.5rem;
-    }
-    #tablaResultados thead th,
-    #tablaResultados tbody td {
-      padding: 0.4rem 0.3rem;
-    }
-    .hero-title {
-      font-size: clamp(1.5rem, 5vw, 2.5rem);
-    }
-    .update-info {
-      position: static;
-      text-align: center;
-      margin-top: 1rem;
-    }
-  }
-  
-  @media (max-width:480px){
-    .results-controls {
       flex-direction: column;
       align-items: stretch;
     }
@@ -318,6 +315,79 @@
     }
     .hero-logo img {
       max-width: 250px;
+    }
+    .hero-title {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+    }
+    .update-info {
+      position: static;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    /* Ajustes específicos para móviles */
+    #tablaResultados {
+      font-size: 0.8rem;
+    }
+    
+    #tablaResultados th:nth-child(1), 
+    #tablaResultados td:nth-child(1) {
+      width: 50px; /* Ranking más pequeño en móviles */
+    }
+    
+    #tablaResultados th:nth-child(2), 
+    #tablaResultados td:nth-child(2) {
+      width: calc(100% - 110px); /* Más espacio para nombres */
+    }
+    
+    #tablaResultados th:nth-child(3), 
+    #tablaResultados td:nth-child(3) {
+      width: 60px; /* Total */
+    }
+    
+    #tablaResultados thead th,
+    #tablaResultados tbody td {
+      padding: 0.4rem 0.3rem;
+    }
+    
+    .team-name {
+      font-size: 0.75rem;
+      max-width: 100%;
+    }
+    
+    .expand-icon {
+      margin-right: 0.3rem;
+      font-size: 0.8rem;
+    }
+    
+    .rank-badge {
+      padding: 0.2rem 0.4rem;
+      min-width: 1.8rem;
+      font-size: 0.75rem;
+    }
+  }
+  
+  @media (max-width:780px) and (min-width:481px){
+    .results-header { 
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .results-controls { 
+      justify-content: center;
+    }
+    .inline { order:4; }
+    .update-info {
+      position: static;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    #tablaResultados {
+      font-size: 0.85rem;
+    }
+    
+    .team-name {
+      font-size: 0.8rem;
     }
   }
   
@@ -344,24 +414,5 @@
     padding: 2rem !important;
     color: var(--text-secondary);
     font-style: italic;
-  }
-  
-  /* Mejoras en el scroll horizontal */
-  .table-wrapper::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  .table-wrapper::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 4px;
-  }
-  
-  .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-dark);
   }
   

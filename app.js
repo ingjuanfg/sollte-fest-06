@@ -55,7 +55,7 @@ const CSV_LOCAL = {
     } catch(err){
       console.error(err);
       tableHead.innerHTML='';
-      tableBody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #d32f2f; padding: 2rem;">Error cargando ${url}: ${err.message}</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #d32f2f; padding: 2rem;">Error cargando ${url}: ${err.message}</td></tr>`;
     } finally {
       showLoading(false);
     }
@@ -109,10 +109,21 @@ const CSV_LOCAL = {
     return out;
   }
   
+  // Función para truncar nombres de equipos
+  function truncateTeamName(name, maxLength = 25) {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength - 3) + '...';
+  }
+  
+  // Función para obtener el nombre completo como tooltip
+  function getFullTeamName(name) {
+    return name.length > 25 ? `title="${name}"` : '';
+  }
+  
   // ====== RENDER ======
   function renderTable(rows){
     if(rows.length===0){
-      tableHead.innerHTML=''; tableBody.innerHTML='<tr><td colspan="2" style="text-align: center; padding: 2rem;">Sin datos disponibles</td></tr>'; return;
+      tableHead.innerHTML=''; tableBody.innerHTML='<tr><td colspan="3" style="text-align: center; padding: 2rem;">Sin datos disponibles</td></tr>'; return;
     }
     const cols = Object.keys(rows[0]);
     const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
@@ -145,16 +156,18 @@ const CSV_LOCAL = {
       const rank = i + 1;
       const tval = recalcularChk.checked ? r.__total : r[totalKey];
       const badge = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
-      const teamName = r[equipoKey] || 'Sin nombre';
+      const fullTeamName = r[equipoKey] || 'Sin nombre';
+      const truncatedName = truncateTeamName(fullTeamName);
+      const tooltipAttr = getFullTeamName(fullTeamName);
       
       // Fila principal del equipo
       tableHTML += `
         <tr class="team-row" data-team-index="${i}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
-            <span class="team-name" onclick="toggleTeamDetails(${i})">
+            <span class="team-name" onclick="toggleTeamDetails(${i})" ${tooltipAttr}>
               <span class="expand-icon" id="expand-${i}">▶</span>
-              ${teamName}
+              ${truncatedName}
             </span>
           </td>
           <td><strong>${(typeof tval === 'number' ? tval : parseFloat(tval)) || 0}</strong></td>
