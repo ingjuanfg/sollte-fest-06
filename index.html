@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Sollte Fest - Resultados</title>
+  <title>Sollte Fest - Resultados Próximamente</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Resultados en tiempo real de la competencia Sollte Fest" />
   <meta name="theme-color" content="#f7d23e" />
@@ -22,32 +22,41 @@
       </div>
     </section>
 
-    <section class="results-section">
-      <div class="results-header">
-        <h3 class="results-title">Resultados</h3>
-        <div class="results-controls">
-          <label for="categoriaSelect">
-            Categoría:
-            <select id="categoriaSelect" aria-label="Seleccionar categoría"></select>
-          </label>
-          <label class="inline" for="recalcularTotal">
-            <input type="checkbox" id="recalcularTotal" /> Recalcular Total
-          </label>
-          <button id="reloadBtn" title="Recargar datos" aria-label="Recargar datos">⟳</button>
-        </div>
-      </div>
-      
-      <div class="table-wrapper">
-        <div id="loadingIndicator" style="display: none; text-align: center; padding: 2rem; color: var(--text-secondary);">
-          <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Cargando datos...</div>
-          <div style="font-size: 0.8rem;">Por favor espera</div>
-        </div>
-        <table id="tablaResultados">
-          <thead id="tableHead"></thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-        <div class="update-info">
-          <span id="lastUpdate">—</span>
+    <section class="waiting-section">
+      <div class="waiting-container">
+        <div class="waiting-content">
+          <div class="waiting-icon">
+            <div class="trophy-animation">🏆</div>
+          </div>
+          <h1 class="waiting-title">¡Los Resultados Están Llegando!</h1>
+          <p class="waiting-message">
+            Estamos procesando los resultados finales de todas las categorías. 
+            Muy pronto conocerás a los campeones del Sollte Fest 06.
+          </p>
+          <div class="loading-animation">
+            <div class="loading-dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+          <div class="waiting-info">
+            <div class="info-card">
+              <div class="info-icon">📊</div>
+              <h3>Procesando Datos</h3>
+              <p>Calculando puntuaciones finales</p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">🏅</div>
+              <h3>Preparando Podios</h3>
+              <p>Organizando los ganadores</p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">🎉</div>
+              <h3>Celebrando Éxitos</h3>
+              <p>Reconociendo el esfuerzo</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -59,7 +68,7 @@
   </main>
 
   <footer>
-    <small>© <span id="year"></span> Sollte Fest. Rankings actualizados en tiempo real.</small>
+    <small>© <span id="year"></span> Sollte Fest. Resultados próximamente.</small>
   </footer>
 
   <script src="app.js"></script>

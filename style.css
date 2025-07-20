@@ -485,3 +485,205 @@
   }
 }
   
+  /* ====== PÁGINA DE ESPERA ====== */
+  .waiting-section {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .waiting-container {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 22px -10px rgba(0,0,0,.25);
+    backdrop-filter: blur(14px) saturate(1.2);
+    max-width: 100%;
+    overflow: hidden;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  
+  .waiting-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .waiting-icon {
+    margin-bottom: 2rem;
+  }
+  
+  .trophy-animation {
+    font-size: 5rem;
+    animation: trophyBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(255, 215, 0, 0.3));
+  }
+  
+  @keyframes trophyBounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) scale(1.1);
+    }
+  }
+  
+  .waiting-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 1.5rem 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .waiting-message {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .loading-animation {
+    margin-bottom: 3rem;
+  }
+  
+  .loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    animation: dotPulse 1.5s ease-in-out infinite;
+  }
+  
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes dotPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+  
+  .waiting-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .info-card {
+    background: linear-gradient(135deg, #F5F5DC, #DEB887);
+    border: 2px solid #8B4513;
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+  }
+  
+  .info-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+  }
+  
+  .info-card h3 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #8B4513;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .info-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  /* Responsive para la página de espera */
+  @media (max-width: 768px) {
+    .waiting-container {
+      padding: 2rem 1rem;
+    }
+    
+    .trophy-animation {
+      font-size: 4rem;
+    }
+    
+    .waiting-info {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .info-card {
+      padding: 1rem;
+    }
+    
+    .info-icon {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .waiting-container {
+      padding: 1.5rem 0.5rem;
+    }
+    
+    .trophy-animation {
+      font-size: 3rem;
+    }
+    
+    .waiting-title {
+      font-size: 1.8rem;
+    }
+    
+    .waiting-message {
+      font-size: 1rem;
+    }
+    
+    .info-card h3 {
+      font-size: 1.1rem;
+    }
+    
+    .info-card p {
+      font-size: 0.8rem;
+    }
+  }
+  
+  /* Ocultar estilos del podio y tabla en la página de espera */
+  .podium-section,
+  .results-section {
+    display: none;
+  }
+  
