@@ -485,3 +485,11 @@
   }
 }
   
+.descalificado-row {
+  background: #d32f2f !important;
+  color: #fff !important;
+}
+.descalificado-row td, .descalificado-row th {
+  color: #fff !important;
+}
+  

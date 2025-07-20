@@ -117,18 +117,30 @@ const CSV_LOCAL = {
     const cols = Object.keys(rows[0]);
     const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
     const totalKey  = cols.find(c=>/total/.test(c));
-  
+
+    // Identificar filas con 'D' en cualquier columna de WOD
+    const descalificados = [];
+    const clasificados = [];
+    rows.forEach(r => {
+      const tieneD = WOD_COLUMNS.some(k => r[k] && r[k].toString().trim().toUpperCase() === 'D');
+      if (tieneD) {
+        descalificados.push(r);
+      } else {
+        clasificados.push(r);
+      }
+    });
+
     if(recalcularChk.checked){
-      rows.forEach(r=>{
+      clasificados.forEach(r=>{
         r.__total = WOD_COLUMNS.reduce((acc,k)=>{
           const val = parseFloat(r[k]);
           return acc + (isNaN(val)?0:val);
         },0);
       });
     }
-  
+
     // Ordenar de menor a mayor puntos (mejor puntuación primero)
-    rows.sort((a,b)=>{
+    clasificados.sort((a,b)=>{
       const ta = parseFloat(recalcularChk.checked ? a.__total : (a[totalKey]||0));
       const tb = parseFloat(recalcularChk.checked ? b.__total : (b[totalKey]||0));
       if(isNaN(ta) && isNaN(tb)) return 0;
@@ -136,20 +148,21 @@ const CSV_LOCAL = {
       if(isNaN(tb)) return -1;
       return ta - tb;
     });
-  
-    // Crear tabla simplificada con solo equipo y total
+
+    // Concatenar clasificados + descalificados
+    const allRows = [...clasificados, ...descalificados];
+
     tableHead.innerHTML = `<tr><th>#</th><th>EQUIPO</th><th>TOTAL</th></tr>`;
-    
     let tableHTML = '';
-    rows.forEach((r, i) => {
+    allRows.forEach((r, i) => {
       const rank = i + 1;
-      const tval = recalcularChk.checked ? r.__total : r[totalKey];
+      const tval = descalificados.includes(r) ? 'NA' : (recalcularChk.checked ? r.__total : r[totalKey]);
       const badge = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
       const teamName = r[equipoKey] || 'Sin nombre';
+      const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
       
-      // Fila principal del equipo
       tableHTML += `
-        <tr class="team-row" data-team-index="${i}">
+        <tr class="team-row ${rowClass}" data-team-index="${i}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
             <span class="team-name" onclick="toggleTeamDetails(${i})">
@@ -157,7 +170,7 @@ const CSV_LOCAL = {
               ${teamName}
             </span>
           </td>
-          <td><strong>${(typeof tval === 'number' ? tval : parseFloat(tval)) || 0}</strong></td>
+          <td><strong>${tval === undefined ? 0 : tval}</strong></td>
         </tr>
       `;
       
@@ -165,7 +178,7 @@ const CSV_LOCAL = {
       const wodDetails = WOD_COLUMNS.filter(c => cols.includes(c) && r[c] && r[c] !== '');
       if (wodDetails.length > 0) {
         tableHTML += `
-          <tr class="wod-details" id="wod-details-${i}">
+          <tr class="wod-details ${rowClass}" id="wod-details-${i}">
             <td colspan="3">
               <div style="padding: 0.5rem 0;">
                 <strong>Resultados por WOD:</strong><br>
