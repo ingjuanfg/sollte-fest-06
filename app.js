@@ -10,7 +10,7 @@ const CSV_LOCAL = {
   };
   
   // Columnas WOD que se sumarán si activas "Recalcular Total" (nombres normalizados).
-  const WOD_COLUMNS = ["wod1","wod2a","wod2b","wod3","wod4semifinal","wod5final"];
+  const WOD_COLUMNS = ["wod1","wod2a","wod2b","wod3","wod4semifinal","wod5afinal","wod5bfinal"];
   
   // ====== DOM ======
   const categoriaSelect = document.getElementById('categoriaSelect');
@@ -193,7 +193,8 @@ const CSV_LOCAL = {
       .replace('2a','2A')
       .replace('2b','2B')
       .replace('wod4semifinal','WOD 4 Semifinal')
-      .replace('wod5final','WOD 5 Final')
+      .replace('wod5afinal','WOD 5A Final')
+      .replace('wod5bfinal','WOD 5B Final')
       .toUpperCase()
       .replace(/EQUIPO|TEAM/,'EQUIPO');
   }
