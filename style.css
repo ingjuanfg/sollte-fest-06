@@ -501,6 +501,9 @@
   position: relative;
   height: 1.3rem;
 }
+.leader-banner + .classificado-banner {
+  margin-left: 10px;
+}
 .leader-ribbon {
   background: linear-gradient(90deg, #c62828 0%, #e53935 100%);
   color: #fff;
@@ -532,6 +535,45 @@
   right: -0.4rem;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
+.classificado-banner {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.6rem;
+  margin-right: 0;
+  position: relative;
+  height: 1.1rem;
+}
+.classificado-ribbon {
+  background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 0.22rem;
+  box-shadow: 0 2px 8px rgba(56,142,60,0.12);
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
+}
+.classificado-ribbon::before, .classificado-ribbon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0.32rem;
+  height: 0.55rem;
+  background: #2e7031;
+  z-index: 0;
+  transform: translateY(-50%);
+}
+.classificado-ribbon::before {
+  left: -0.32rem;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+.classificado-ribbon::after {
+  right: -0.32rem;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
 @media (max-width: 600px) {
   .leader-banner {
     height: 1rem;
@@ -543,6 +585,17 @@
   .leader-ribbon::before, .leader-ribbon::after {
     width: 0.28rem;
     height: 0.5rem;
+  }
+  .classificado-banner {
+    height: 0.85rem;
+  }
+  .classificado-ribbon {
+    font-size: 0.62rem;
+    padding: 0.03rem 0.32rem;
+  }
+  .classificado-ribbon::before, .classificado-ribbon::after {
+    width: 0.18rem;
+    height: 0.32rem;
   }
 }
   

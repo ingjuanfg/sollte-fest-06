@@ -161,8 +161,17 @@ const CSV_LOCAL = {
       const teamName = r[equipoKey] || 'Sin nombre';
       const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
       
-      // Banner Leader solo para el primer puesto y no descalificado
-      const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Leader</span></span>` : '';
+      // Determinar categoría y puestos clasificados
+      const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
+      let clasificadosHasta = 3;
+      if (categoria === 'Intermedio HH') clasificadosHasta = 2;
+      if (categoria === 'Intermedio MM') clasificadosHasta = 5;
+      if (categoria === 'RX') clasificadosHasta = 6;
+      
+      // Banner Lider solo para el primer puesto y no descalificado
+      const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Lider</span></span>` : '';
+      // Banner Clasificado para los puestos clasificados y no descalificados
+      const classificadoBanner = (rank <= clasificadosHasta && !descalificados.includes(r)) ? `<span class='classificado-banner'><span class='classificado-ribbon'>Clasificado</span></span>` : '';
       
       tableHTML += `
         <tr class="team-row ${rowClass}" data-team-index="${i}">
@@ -170,7 +179,7 @@ const CSV_LOCAL = {
           <td>
             <span class="team-name" onclick="toggleTeamDetails(${i})">
               <span class="expand-icon" id="expand-${i}">▶</span>
-              ${teamName}${leaderBanner}
+              ${teamName}${leaderBanner}${classificadoBanner}
             </span>
           </td>
           <td><strong>${tval === undefined ? 0 : tval}</strong></td>
