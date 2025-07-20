@@ -161,13 +161,16 @@ const CSV_LOCAL = {
       const teamName = r[equipoKey] || 'Sin nombre';
       const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
       
+      // Banner Leader solo para el primer puesto y no descalificado
+      const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Leader</span></span>` : '';
+      
       tableHTML += `
         <tr class="team-row ${rowClass}" data-team-index="${i}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
             <span class="team-name" onclick="toggleTeamDetails(${i})">
               <span class="expand-icon" id="expand-${i}">▶</span>
-              ${teamName}
+              ${teamName}${leaderBanner}
             </span>
           </td>
           <td><strong>${tval === undefined ? 0 : tval}</strong></td>
