@@ -52,6 +52,7 @@
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
+    margin-bottom: 0.5rem; /* Reducido para menos espacio debajo del título principal */
   }
   
   .hero-logo img {
@@ -64,7 +65,7 @@
     font-size: clamp(2rem, 4vw, 3.5rem);
     font-weight: 800;
     color: var(--text);
-    margin: 0;
+    margin: 0 0 0.5rem 0; /* Menor margen inferior */
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     letter-spacing: -0.5px;
   }
@@ -80,7 +81,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Menor espacio entre título y categoría */
     flex-wrap: wrap;
     gap: 1rem;
   }
@@ -596,6 +597,210 @@
   .classificado-ribbon::before, .classificado-ribbon::after {
     width: 0.18rem;
     height: 0.32rem;
+  }
+}
+  
+.podium-section {
+  margin: 1.2rem auto 2rem auto; /* Bajado el podio y menos espacio arriba */
+  max-width: 1100px;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+.podium-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #8d5a1b;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+.podium-container {
+  background: linear-gradient(135deg, #fffbe6 60%, #fff7c2 100%);
+  border-radius: 24px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+  padding: 3.2rem 1.2rem 2.7rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.podium-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+.podium-card {
+  flex: 1 1 0;
+  min-width: 220px;
+  max-width: 320px;
+  background: #f5f5f5;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+  padding: 1.2rem 1rem 1.7rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  border: 3px solid #e2e2e2;
+  transition: box-shadow 0.2s;
+}
+.podium-card.first-place {
+  background: linear-gradient(135deg, #ffe066 80%, #ffd700 100%);
+  border-color: #ffd700;
+  z-index: 2;
+  transform: translateY(-10px) scale(1.08);
+  box-shadow: 0 8px 32px 0 rgba(255, 215, 0, 0.18);
+}
+.podium-card.second-place {
+  background: linear-gradient(135deg, #e0e0e0 80%, #bdbdbd 100%);
+  border-color: #bdbdbd;
+  z-index: 1;
+  transform: translateY(10px) scale(1.00);
+}
+.podium-card.third-place {
+  background: linear-gradient(135deg, #f7c08a 80%, #c97a2b 100%);
+  border-color: #c97a2b;
+  z-index: 1;
+  transform: translateY(20px) scale(0.98);
+}
+.podium-rank {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  border: 4px solid #fff;
+  z-index: 3;
+}
+.podium-card.first-place .podium-rank {
+  background: #ffd700;
+  color: #8d5a1b;
+}
+.podium-card.second-place .podium-rank {
+  background: #bdbdbd;
+  color: #555;
+}
+.podium-card.third-place .podium-rank {
+  background: #c97a2b;
+  color: #fff;
+}
+.podium-medal {
+  margin-top: 0.2rem;
+  margin-bottom: 0.7rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  position: relative;
+}
+.podium-medal.gold {
+  background: radial-gradient(circle at 60% 40%, #fffbe6 0%, #ffd700 80%);
+  box-shadow: 0 2px 8px 0 rgba(255, 215, 0, 0.18);
+}
+.podium-medal.silver {
+  background: radial-gradient(circle at 60% 40%, #f5f5f5 0%, #bdbdbd 80%);
+  box-shadow: 0 2px 8px 0 rgba(189, 189, 189, 0.18);
+}
+.podium-medal.bronze {
+  background: radial-gradient(circle at 60% 40%, #f7c08a 0%, #c97a2b 80%);
+  box-shadow: 0 2px 8px 0 rgba(201, 122, 43, 0.18);
+}
+.podium-team {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #8d5a1b;
+  margin: 1.1rem 0 0.7rem 0;
+  min-height: 2.2rem;
+  text-align: center;
+  word-break: break-word;
+}
+.podium-score {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #fff;
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 0.4rem 1.5rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
+  color: #8d5a1b;
+  display: inline-block;
+}
+.podium-card.first-place .podium-score {
+  background: #fffbe6;
+  color: #8d5a1b;
+}
+.podium-card.second-place .podium-score {
+  background: #f5f5f5;
+  color: #555;
+}
+.podium-card.third-place .podium-score {
+  background: #f7c08a;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .podium-grid {
+    gap: 1.2rem;
+  }
+  .podium-card {
+    min-width: 140px;
+    max-width: 220px;
+    padding: 0.7rem 0.5rem 1.2rem 0.5rem;
+  }
+  .podium-team {
+    font-size: 1rem;
+  }
+  .podium-score {
+    font-size: 1.1rem;
+    padding: 0.3rem 1rem;
+  }
+  .podium-rank {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+  .podium-medal {
+    width: 22px;
+    height: 22px;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 600px) {
+  .podium-section {
+    padding: 0 0.2rem;
+  }
+  .podium-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .podium-card {
+    min-width: 90vw;
+    max-width: 98vw;
+    margin: 0 auto;
+    transform: none !important;
+  }
+  .podium-card.first-place {
+    z-index: 2;
   }
 }
   

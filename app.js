@@ -149,48 +149,37 @@ const CSV_LOCAL = {
       return ta - tb;
     });
 
-    // Concatenar clasificados + descalificados
-    const allRows = [...clasificados, ...descalificados];
+    // Actualizar podio con los primeros 3 lugares
+    updatePodium(clasificados.slice(0, 3), cols, equipoKey, totalKey);
+
+    // Concatenar clasificados (del 4 en adelante) + descalificados
+    const allRows = [...clasificados.slice(3), ...descalificados];
 
     tableHead.innerHTML = `<tr><th>#</th><th>EQUIPO</th><th>TOTAL</th></tr>`;
     let tableHTML = '';
     allRows.forEach((r, i) => {
-      const rank = i + 1;
+      const rank = i + 4; // Empieza desde el puesto 4
       const tval = descalificados.includes(r) ? 'NA' : (recalcularChk.checked ? r.__total : r[totalKey]);
-      const badge = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+      const badge = '';
       const teamName = r[equipoKey] || 'Sin nombre';
       const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
-      
-      // Determinar categoría y puestos clasificados
-      const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
-      let clasificadosHasta = 3;
-      if (categoria === 'Intermedio HH') clasificadosHasta = 2;
-      if (categoria === 'Intermedio MM') clasificadosHasta = 5;
-      if (categoria === 'RX') clasificadosHasta = 6;
-      
-      // Banner Lider solo para el primer puesto y no descalificado
-      const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Lider</span></span>` : '';
-      // Banner Clasificado para los puestos clasificados y no descalificados
-      const classificadoBanner = (rank <= clasificadosHasta && !descalificados.includes(r)) ? `<span class='classificado-banner'><span class='classificado-ribbon'>Clasificado</span></span>` : '';
-      
       tableHTML += `
-        <tr class="team-row ${rowClass}" data-team-index="${i}">
+        <tr class="team-row ${rowClass}" data-team-index="${i+3}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
-            <span class="team-name" onclick="toggleTeamDetails(${i})">
-              <span class="expand-icon" id="expand-${i}">▶</span>
-              ${teamName}${leaderBanner}${classificadoBanner}
+            <span class="team-name" onclick="toggleTeamDetails(${i+3})">
+              <span class="expand-icon" id="expand-${i+3}">▶</span>
+              ${teamName}
             </span>
           </td>
           <td><strong>${tval === undefined ? 0 : tval}</strong></td>
         </tr>
       `;
-      
       // Fila desplegable con detalles de WODs
       const wodDetails = WOD_COLUMNS.filter(c => cols.includes(c) && r[c] && r[c] !== '');
       if (wodDetails.length > 0) {
         tableHTML += `
-          <tr class="wod-details ${rowClass}" id="wod-details-${i}">
+          <tr class="wod-details ${rowClass}" id="wod-details-${i+3}">
             <td colspan="3">
               <div style="padding: 0.5rem 0;">
                 <strong>Resultados por WOD:</strong><br>
@@ -207,7 +196,6 @@ const CSV_LOCAL = {
         `;
       }
     });
-    
     tableBody.innerHTML = tableHTML;
   }
   
@@ -263,5 +251,45 @@ function cargarPatrocinadores() {
       <img src="assets/patrocinadores/${file}" alt="Patrocinador" class="patrocinador-logo-img" loading="lazy" />
     </div>
   `).join('');
+}
+  
+// Función para actualizar el podio
+function updatePodium(top3, cols, equipoKey, totalKey) {
+  const podiumTeams = [
+    document.getElementById('podium-team-2'),
+    document.getElementById('podium-team-1'),
+    document.getElementById('podium-team-3')
+  ];
+  const podiumScores = [
+    document.getElementById('podium-score-2'),
+    document.getElementById('podium-score-1'),
+    document.getElementById('podium-score-3')
+  ];
+  // Actualizar título con la categoría
+  const podiumTitle = document.getElementById('podium-title');
+  const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
+  if (podiumTitle) {
+    podiumTitle.textContent = `Campeón Categoría ${categoria}`;
+  }
+  // Limpiar podio
+  podiumTeams.forEach(el => {
+    if (el) el.textContent = '—';
+  });
+  podiumScores.forEach(el => {
+    if (el) el.textContent = '— puntos';
+  });
+  // Actualizar con los datos (en orden: 2°, 1°, 3°)
+  if (top3[1]) {
+    podiumTeams[0].textContent = top3[1][equipoKey] || '—';
+    podiumScores[0].textContent = `${(typeof (recalcularChk.checked ? top3[1].__total : top3[1][totalKey]) === 'number' ? (recalcularChk.checked ? top3[1].__total : top3[1][totalKey]) : parseFloat(recalcularChk.checked ? top3[1].__total : top3[1][totalKey])) || 0} puntos`;
+  }
+  if (top3[0]) {
+    podiumTeams[1].textContent = top3[0][equipoKey] || '—';
+    podiumScores[1].textContent = `${(typeof (recalcularChk.checked ? top3[0].__total : top3[0][totalKey]) === 'number' ? (recalcularChk.checked ? top3[0].__total : top3[0][totalKey]) : parseFloat(recalcularChk.checked ? top3[0].__total : top3[0][totalKey])) || 0} puntos`;
+  }
+  if (top3[2]) {
+    podiumTeams[2].textContent = top3[2][equipoKey] || '—';
+    podiumScores[2].textContent = `${(typeof (recalcularChk.checked ? top3[2].__total : top3[2][totalKey]) === 'number' ? (recalcularChk.checked ? top3[2].__total : top3[2][totalKey]) : parseFloat(recalcularChk.checked ? top3[2].__total : top3[2][totalKey])) || 0} puntos`;
+  }
 }
   
