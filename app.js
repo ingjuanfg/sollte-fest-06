@@ -112,7 +112,9 @@ const CSV_LOCAL = {
   // ====== RENDER ======
   function renderTable(rows){
     if(rows.length===0){
-      tableHead.innerHTML=''; tableBody.innerHTML='<tr><td colspan="3" style="text-align: center; padding: 2rem;">Sin datos disponibles</td></tr>'; return;
+      tableHead.innerHTML=''; tableBody.innerHTML='<tr><td colspan="3" style="text-align: center; padding: 2rem;">Sin datos disponibles</td></tr>'; 
+      updatePodium([], [], null, null);
+      return;
     }
     const cols = Object.keys(rows[0]);
     const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
@@ -137,6 +139,9 @@ const CSV_LOCAL = {
       return ta - tb;
     });
   
+    // Actualizar podio con los primeros 3 lugares
+    updatePodium(rows.slice(0, 3), cols, equipoKey, totalKey);
+  
     // Crear tabla simplificada con solo equipo y total
     tableHead.innerHTML = `<tr><th>#</th><th>EQUIPO</th><th>TOTAL</th></tr>`;
     
@@ -149,7 +154,7 @@ const CSV_LOCAL = {
       
       // Fila principal del equipo
       tableHTML += `
-        <tr class="team-row" data-team-index="${i}">
+        <tr class="team-row" data-team-index="${i}" data-rank="${rank}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
             <span class="team-name" onclick="toggleTeamDetails(${i})">
@@ -216,6 +221,46 @@ const CSV_LOCAL = {
       }
     }
   };
+  
+  // Función para actualizar el podio
+  function updatePodium(top3, cols, equipoKey, totalKey) {
+    const podiumTeams = [
+      document.getElementById('podium-team-1'),
+      document.getElementById('podium-team-2'),
+      document.getElementById('podium-team-3')
+    ];
+    const podiumScores = [
+      document.getElementById('podium-score-1'),
+      document.getElementById('podium-score-2'),
+      document.getElementById('podium-score-3')
+    ];
+    
+    // Actualizar título con la categoría
+    const podiumTitle = document.getElementById('podium-title');
+    const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
+    if (podiumTitle) {
+      podiumTitle.textContent = `Campeón Categoría ${categoria}`;
+    }
+    
+    // Limpiar podio
+    podiumTeams.forEach(el => {
+      if (el) el.textContent = '—';
+    });
+    podiumScores.forEach(el => {
+      if (el) el.textContent = '— puntos';
+    });
+    
+    // Actualizar con los datos
+    top3.forEach((row, index) => {
+      if (podiumTeams[index] && podiumScores[index]) {
+        const teamName = row[equipoKey] || 'Sin nombre';
+        const score = recalcularChk.checked ? row.__total : row[totalKey];
+        
+        podiumTeams[index].textContent = teamName;
+        podiumScores[index].textContent = `${(typeof score === 'number' ? score : parseFloat(score)) || 0} puntos`;
+      }
+    });
+  }
   
 // ====== PATROCINADORES ======
 document.addEventListener('DOMContentLoaded', cargarPatrocinadores);
