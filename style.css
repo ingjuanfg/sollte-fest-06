@@ -223,17 +223,17 @@
   }
   
   .team-name {
-    cursor: pointer;
-    font-weight: 600;
-    color: var(--text);
-    transition: var(--transition);
-    display: block;
-    word-wrap: break-word; /* Permite saltos de línea en palabras largas */
-    word-break: break-word; /* Rompe palabras muy largas si es necesario */
-    white-space: normal; /* Permite múltiples líneas */
-    line-height: 1.3; /* Mejor espaciado entre líneas */
-    min-height: 1.3em; /* Altura mínima para una línea */
-  }
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  transition: var(--transition);
+  display: inline-block;
+  word-wrap: break-word; /* Permite saltos de línea en palabras largas */
+  word-break: break-word; /* Rompe palabras muy largas si es necesario */
+  white-space: normal; /* Permite múltiples líneas */
+  line-height: 1.3; /* Mejor espaciado entre líneas */
+  min-height: 1.3em; /* Altura mínima para una línea */
+}
   
   .team-name:hover {
     color: var(--accent-dark);
@@ -494,6 +494,57 @@
   color: #fff !important;
 }
 
+.finalista-row {
+  background: #f5f5f5 !important;
+}
+.finalista-row td, .finalista-row th {
+  color: #666 !important;
+}
+
+.no-final-banner {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.6rem;
+  margin-right: 0;
+  position: relative;
+  height: 1.1rem;
+}
+
+.no-final-ribbon {
+  background: linear-gradient(90deg, #757575 0%, #9e9e9e 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 0.22rem;
+  box-shadow: 0 2px 8px rgba(117,117,117,0.12);
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
+}
+
+.no-final-ribbon::before, .no-final-ribbon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0.32rem;
+  height: 0.55rem;
+  background: #616161;
+  z-index: 0;
+  transform: translateY(-50%);
+}
+
+.no-final-ribbon::before {
+  left: -0.32rem;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.no-final-ribbon::after {
+  right: -0.32rem;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
 .leader-banner {
   display: inline-flex;
   align-items: center;
@@ -598,6 +649,17 @@
     width: 0.18rem;
     height: 0.32rem;
   }
+  .no-final-banner {
+    height: 0.85rem;
+  }
+  .no-final-ribbon {
+    font-size: 0.62rem;
+    padding: 0.03rem 0.32rem;
+  }
+  .no-final-ribbon::before, .no-final-ribbon::after {
+    width: 0.18rem;
+    height: 0.32rem;
+  }
 }
   
 .podium-section {
@@ -632,11 +694,12 @@
   gap: 2.5rem;
   width: 100%;
   max-width: 900px;
+  flex-wrap: wrap;
 }
 .podium-card {
   flex: 1 1 0;
-  min-width: 220px;
-  max-width: 320px;
+  min-width: 200px;
+  max-width: 280px;
   background: #f5f5f5;
   border-radius: 18px;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
@@ -757,50 +820,239 @@
   background: #f7c08a;
   color: #fff;
 }
+
+/* Tooltip para el podio */
+.podium-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  max-width: 280px;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.podium-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.podium-tooltip-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #ffd700;
+  font-size: 0.9rem;
+}
+
+.podium-tooltip-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.podium-tooltip-list li {
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.podium-tooltip-list li:last-child {
+  border-bottom: none;
+}
+
+.podium-tooltip-wod {
+  font-weight: 600;
+  color: #ccc;
+}
+
+.podium-tooltip-value {
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Flecha del tooltip */
+.podium-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(0, 0, 0, 0.9);
+}
 @media (max-width: 900px) {
   .podium-grid {
-    gap: 1.2rem;
+    gap: 1rem;
+    padding: 0 1rem;
   }
   .podium-card {
-    min-width: 140px;
-    max-width: 220px;
-    padding: 0.7rem 0.5rem 1.2rem 0.5rem;
+    min-width: 120px;
+    max-width: 180px;
+    padding: 1rem 0.5rem 1.2rem 0.5rem;
+  }
+  .podium-team {
+    font-size: 0.9rem;
+    text-align: center;
+    word-wrap: break-word;
+  }
+  .podium-score {
+    font-size: 1rem;
+    padding: 0.3rem 0.8rem;
+  }
+  .podium-rank {
+    top: -28px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  .podium-medal {
+    width: 20px;
+    height: 20px;
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 600px) {
+  .podium-section {
+    padding: 0 0.5rem;
+  }
+  .podium-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0;
+  }
+  .podium-card {
+    min-width: 85vw;
+    max-width: 95vw;
+    margin: 0 auto;
+    transform: none !important;
+    padding-top: 2rem;
+  }
+  .podium-card.first-place {
+    z-index: 2;
+  }
+  .podium-rank {
+    top: -35px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
   }
   .podium-team {
     font-size: 1rem;
   }
   .podium-score {
     font-size: 1.1rem;
-    padding: 0.3rem 1rem;
-  }
-  .podium-rank {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
-  }
-  .podium-medal {
-    width: 22px;
-    height: 22px;
-    font-size: 1rem;
   }
 }
-@media (max-width: 600px) {
+
+@media (max-width: 400px) {
   .podium-section {
-    padding: 0 0.2rem;
+    padding: 0 0.3rem;
   }
   .podium-grid {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.7rem;
+    gap: 1.2rem;
   }
   .podium-card {
     min-width: 90vw;
     max-width: 98vw;
-    margin: 0 auto;
-    transform: none !important;
+    padding: 1.5rem 0.5rem 1rem 0.5rem;
   }
-  .podium-card.first-place {
-    z-index: 2;
+  .podium-team {
+    font-size: 0.9rem;
+  }
+  .podium-score {
+    font-size: 1rem;
+    padding: 0.2rem 0.6rem;
+  }
+  .podium-rank {
+    top: -30px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
   }
 }
+  
+/* Fuegos Artificiales */
+.fireworks-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.firework {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: firework-launch 2s ease-out forwards;
+}
+
+.firework-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: firework-explode 1.5s ease-out forwards;
+}
+
+@keyframes firework-launch {
+  0% {
+    transform: translateY(100vh) scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--target-y)) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes firework-explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Colores de fuegos artificiales */
+.firework.red { background: #ff4444; box-shadow: 0 0 12px #ff4444; }
+.firework.blue { background: #4444ff; box-shadow: 0 0 12px #4444ff; }
+.firework.green { background: #44ff44; box-shadow: 0 0 12px #44ff44; }
+.firework.yellow { background: #ffff44; box-shadow: 0 0 12px #ffff44; }
+.firework.purple { background: #ff44ff; box-shadow: 0 0 12px #ff44ff; }
+.firework.orange { background: #ff8844; box-shadow: 0 0 12px #ff8844; }
+.firework.pink { background: #ff4488; box-shadow: 0 0 12px #ff4488; }
+.firework.cyan { background: #44ffff; box-shadow: 0 0 12px #44ffff; }
+
+.firework-particle.red { background: #ff4444; }
+.firework-particle.blue { background: #4444ff; }
+.firework-particle.green { background: #44ff44; }
+.firework-particle.yellow { background: #ffff44; }
+.firework-particle.purple { background: #ff44ff; }
+.firework-particle.orange { background: #ff8844; }
+.firework-particle.pink { background: #ff4488; }
+.firework-particle.cyan { background: #44ffff; }
   

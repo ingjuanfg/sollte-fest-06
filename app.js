@@ -118,13 +118,17 @@ const CSV_LOCAL = {
     const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
     const totalKey  = cols.find(c=>/total/.test(c));
 
-    // Identificar filas con 'D' en cualquier columna de WOD
+    // Identificar filas con 'D' o 'F' en cualquier columna de WOD
     const descalificados = [];
+    const finalistas = [];
     const clasificados = [];
     rows.forEach(r => {
       const tieneD = WOD_COLUMNS.some(k => r[k] && r[k].toString().trim().toUpperCase() === 'D');
+      const tieneF = WOD_COLUMNS.some(k => r[k] && r[k].toString().trim().toUpperCase() === 'F');
       if (tieneD) {
         descalificados.push(r);
+      } else if (tieneF) {
+        finalistas.push(r);
       } else {
         clasificados.push(r);
       }
@@ -132,6 +136,12 @@ const CSV_LOCAL = {
 
     if(recalcularChk.checked){
       clasificados.forEach(r=>{
+        r.__total = WOD_COLUMNS.reduce((acc,k)=>{
+          const val = parseFloat(r[k]);
+          return acc + (isNaN(val)?0:val);
+        },0);
+      });
+      finalistas.forEach(r=>{
         r.__total = WOD_COLUMNS.reduce((acc,k)=>{
           const val = parseFloat(r[k]);
           return acc + (isNaN(val)?0:val);
@@ -152,8 +162,8 @@ const CSV_LOCAL = {
     // Actualizar podio con los primeros 3 lugares
     updatePodium(clasificados.slice(0, 3), cols, equipoKey, totalKey);
 
-    // Concatenar clasificados (del 4 en adelante) + descalificados
-    const allRows = [...clasificados.slice(3), ...descalificados];
+    // Concatenar clasificados (del 4 en adelante) + finalistas + descalificados
+    const allRows = [...clasificados.slice(3), ...finalistas, ...descalificados];
 
     tableHead.innerHTML = `<tr><th>#</th><th>EQUIPO</th><th>TOTAL</th></tr>`;
     let tableHTML = '';
@@ -162,15 +172,23 @@ const CSV_LOCAL = {
       const tval = descalificados.includes(r) ? 'NA' : (recalcularChk.checked ? r.__total : r[totalKey]);
       const badge = '';
       const teamName = r[equipoKey] || 'Sin nombre';
-      const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
+      let rowClass = '';
+      if (descalificados.includes(r)) {
+        rowClass = 'descalificado-row';
+      } else if (finalistas.includes(r)) {
+        rowClass = 'finalista-row';
+      }
       tableHTML += `
         <tr class="team-row ${rowClass}" data-team-index="${i+3}">
           <td><span class="rank-badge ${badge}">${rank}</span></td>
           <td>
-            <span class="team-name" onclick="toggleTeamDetails(${i+3})">
-              <span class="expand-icon" id="expand-${i+3}">▶</span>
-              ${teamName}
-            </span>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="team-name" onclick="toggleTeamDetails(${i+3})">
+                <span class="expand-icon" id="expand-${i+3}">▶</span>
+                ${teamName}
+              </span>
+              ${finalistas.includes(r) ? '<div class="no-final-banner"><div class="no-final-ribbon">No Participa en Final</div></div>' : ''}
+            </div>
           </td>
           <td><strong>${tval === undefined ? 0 : tval}</strong></td>
         </tr>
@@ -265,12 +283,19 @@ function updatePodium(top3, cols, equipoKey, totalKey) {
     document.getElementById('podium-score-1'),
     document.getElementById('podium-score-3')
   ];
+  const podiumCards = [
+    document.querySelector('.podium-card.second-place'),
+    document.querySelector('.podium-card.first-place'),
+    document.querySelector('.podium-card.third-place')
+  ];
+  
   // Actualizar título con la categoría
   const podiumTitle = document.getElementById('podium-title');
   const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
   if (podiumTitle) {
     podiumTitle.textContent = `Campeón Categoría ${categoria}`;
   }
+  
   // Limpiar podio
   podiumTeams.forEach(el => {
     if (el) el.textContent = '—';
@@ -278,18 +303,179 @@ function updatePodium(top3, cols, equipoKey, totalKey) {
   podiumScores.forEach(el => {
     if (el) el.textContent = '— puntos';
   });
+  
   // Actualizar con los datos (en orden: 2°, 1°, 3°)
   if (top3[1]) {
     podiumTeams[0].textContent = top3[1][equipoKey] || '—';
     podiumScores[0].textContent = `${(typeof (recalcularChk.checked ? top3[1].__total : top3[1][totalKey]) === 'number' ? (recalcularChk.checked ? top3[1].__total : top3[1][totalKey]) : parseFloat(recalcularChk.checked ? top3[1].__total : top3[1][totalKey])) || 0} puntos`;
+    addPodiumTooltip(podiumCards[0], top3[1], cols, equipoKey, '2° Lugar');
   }
   if (top3[0]) {
     podiumTeams[1].textContent = top3[0][equipoKey] || '—';
     podiumScores[1].textContent = `${(typeof (recalcularChk.checked ? top3[0].__total : top3[0][totalKey]) === 'number' ? (recalcularChk.checked ? top3[0].__total : top3[0][totalKey]) : parseFloat(recalcularChk.checked ? top3[0].__total : top3[0][totalKey])) || 0} puntos`;
+    addPodiumTooltip(podiumCards[1], top3[0], cols, equipoKey, '1° Lugar');
   }
   if (top3[2]) {
     podiumTeams[2].textContent = top3[2][equipoKey] || '—';
     podiumScores[2].textContent = `${(typeof (recalcularChk.checked ? top3[2].__total : top3[2][totalKey]) === 'number' ? (recalcularChk.checked ? top3[2].__total : top3[2][totalKey]) : parseFloat(recalcularChk.checked ? top3[2].__total : top3[2][totalKey])) || 0} puntos`;
+    addPodiumTooltip(podiumCards[2], top3[2], cols, equipoKey, '3° Lugar');
   }
 }
+
+// Función para agregar tooltip al podio
+function addPodiumTooltip(card, teamData, cols, equipoKey, position) {
+  if (!card) return;
+  
+  // Remover tooltip existente si hay uno
+  const existingTooltip = card.querySelector('.podium-tooltip');
+  if (existingTooltip) {
+    existingTooltip.remove();
+  }
+  
+  // Crear tooltip
+  const tooltip = document.createElement('div');
+  tooltip.className = 'podium-tooltip';
+  
+  // Obtener datos de WOD
+  const wodDetails = WOD_COLUMNS.filter(c => cols.includes(c) && teamData[c] && teamData[c] !== '');
+  
+  if (wodDetails.length > 0) {
+    const tooltipContent = `
+      <div class="podium-tooltip-title">${teamData[equipoKey]} - ${position}</div>
+      <ul class="podium-tooltip-list">
+        ${wodDetails.map(wod => {
+          const wodName = formatHeader(wod);
+          const wodValue = teamData[wod];
+          return `<li>
+            <span class="podium-tooltip-wod">${wodName}</span>
+            <span class="podium-tooltip-value">${wodValue}</span>
+          </li>`;
+        }).join('')}
+      </ul>
+    `;
+    tooltip.innerHTML = tooltipContent;
+  } else {
+    tooltip.innerHTML = `
+      <div class="podium-tooltip-title">${teamData[equipoKey]} - ${position}</div>
+      <p>No hay resultados de WOD disponibles</p>
+    `;
+  }
+  
+  // Agregar tooltip al card
+  card.appendChild(tooltip);
+  
+  // Eventos de hover
+  card.addEventListener('mouseenter', () => {
+    tooltip.classList.add('show');
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('show');
+  });
+}
+  
+// Sistema de Fuegos Artificiales
+class FireworksSystem {
+  constructor() {
+    this.container = document.getElementById('fireworksContainer');
+    this.colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan'];
+    this.maxFireworks = 5;
+    this.activeFireworks = 0;
+    this.isRunning = false;
+  }
+
+  start() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.scheduleNextFirework();
+  }
+
+  stop() {
+    this.isRunning = false;
+  }
+
+  scheduleNextFirework() {
+    if (!this.isRunning) return;
+    
+    const delay = Math.random() * 2000 + 1000; // 1-3 segundos
+    setTimeout(() => {
+      if (this.isRunning && this.activeFireworks < this.maxFireworks) {
+        this.createFirework();
+      }
+      this.scheduleNextFirework();
+    }, delay);
+  }
+
+  createFirework() {
+    this.activeFireworks++;
+    
+    // Posición aleatoria en la parte inferior de la pantalla
+    const startX = Math.random() * window.innerWidth;
+    const targetY = Math.random() * (window.innerHeight * 0.6) + (window.innerHeight * 0.2);
+    
+    // Crear el fuego artificial
+    const firework = document.createElement('div');
+    firework.className = `firework ${this.getRandomColor()}`;
+    firework.style.left = `${startX}px`;
+    firework.style.setProperty('--target-y', `${targetY}px`);
+    
+    this.container.appendChild(firework);
+    
+    // Cuando el fuego artificial llega a su destino, crear la explosión
+    setTimeout(() => {
+      this.createExplosion(startX, targetY, firework.className.split(' ')[1]);
+      firework.remove();
+      this.activeFireworks--;
+    }, 2000);
+  }
+
+  createExplosion(x, y, color) {
+    const particleCount = 15 + Math.floor(Math.random() * 10); // 15-24 partículas
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = `firework-particle ${color}`;
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      
+      // Dirección aleatoria para cada partícula
+      const angle = (i / particleCount) * 2 * Math.PI + Math.random() * 0.5;
+      const distance = 50 + Math.random() * 100;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      
+      particle.style.setProperty('--dx', `${dx}px`);
+      particle.style.setProperty('--dy', `${dy}px`);
+      
+      this.container.appendChild(particle);
+      
+      // Remover la partícula después de la animación
+      setTimeout(() => {
+        particle.remove();
+      }, 1500);
+    }
+  }
+
+  getRandomColor() {
+    return this.colors[Math.floor(Math.random() * this.colors.length)];
+  }
+}
+
+// Inicializar el sistema de fuegos artificiales
+const fireworks = new FireworksSystem();
+
+// Iniciar los fuegos artificiales cuando la página esté cargada
+document.addEventListener('DOMContentLoaded', () => {
+  // Iniciar inmediatamente
+  fireworks.start();
+});
+
+// Pausar fuegos artificiales cuando la ventana no está visible
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    fireworks.stop();
+  } else {
+    fireworks.start();
+  }
+});
   
