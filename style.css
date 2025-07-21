@@ -513,18 +513,47 @@
     margin-bottom: 2rem;
   }
   
-  .trophy-animation {
-    font-size: 5rem;
-    animation: trophyBounce 2s ease-in-out infinite;
-    filter: drop-shadow(0 8px 20px rgba(255, 215, 0, 0.3));
+  .medals-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
   
-  @keyframes trophyBounce {
+  .medal {
+    font-size: 4rem;
+    animation: medalBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+  }
+  
+  .medal.bronze {
+    color: #cd7f32;
+    animation-delay: 0s;
+  }
+  
+  .medal.gold {
+    color: #ffd700;
+    animation-delay: 0.3s;
+  }
+  
+  .medal.silver {
+    color: #c0c0c0;
+    animation-delay: 0.6s;
+  }
+  
+  @keyframes medalBounce {
     0%, 100% {
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-8px) scale(1.05) rotate(5deg);
     }
     50% {
-      transform: translateY(-10px) scale(1.1);
+      transform: translateY(-12px) scale(1.1) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-8px) scale(1.05) rotate(-5deg);
     }
   }
   
@@ -588,47 +617,26 @@
     }
   }
   
-  .waiting-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+  .weight-animation {
+    font-size: 5rem;
+    animation: weightBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(255, 215, 0, 0.4));
+    color: #ffd700;
   }
   
-  .info-card {
-    background: linear-gradient(135deg, #F5F5DC, #DEB887);
-    border: 2px solid #8B4513;
-    border-radius: 16px;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .info-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
-  }
-  
-  .info-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
-  }
-  
-  .info-card h3 {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #8B4513;
-    margin: 0 0 0.5rem 0;
-  }
-  
-  .info-card p {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin: 0;
-    line-height: 1.4;
+  @keyframes weightBounce {
+    0%, 100% {
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-8px) scale(1.05) rotate(5deg);
+    }
+    50% {
+      transform: translateY(-12px) scale(1.1) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-8px) scale(1.05) rotate(-5deg);
+    }
   }
   
   /* Responsive para la página de espera */
@@ -637,21 +645,16 @@
       padding: 2rem 1rem;
     }
     
-    .trophy-animation {
+    .medals-container {
+      gap: 1.5rem;
+    }
+    
+    .medal {
+      font-size: 3.5rem;
+    }
+    
+    .weight-animation {
       font-size: 4rem;
-    }
-    
-    .waiting-info {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    
-    .info-card {
-      padding: 1rem;
-    }
-    
-    .info-icon {
-      font-size: 2rem;
     }
   }
   
@@ -660,7 +663,15 @@
       padding: 1.5rem 0.5rem;
     }
     
-    .trophy-animation {
+    .medals-container {
+      gap: 1rem;
+    }
+    
+    .medal {
+      font-size: 3rem;
+    }
+    
+    .weight-animation {
       font-size: 3rem;
     }
     
@@ -671,14 +682,6 @@
     .waiting-message {
       font-size: 1rem;
     }
-    
-    .info-card h3 {
-      font-size: 1.1rem;
-    }
-    
-    .info-card p {
-      font-size: 0.8rem;
-    }
   }
   
   /* Ocultar estilos del podio y tabla en la página de espera */
@@ -686,4 +689,76 @@
   .results-section {
     display: none;
   }
+  
+  /* Fuegos Artificiales Mejorados */
+  .fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    overflow: hidden;
+  }
+  
+  .firework {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: firework-launch 2s ease-out forwards;
+  }
+  
+  .firework-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: firework-explode 1.5s ease-out forwards;
+  }
+  
+  @keyframes firework-launch {
+    0% {
+      transform: translateY(100vh) scale(1);
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(var(--target-y)) scale(0.1);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes firework-explode {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--dx), var(--dy)) scale(0);
+      opacity: 0;
+    }
+  }
+  
+  /* Colores de fuegos artificiales */
+  .firework.red { background: #ff4444; box-shadow: 0 0 12px #ff4444; }
+  .firework.blue { background: #4444ff; box-shadow: 0 0 12px #4444ff; }
+  .firework.green { background: #44ff44; box-shadow: 0 0 12px #44ff44; }
+  .firework.yellow { background: #ffff44; box-shadow: 0 0 12px #ffff44; }
+  .firework.purple { background: #ff44ff; box-shadow: 0 0 12px #ff44ff; }
+  .firework.orange { background: #ff8844; box-shadow: 0 0 12px #ff8844; }
+  .firework.pink { background: #ff4488; box-shadow: 0 0 12px #ff4488; }
+  .firework.cyan { background: #44ffff; box-shadow: 0 0 12px #44ffff; }
+  
+  .firework-particle.red { background: #ff4444; }
+  .firework-particle.blue { background: #4444ff; }
+  .firework-particle.green { background: #44ff44; }
+  .firework-particle.yellow { background: #ffff44; }
+  .firework-particle.purple { background: #ff44ff; }
+  .firework-particle.orange { background: #ff8844; }
+  .firework-particle.pink { background: #ff4488; }
+  .firework-particle.cyan { background: #44ffff; }
   
