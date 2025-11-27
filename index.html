@@ -1,67 +1,150 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sollte Fest - Resultados</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Resultados en tiempo real de la competencia Sollte Fest" />
-  <meta name="theme-color" content="#f7d23e" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sollte - Presentación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 300px;
+            height: auto;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1400px;
+            height: 80vh;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f5f5f5;
+        }
+
+        .presentation-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .fullscreen-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background-color: #333;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                max-width: 200px;
+            }
+
+            main {
+                padding: 20px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                max-width: 150px;
+            }
+
+            main {
+                padding: 15px 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <main>
-    <section class="hero">
-      <div class="hero-content">
-        <div class="hero-logo">
-          <img src="assets/sollte_logo_nombre_icono.png" alt="Sollte Fest" onerror="this.style.display='none'" />
-        </div>
-        <h2 class="hero-title">Sollte Fest 06 - La Independencia</h2>
-      </div>
-    </section>
+    <header>
+        <img src="assets/sollte_logo_nombre_icono.png" alt="Sollte Logo" class="logo">
+    </header>
 
-    <section class="results-section">
-      <div class="results-header">
-        <h3 class="results-title">Resultados</h3>
-        <div class="results-controls">
-          <label for="categoriaSelect">
-            Categoría:
-            <select id="categoriaSelect" aria-label="Seleccionar categoría"></select>
-          </label>
-          <label class="inline" for="recalcularTotal">
-            <input type="checkbox" id="recalcularTotal" /> Recalcular Total
-          </label>
-          <button id="reloadBtn" title="Recargar datos" aria-label="Recargar datos">⟳</button>
+    <main>
+        <div class="presentation-container" id="presentation">
+            <iframe 
+                src="https://docs.google.com/presentation/d/1uw_WfJcjEr6JMkC5zVKjJO2JmU6xZ0rrB7Jb7Yl85-c/embed?start=false&loop=false&delayms=3000&rm=minimal" 
+                frameborder="0" 
+                allowfullscreen="true" 
+                mozallowfullscreen="true" 
+                webkitallowfullscreen="true"
+                allow="autoplay">
+            </iframe>
         </div>
-      </div>
-      
-      <div class="table-wrapper">
-        <div id="loadingIndicator" style="display: none; text-align: center; padding: 2rem; color: var(--text-secondary);">
-          <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Cargando datos...</div>
-          <div style="font-size: 0.8rem;">Por favor espera</div>
+        <div class="controls">
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">Ver en Pantalla Completa</button>
         </div>
-        <table id="tablaResultados">
-          <thead id="tableHead"></thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-        <div class="update-info">
-          <span id="lastUpdate">—</span>
-        </div>
-      </div>
-    </section>
+    </main>
 
-    <section class="patrocinadores-section">
-      <h3 class="patrocinadores-title">Nuestros Patrocinadores</h3>
-      <div class="patrocinadores-grid" id="patrocinadoresGrid"></div>
-    </section>
-  </main>
-
-  <footer>
-    <small>© <span id="year"></span> Sollte Fest. Rankings actualizados en tiempo real.</small>
-  </footer>
-
-  <script src="app.js"></script>
+    <script>
+        function toggleFullscreen() {
+            const element = document.getElementById('presentation');
+            
+            if (!document.fullscreenElement) {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
 </body>
 </html>
