@@ -1,9 +1,8 @@
-Atleta,Pais,WOD 1,
-,,Puntos,Detalle
-Angela Sons,Japon,2,8:37
-Valen Arenas,Curazao,3,8:46
-Malle,Sudafrica,1,8:11
-Isa Cardona,Ecuador,5,9:10
-Laura Beltran,Inglaterra,4,9:01
+Atleta,Pais,WOD 1,,WOD 2.A,,WOD 2.B,
+,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
+Angela Sons,Japon,2,8:37,4,108 Saltos,4,115 lbs
+Valen Arenas,Curazao,3,8:46,2,132 Saltos,3,115 lbs
+Malle,Sudafrica,1,8:11,1,168 Saltos,1,155 lbs
+Laura Beltran,Inglaterra,4,9:01,3,113 Saltos,2,125 lbs
 Aleja Parra,Mexico,6,"11:00
-28 Burpees"
+28 Burpees",5,49 Saltos,5,85 lbs

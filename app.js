@@ -36,6 +36,7 @@ const COUNTRY_FLAGS = {
   'arabia': '🇸🇦',
   'checa': '🇨🇿',
   'republica checa': '🇨🇿',
+  'arabia saudita': '🇸🇦',
   'escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
   'portugal': '🇵🇹',
   'uzbe': '🇺🇿',
@@ -64,6 +65,9 @@ const COUNTRY_FLAGS = {
 };
 
 const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+const HONORARY_CATEGORY = 'Mujeres Principiantes';
+const HONORARY_ATHLETE = 'esmeralda bustamante';
 
 // ====== DOM ======
 const categoriaSelect = document.getElementById('categoriaSelect');
@@ -189,7 +193,7 @@ async function loadData() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     const parsed = parseResultsCSV(text);
-    renderTable(parsed);
+    renderTable(parsed, categoria);
     lastUpdateSpan.textContent = `Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
   } catch (err) {
     console.error(err);
@@ -334,7 +338,52 @@ function formatWodPosition(puntos) {
   return `${n}º`;
 }
 
-function renderTable({ athletes, wodNames }) {
+function normalizeAthleteName(name) {
+  return String(name)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function isHonoraryAthlete(name) {
+  return normalizeAthleteName(name) === HONORARY_ATHLETE;
+}
+
+function prepareAthletesForDisplay(athletes, categoria) {
+  const sorted = [...athletes].sort((a, b) => a.total - b.total);
+
+  if (categoria !== HONORARY_CATEGORY) {
+    return sorted.map((athlete, index) => ({
+      ...athlete,
+      displayRank: index + 1,
+      isHonorary: false
+    }));
+  }
+
+  const honorary = sorted.find(athlete => isHonoraryAthlete(athlete.atleta));
+  const rest = sorted.filter(athlete => !isHonoraryAthlete(athlete.atleta));
+  const ordered = honorary ? [honorary, ...rest] : sorted;
+
+  return ordered.map((athlete, index) => ({
+    ...athlete,
+    displayRank: index === 0 ? 1 : index,
+    isHonorary: isHonoraryAthlete(athlete.atleta)
+  }));
+}
+
+function getDisplayRankClass(displayRank, isHonorary) {
+  if (isHonorary || displayRank === 1) return 'top1';
+  if (displayRank === 2) return 'top2';
+  if (displayRank === 3) return 'top3';
+  return '';
+}
+
+function getDisplayMedal(displayRank) {
+  return RANK_MEDALS[displayRank] || '';
+}
+
+function renderTable({ athletes, wodNames }, categoria) {
   if (!athletes.length) {
     showPlaceholderMessage();
     return;
@@ -352,12 +401,14 @@ function renderTable({ athletes, wodNames }) {
 
   tableHead.innerHTML = `<tr>${headCells.join('')}</tr>`;
 
+  const displayAthletes = prepareAthletesForDisplay(athletes, categoria);
   let tableHTML = '';
 
-  athletes.forEach((athlete, index) => {
-    const rank = index + 1;
-    const medal = RANK_MEDALS[rank] || '';
-    const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+  displayAthletes.forEach((athlete, index) => {
+    const { displayRank, isHonorary } = athlete;
+    const medal = getDisplayMedal(displayRank);
+    const rankClass = getDisplayRankClass(displayRank, isHonorary);
+    const honoraryClass = isHonorary ? ' team-row--honorary' : '';
     const flag = getCountryFlag(athlete.pais);
 
     const wodCells = athlete.wods.map(wod =>
@@ -365,9 +416,9 @@ function renderTable({ athletes, wodNames }) {
     ).join('');
 
     tableHTML += `
-      <tr class="team-row" data-team-index="${index}">
+      <tr class="team-row${honoraryClass}" data-team-index="${index}">
         <td class="pos-cell">
-          <span class="rank-badge ${rankClass}">${rank}</span>
+          <span class="rank-badge ${rankClass}">${displayRank}</span>
           ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
         </td>
         <td>

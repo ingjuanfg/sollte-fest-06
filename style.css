@@ -420,6 +420,19 @@
     outline-offset: -2px;
   }
 
+  #tablaResultados tbody tr.team-row--honorary {
+    background: linear-gradient(90deg, #fce4f0, #f8d4e8);
+  }
+
+  #tablaResultados tbody tr.team-row--honorary:hover {
+    background: linear-gradient(90deg, #f8d4e8, #f3c0db);
+  }
+
+  #tablaResultados tbody tr.team-row--honorary.team-row--expanded {
+    background: linear-gradient(90deg, #f8d4e8, #f3c0db);
+    outline-color: #e879a8;
+  }
+
   .pos-cell {
     text-align: center;
     white-space: nowrap;
@@ -717,10 +730,6 @@
       font-size: 0.85rem;
     }
 
-    .rank-medal {
-      display: none;
-    }
-
     .wod-details-panel {
       padding: 0.7rem 0.85rem;
     }
@@ -793,7 +802,7 @@
     }
 
     .rank-medal {
-      display: none;
+      font-size: 0.85rem;
     }
   }
   

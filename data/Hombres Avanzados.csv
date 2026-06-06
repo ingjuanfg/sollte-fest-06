@@ -1,12 +1,12 @@
-Atleta,Pais,WOD 1,
-,,Puntos,Detalle
-Tiben Ledesma,Australia,5,10:04
+Atleta,Pais,WOD 1,,WOD 2.A,,WOD 2.B,
+,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
+Tiben Ledesma,Australia,5,10:04,6,69 Saltos,6,165 lbs
 Bri,Tunez,9,"11:00
-21 Burpees"
-Dari,Brasil,7,10:37
-Daniel Mesa,Qatar,1,7:05
-Mateo Villa,Costa de Marfil,4,8:52
-Juan Diego,Colombia,2,7:53
-Sebas Jaimes,Ghana,8,10:45
-Julian Garcia,Iran,6,10:09
-Santiago Ceballos,Cabo Verde,3,8:05
+21 Burpees",7,64 Saltos,9,135 lbs
+Dari,Brasil,7,10:37,3,86 Saltos,5,165 lbs
+Daniel Mesa,Qatar,1,7:05,1,157 Saltos,7,155 lbs
+Mateo Villa,Costa de Marfil,4,8:52,8,40 Saltos,8,155 lbs
+Juan Diego,Colombia,2,7:53,4,85 Saltos,3,195 lbs
+Sebas Jaimes,Ghana,8,10:45,9,16 Saltos,4,180 lbs
+Julian Garcia,Iran,6,10:09,2,133 Saltos,2,205 lbs
+Santiago Ceballos,Cabo Verde,3,8:05,5,82 Saltos,1,210 lbs
