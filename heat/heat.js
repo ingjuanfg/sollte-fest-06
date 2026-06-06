@@ -10,7 +10,7 @@ const HEAT_IMAGES = {
   9: ['haiti.png', 'nueva zelanda.png'],
   10: ['curazao.png', 'japon.png'],
   11: ['espana.png', 'sudafrica.png'],
-  12: ['ecuador.png', 'inglaterra.png', 'mexico.png'],
+  12: ['inglaterra.png', 'mexico.png', 'sudafrica.png'],
   13: ['brasil.png', 'tiben.png', 'tunez.png'],
   14: ['colombia.png', 'costa.png', 'qatar.png'],
   15: ['cabo.png', 'ghana.png', 'iran.png']
