@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Sollte Fest - Resultados</title>
+  <title>Sollte Fest 07 - Mundialista</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Resultados en tiempo real de la competencia Sollte Fest" />
-  <meta name="theme-color" content="#f7d23e" />
+  <meta name="description" content="Resultados en tiempo real de Sollte Fest 07 - Mundialista" />
+  <meta name="theme-color" content="#0c4d35" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
         <div class="hero-logo">
           <img src="assets/sollte_logo_nombre_icono.png" alt="Sollte Fest" onerror="this.style.display='none'" />
         </div>
-        <h2 class="hero-title">Sollte Fest 06 - La Independencia</h2>
+        <h2 class="hero-title">Sollte Fest 07 - Mundialista</h2>
       </div>
     </section>
 
@@ -26,10 +26,24 @@
       <div class="results-header">
         <h3 class="results-title">Resultados</h3>
         <div class="results-controls">
-          <label for="categoriaSelect">
-            Categoría:
-            <select id="categoriaSelect" aria-label="Seleccionar categoría"></select>
-          </label>
+          <div class="categoria-picker" id="categoriaPicker">
+            <span class="categoria-picker__label" id="categoriaLabel">Categoría</span>
+            <div class="categoria-picker__wrap">
+              <button
+                type="button"
+                class="categoria-picker__trigger"
+                id="categoriaTrigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="categoriaLabel categoriaValue"
+              >
+                <span class="categoria-picker__value" id="categoriaValue">—</span>
+                <span class="categoria-picker__icon" aria-hidden="true">▾</span>
+              </button>
+              <ul class="categoria-picker__menu" id="categoriaMenu" role="listbox" hidden></ul>
+            </div>
+            <select id="categoriaSelect" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
+          </div>
           <label class="inline" for="recalcularTotal">
             <input type="checkbox" id="recalcularTotal" /> Recalcular Total
           </label>

@@ -11,6 +11,7 @@ const CSV_LOCAL = {
   
   // Columnas WOD que se sumarán si activas "Recalcular Total" (nombres normalizados).
   const WOD_COLUMNS = ["wod1","wod2a","wod2b","wod3","wod4semifinal","wod5afinal","wod5bfinal"];
+  const PLACEHOLDER_MSG = 'Aquí podrás ver los resultados próximamente';
   
   // ====== DOM ======
   const categoriaSelect = document.getElementById('categoriaSelect');
@@ -27,15 +28,75 @@ const CSV_LOCAL = {
   document.addEventListener('DOMContentLoaded', init);
   
   function init(){
-    Object.keys(CSV_LOCAL).forEach(cat=>{
-      const opt = document.createElement('option');
-      opt.value = cat; opt.textContent = cat;
-      categoriaSelect.appendChild(opt);
-    });
-    categoriaSelect.addEventListener('change', loadData);
+    initCategoriaPicker();
     reloadBtn.addEventListener('click', loadData);
     recalcularChk.addEventListener('change', loadData);
-    loadData();
+  }
+
+  function initCategoriaPicker() {
+    const trigger = document.getElementById('categoriaTrigger');
+    const valueSpan = document.getElementById('categoriaValue');
+    const menu = document.getElementById('categoriaMenu');
+    if (!categoriaSelect || !trigger || !valueSpan || !menu) return;
+
+    Object.keys(CSV_LOCAL).forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      categoriaSelect.appendChild(opt);
+
+      const item = document.createElement('li');
+      item.role = 'option';
+      item.dataset.value = cat;
+      item.textContent = cat;
+      item.tabIndex = -1;
+      item.addEventListener('click', () => setCategoria(cat));
+      menu.appendChild(item);
+    });
+
+    function setCategoria(cat) {
+      categoriaSelect.value = cat;
+      valueSpan.textContent = cat;
+      menu.querySelectorAll('[role="option"]').forEach(item => {
+        const selected = item.dataset.value === cat;
+        item.classList.toggle('is-selected', selected);
+        item.setAttribute('aria-selected', selected);
+      });
+      closeMenu();
+      loadData();
+    }
+
+    function openMenu() {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleMenu() {
+      if (menu.hidden) openMenu();
+      else closeMenu();
+    }
+
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    document.addEventListener('click', e => {
+      if (!menu.hidden && !document.getElementById('categoriaPicker').contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    setCategoria(Object.keys(CSV_LOCAL)[0]);
   }
   
   async function loadData(){
@@ -54,13 +115,18 @@ const CSV_LOCAL = {
       lastUpdateSpan.textContent = `Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
     } catch(err){
       console.error(err);
-      tableHead.innerHTML='';
-      tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #d32f2f; padding: 2rem;">Error cargando ${url}: ${err.message}</td></tr>`;
+      showPlaceholderMessage();
     } finally {
       showLoading(false);
     }
   }
   
+  function showPlaceholderMessage() {
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = `<tr><td colspan="3" class="results-placeholder">${PLACEHOLDER_MSG}</td></tr>`;
+    if (lastUpdateSpan) lastUpdateSpan.textContent = '—';
+  }
+
   function showLoading(show) {
     if (loadingIndicator) {
       loadingIndicator.style.display = show ? 'block' : 'none';
@@ -112,7 +178,8 @@ const CSV_LOCAL = {
   // ====== RENDER ======
   function renderTable(rows){
     if(rows.length===0){
-      tableHead.innerHTML=''; tableBody.innerHTML='<tr><td colspan="3" style="text-align: center; padding: 2rem;">Sin datos disponibles</td></tr>'; return;
+      showPlaceholderMessage();
+      return;
     }
     const cols = Object.keys(rows[0]);
     const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
@@ -250,13 +317,12 @@ function cargarPatrocinadores() {
   if (!grid) return;
   // Lista de archivos detectados en la carpeta (puedes agregar más si subes nuevos logos)
   const logos = [
-    'cheladas.png',
-    'CALDEBURGER.png',
-    'desayunos.jpg',
-    'MANANTIAL.PNG',
-    'PEREIRA PLAZA.jpg',
-    'ENDURANCE .jpg',
-    'JEN.png'
+    'Equimovi.jpeg',
+    'Imagen1.png',
+    'LOGO DOMIVET.png',
+    'culto.png',
+    'intellygence.png',
+    'mues.png'
   ];
   grid.innerHTML = logos.map(file => `
     <div class="patrocinador-logo-box">
