@@ -16,6 +16,15 @@ const HEAT_IMAGES = {
   15: ['cabo.png', 'ghana.png', 'iran.png']
 };
 
+const SPONSOR_LOGOS = [
+  'Equimovi.jpeg',
+  'Imagen1.png',
+  'LOGO DOMIVET.png',
+  'culto.png',
+  'intellygence.png',
+  'mues.png'
+];
+
 const HEAT_CATEGORIES = [
   { from: 1, to: 2, label: 'Categoría Hombres Principiantes' },
   { from: 3, to: 6, label: 'Categoría Hombres Intermedios' },
@@ -83,6 +92,22 @@ function renderMatchup(heatNum, images) {
   matchup.appendChild(createAthlete(heatNum, images[1]));
 }
 
+function initSponsorsGrid() {
+  const grid = document.getElementById('heatSponsorsGrid');
+  if (!grid || !SPONSOR_LOGOS.length) return;
+
+  grid.innerHTML = SPONSOR_LOGOS.map(file => `
+    <div class="patrocinador-logo-box heat-sponsor-box">
+      <img
+        src="../assets/patrocinadores/${encodeURIComponent(file)}"
+        alt="Patrocinador"
+        class="patrocinador-logo-img"
+        loading="lazy"
+      />
+    </div>
+  `).join('');
+}
+
 function initHeatPage() {
   const heatNum = getHeatNumber();
   const images = heatNum ? HEAT_IMAGES[heatNum] : null;
@@ -109,6 +134,7 @@ function initHeatPage() {
   if (heatCategory) heatCategory.textContent = category;
 
   renderMatchup(heatNum, images);
+  initSponsorsGrid();
 }
 
 document.addEventListener('DOMContentLoaded', initHeatPage);
