@@ -1,12 +1,11 @@
 // ====== CONFIG ======
 // Un CSV por categoría en /data. Deben existir los archivos referenciados.
 const CSV_LOCAL = {
-    "Principiante HH": "data/Sollte Fest 06 - Principiante HH.csv",
-    "Principiante MM": "data/Sollte Fest 06 - Principiante MM.csv",
-    "Intermedio HH":  "data/Sollte Fest 06 - Intermedio HH.csv",
-    "Intermedio MM":  "data/Sollte Fest 06 - Intermedio MM.csv",
-    "RX":             "data/Sollte Fest 06 - RX.csv",
-    "Sollte Fest":    "data/Sollte Fest 06 - Sollte Fest.csv"
+    "Hombres Principiantes": "data/Hombres Principiantes.csv",
+    "Mujeres Principiantes": "data/Mujeres Principiantes.csv",
+    "Hombres Intermedios":   "data/Hombres Intermedios.csv",
+    "Mujeres Avanzadas":     "data/Mujeres Avanzadas.csv",
+    "Hombres Avanzados":     "data/Hombres Avanzados.csv"
   };
   
   // Columnas WOD que se sumarán si activas "Recalcular Total" (nombres normalizados).
@@ -231,9 +230,7 @@ const CSV_LOCAL = {
       // Determinar categoría y puestos clasificados
       const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
       let clasificadosHasta = 3;
-      if (categoria === 'Intermedio HH') clasificadosHasta = 2;
-      if (categoria === 'Intermedio MM') clasificadosHasta = 5;
-      if (categoria === 'RX') clasificadosHasta = 6;
+      if (categoria === 'Mujeres Avanzadas') clasificadosHasta = 6;
       
       // Banner Lider solo para el primer puesto y no descalificado
       const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Lider</span></span>` : '';
