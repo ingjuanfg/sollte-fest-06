@@ -44,14 +44,17 @@
             </div>
             <select id="categoriaSelect" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
           </div>
-          <label class="inline" for="recalcularTotal">
-            <input type="checkbox" id="recalcularTotal" /> Recalcular Total
-          </label>
           <button id="reloadBtn" title="Recargar datos" aria-label="Recargar datos">⟳</button>
         </div>
       </div>
       
       <div class="table-wrapper">
+        <div id="tableHint" class="table-hint" hidden>
+          <p class="table-hint__text">
+            <span class="table-hint__scroll" hidden>Desliza hacia la derecha para ver más columnas. </span>
+            Toca el nombre de un atleta para ver el detalle y las posiciones por WOD.
+          </p>
+        </div>
         <div id="loadingIndicator" style="display: none; text-align: center; padding: 2rem; color: var(--text-secondary);">
           <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">Cargando datos...</div>
           <div style="font-size: 0.8rem;">Por favor espera</div>
