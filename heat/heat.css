@@ -8,8 +8,10 @@
 .heat-layout {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   width: 100%;
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
 }
@@ -39,10 +41,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: clamp(1.25rem, 3vw, 2rem);
-  padding: clamp(1.25rem, 3.5vw, 3rem);
+  justify-content: flex-start;
+  min-width: 0;
+  max-height: 100vh;
+  max-height: 100dvh;
+  padding: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2.5rem) clamp(1rem, 2.5vw, 1.75rem);
   background: linear-gradient(to bottom right, var(--bg-green) 0%, #000000 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.heat-panel__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  gap: clamp(0.65rem, 1.8vw, 1.1rem);
+  margin-top: clamp(0.15rem, 1vw, 0.5rem);
+}
+
+.heat-header,
+.heat-matchup {
+  width: 100%;
+  max-width: 520px;
 }
 
 .heat-header {
@@ -55,10 +77,10 @@
 
 .heat-logo {
   display: block;
-  max-width: clamp(140px, 22vw, 220px);
+  max-width: clamp(130px, 20vw, 200px);
   width: 100%;
-  margin: 0 auto 0.75rem;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+  margin: 0 auto 0.45rem;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
 }
 
 .heat-eyebrow {
@@ -91,12 +113,64 @@
 }
 
 .heat-subtitle {
-  margin: 0.65rem 0 0;
-  font-size: clamp(0.85rem, 2vw, 1rem);
+  margin: 0.45rem 0 0;
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+/* Patrocinadores — grid estático como index */
+.heat-sponsors {
+  width: 90%;
+  text-align: center;
+  margin-top: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.heat-sponsors__title {
+  margin: 0 0 clamp(0.55rem, 1.5vw, 0.85rem);
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.heat-sponsors__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.45rem, 1.2vw, 0.75rem);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.heat-sponsors .patrocinador-logo-box.heat-sponsor-box {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: clamp(12px, 1.8vw, 16px);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.15), 0 1.5px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.heat-sponsors .heat-sponsor-box:hover {
+  transform: none;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.15), 0 1.5px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.heat-sponsors .heat-sponsor-box .patrocinador-logo-img {
+  display: block;
+  max-width: 82%;
+  max-height: 82%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: clamp(8px, 1.2vw, 12px);
+  box-shadow: 0 0 0 2px #fff, 0 2px 8px 0 rgba(0, 0, 0, 0.07);
 }
 
 .heat-matchup {
@@ -159,43 +233,24 @@
   border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.heat-wod-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin: 0;
-  font-size: clamp(0.78rem, 1.8vw, 0.9rem);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 0.03em;
-}
-
-.heat-wod-hint__arrow {
-  font-size: 1.1em;
-  color: rgba(255, 255, 255, 0.7);
-}
-
 .heat-panel--wod {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 0;
+  height: 100vh;
+  height: 100dvh;
   background: #000;
   overflow: hidden;
 }
 
 .heat-wod-frame {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .heat-wod-frame img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -203,13 +258,12 @@
 }
 
 /* ── Template trio (3 competidores) ── */
-.heat-page--trio {
-  overflow: auto;
+.heat-page--trio .heat-panel--athletes {
+  padding: clamp(0.65rem, 2vw, 1.25rem) clamp(1rem, 3.5vw, 2rem) clamp(0.85rem, 2vw, 1.5rem);
 }
 
-.heat-page--trio .heat-panel--athletes {
-  gap: clamp(0.85rem, 2vw, 1.5rem);
-  padding: clamp(1rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem);
+.heat-page--trio .heat-panel__inner {
+  gap: clamp(0.5rem, 1.5vw, 0.85rem);
 }
 
 .heat-page--trio .heat-logo {
@@ -297,10 +351,6 @@
     min-height: 55vh;
   }
 
-  .heat-wod-hint {
-    display: none;
-  }
-
   .heat-matchup {
     max-width: 100%;
     gap: 0.5rem;
@@ -311,7 +361,16 @@
   }
 
   .heat-page--trio .heat-panel--athletes {
-    padding: 1.25rem 1rem 1.75rem;
+    padding: 1rem 0.85rem 1.25rem;
+  }
+
+  .heat-sponsors {
+    width: 92%;
+  }
+
+  .heat-sponsors__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
   }
 
   .heat-matchup--trio {
@@ -360,7 +419,7 @@
 
 @media (min-width: 1920px) {
   .heat-panel--athletes {
-    padding: 4rem;
+    padding: 2rem 3.5rem 2.5rem;
   }
 
   .heat-athlete__card {

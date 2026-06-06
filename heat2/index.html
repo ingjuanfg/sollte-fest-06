@@ -15,25 +15,27 @@
 <body class="heat-page">
   <div class="heat-layout">
     <section class="heat-panel heat-panel--athletes" aria-labelledby="heatTitle">
-      <header class="heat-header">
-        <img
-          src="../assets/sollte_logo_nombre_icono.png"
-          alt="Sollte Fest"
-          class="heat-logo"
-          onerror="this.style.display='none'"
-        />
-        <p class="heat-eyebrow">Sollte Fest 07 — Mundialista</p>
-        <h1 class="heat-title" id="heatTitle">Heat</h1>
-        <p class="heat-category" id="heatCategory">Categoría</p>
-        <p class="heat-subtitle">Competidores de este heat</p>
-      </header>
+      <div class="heat-panel__inner">
+        <header class="heat-header">
+          <img
+            src="../assets/sollte_logo_nombre_icono.png"
+            alt="Sollte Fest"
+            class="heat-logo"
+            onerror="this.style.display='none'"
+          />
+          <p class="heat-eyebrow">Sollte Fest 07 — Mundialista</p>
+          <h1 class="heat-title" id="heatTitle">Heat</h1>
+          <p class="heat-category" id="heatCategory">Categoría</p>
+          <p class="heat-subtitle">Competidores de este heat</p>
+        </header>
 
-      <div class="heat-matchup" id="heatMatchup"></div>
+        <div class="heat-matchup" id="heatMatchup"></div>
 
-      <p class="heat-wod-hint">
-        <span class="heat-wod-hint__arrow" aria-hidden="true">→</span>
-        WOD asignado a la derecha
-      </p>
+        <section class="heat-sponsors" aria-label="Patrocinadores">
+          <p class="heat-sponsors__title">Nuestros Patrocinadores</p>
+          <div class="heat-sponsors__grid" id="heatSponsorsGrid"></div>
+        </section>
+      </div>
     </section>
 
     <section class="heat-panel heat-panel--wod" aria-label="WOD del heat">
