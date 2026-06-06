@@ -1,318 +1,438 @@
 // ====== CONFIG ======
-// Un CSV por categoría en /data. Deben existir los archivos referenciados.
 const CSV_LOCAL = {
-    "Hombres Principiantes": "data/Hombres Principiantes.csv",
-    "Mujeres Principiantes": "data/Mujeres Principiantes.csv",
-    "Hombres Intermedios":   "data/Hombres Intermedios.csv",
-    "Mujeres Avanzadas":     "data/Mujeres Avanzadas.csv",
-    "Hombres Avanzados":     "data/Hombres Avanzados.csv"
-  };
-  
-  // Columnas WOD que se sumarán si activas "Recalcular Total" (nombres normalizados).
-  const WOD_COLUMNS = ["wod1","wod2a","wod2b","wod3","wod4semifinal","wod5afinal","wod5bfinal"];
-  const PLACEHOLDER_MSG = 'Aquí podrás ver los resultados próximamente';
-  
-  // ====== DOM ======
-  const categoriaSelect = document.getElementById('categoriaSelect');
-  const tableHead       = document.getElementById('tableHead');
-  const tableBody       = document.getElementById('tableBody');
-  const reloadBtn       = document.getElementById('reloadBtn');
-  const lastUpdateSpan  = document.getElementById('lastUpdate');
-  const recalcularChk   = document.getElementById('recalcularTotal');
-  const loadingIndicator = document.getElementById('loadingIndicator');
-  const yearEl          = document.getElementById('year');
-  if(yearEl) yearEl.textContent = new Date().getFullYear();
-  
-  // INIT
-  document.addEventListener('DOMContentLoaded', init);
-  
-  function init(){
-    initCategoriaPicker();
-    reloadBtn.addEventListener('click', loadData);
-    recalcularChk.addEventListener('change', loadData);
+  "Hombres Principiantes": "data/Hombres Principiantes.csv",
+  "Mujeres Principiantes": "data/Mujeres Principiantes.csv",
+  "Hombres Intermedios":   "data/Hombres Intermedios.csv",
+  "Mujeres Avanzadas":     "data/Mujeres Avanzadas.csv",
+  "Hombres Avanzados":     "data/Hombres Avanzados.csv"
+};
+
+const PLACEHOLDER_MSG = 'Aquí podrás ver los resultados próximamente';
+
+const COUNTRY_FLAGS = {
+  'paises bajos': '🇳🇱',
+  'austria': '🇦🇹',
+  'francia': '🇫🇷',
+  'canada': '🇨🇦',
+  'jordania': '🇯🇴',
+  'irak': '🇮🇶',
+  'noruega': '🇳🇴',
+  'egipto': '🇪🇬',
+  'estados unidos': '🇺🇸',
+  'uruguay': '🇺🇾',
+  'suiza': '🇨🇭',
+  'argelia': '🇩🇿',
+  'panama': '🇵🇦',
+  'panamá': '🇵🇦',
+  'marruecos': '🇲🇦',
+  'belgica': '🇧🇪',
+  'bélgica': '🇧🇪',
+  'senegal': '🇸🇳',
+  'inglaterra': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  'mexico': '🇲🇽',
+  'méxico': '🇲🇽',
+  'sudafrica': '🇿🇦',
+  'sudáfrica': '🇿🇦',
+  'arabia': '🇸🇦',
+  'checa': '🇨🇿',
+  'republica checa': '🇨🇿',
+  'escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'portugal': '🇵🇹',
+  'uzbe': '🇺🇿',
+  'uzbekistan': '🇺🇿',
+  'haiti': '🇭🇹',
+  'nueva zelanda': '🇳🇿',
+  'curazao': '🇨🇼',
+  'curacao': '🇨🇼',
+  'japon': '🇯🇵',
+  'japón': '🇯🇵',
+  'espana': '🇪🇸',
+  'españa': '🇪🇸',
+  'ecuador': '🇪🇨',
+  'brasil': '🇧🇷',
+  'tunez': '🇹🇳',
+  'túnez': '🇹🇳',
+  'colombia': '🇨🇴',
+  'costa': '🇨🇷',
+  'costa rica': '🇨🇷',
+  'qatar': '🇶🇦',
+  'cabo': '🇨🇻',
+  'cabo verde': '🇨🇻',
+  'ghana': '🇬🇭',
+  'iran': '🇮🇷',
+  'irán': '🇮🇷'
+};
+
+const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+// ====== DOM ======
+const categoriaSelect = document.getElementById('categoriaSelect');
+const tableHead       = document.getElementById('tableHead');
+const tableBody       = document.getElementById('tableBody');
+const reloadBtn       = document.getElementById('reloadBtn');
+const lastUpdateSpan  = document.getElementById('lastUpdate');
+const loadingIndicator = document.getElementById('loadingIndicator');
+const tableHint        = document.getElementById('tableHint');
+const tableWrapper     = document.querySelector('.table-wrapper');
+const yearEl          = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+let resizeHintTimer;
+
+document.addEventListener('DOMContentLoaded', init);
+
+function init() {
+  initCategoriaPicker();
+  reloadBtn.addEventListener('click', loadData);
+  window.addEventListener('resize', scheduleTableHintUpdate);
+}
+
+function scheduleTableHintUpdate() {
+  clearTimeout(resizeHintTimer);
+  resizeHintTimer = setTimeout(updateTableScrollHint, 120);
+}
+
+function updateTableScrollHint() {
+  if (!tableHint || !tableWrapper) return;
+
+  const isNarrow = window.matchMedia('(max-width: 780px)').matches;
+  const isCompact = window.matchMedia('(max-width: 640px)').matches;
+  const scrollPart = tableHint.querySelector('.table-hint__scroll');
+  const hasData = tableBody.querySelector('tr.team-row');
+
+  if (!isNarrow || !hasData) {
+    tableHint.hidden = true;
+    tableWrapper.classList.remove('is-scrollable');
+    return;
   }
 
-  function initCategoriaPicker() {
-    const trigger = document.getElementById('categoriaTrigger');
-    const valueSpan = document.getElementById('categoriaValue');
-    const menu = document.getElementById('categoriaMenu');
-    if (!categoriaSelect || !trigger || !valueSpan || !menu) return;
+  tableHint.hidden = false;
+  const scrollable = !isCompact && tableWrapper.scrollWidth > tableWrapper.clientWidth + 2;
+  if (scrollPart) scrollPart.hidden = !scrollable;
+  tableWrapper.classList.toggle('is-scrollable', scrollable);
+}
 
-    Object.keys(CSV_LOCAL).forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat;
-      categoriaSelect.appendChild(opt);
+function initCategoriaPicker() {
+  const trigger = document.getElementById('categoriaTrigger');
+  const valueSpan = document.getElementById('categoriaValue');
+  const menu = document.getElementById('categoriaMenu');
+  if (!categoriaSelect || !trigger || !valueSpan || !menu) return;
 
-      const item = document.createElement('li');
-      item.role = 'option';
-      item.dataset.value = cat;
-      item.textContent = cat;
-      item.tabIndex = -1;
-      item.addEventListener('click', () => setCategoria(cat));
-      menu.appendChild(item);
+  Object.keys(CSV_LOCAL).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categoriaSelect.appendChild(opt);
+
+    const item = document.createElement('li');
+    item.role = 'option';
+    item.dataset.value = cat;
+    item.textContent = cat;
+    item.tabIndex = -1;
+    item.addEventListener('click', () => setCategoria(cat));
+    menu.appendChild(item);
+  });
+
+  function setCategoria(cat) {
+    categoriaSelect.value = cat;
+    valueSpan.textContent = cat;
+    menu.querySelectorAll('[role="option"]').forEach(item => {
+      const selected = item.dataset.value === cat;
+      item.classList.toggle('is-selected', selected);
+      item.setAttribute('aria-selected', selected);
     });
+    closeMenu();
+    loadData();
+  }
 
-    function setCategoria(cat) {
-      categoriaSelect.value = cat;
-      valueSpan.textContent = cat;
-      menu.querySelectorAll('[role="option"]').forEach(item => {
-        const selected = item.dataset.value === cat;
-        item.classList.toggle('is-selected', selected);
-        item.setAttribute('aria-selected', selected);
-      });
+  function openMenu() {
+    menu.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleMenu() {
+    if (menu.hidden) openMenu();
+    else closeMenu();
+  }
+
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  document.addEventListener('click', e => {
+    if (!menu.hidden && !document.getElementById('categoriaPicker').contains(e.target)) {
       closeMenu();
-      loadData();
     }
+  });
 
-    function openMenu() {
-      menu.hidden = false;
-      trigger.setAttribute('aria-expanded', 'true');
-    }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
 
-    function closeMenu() {
-      menu.hidden = true;
-      trigger.setAttribute('aria-expanded', 'false');
-    }
+  setCategoria(Object.keys(CSV_LOCAL)[0]);
+}
 
-    function toggleMenu() {
-      if (menu.hidden) openMenu();
-      else closeMenu();
-    }
+async function loadData() {
+  const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
+  const url = CSV_LOCAL[categoria];
 
-    trigger.addEventListener('click', e => {
-      e.stopPropagation();
-      toggleMenu();
-    });
+  showLoading(true);
 
-    document.addEventListener('click', e => {
-      if (!menu.hidden && !document.getElementById('categoriaPicker').contains(e.target)) {
-        closeMenu();
-      }
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeMenu();
-    });
-
-    setCategoria(Object.keys(CSV_LOCAL)[0]);
+  try {
+    const res = await fetch(url + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const parsed = parseResultsCSV(text);
+    renderTable(parsed);
+    lastUpdateSpan.textContent = `Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
+  } catch (err) {
+    console.error(err);
+    showPlaceholderMessage();
+  } finally {
+    showLoading(false);
   }
-  
-  async function loadData(){
-    const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
-    const url = CSV_LOCAL[categoria];
-    
-    // Mostrar indicador de carga
-    showLoading(true);
-    
-    try {
-      const res = await fetch(url + '?t=' + Date.now()); // evitar cache
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-      const text = await res.text();
-      const rows = parseCSV(text);
-      renderTable(rows);
-      lastUpdateSpan.textContent = `Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
-    } catch(err){
-      console.error(err);
-      showPlaceholderMessage();
-    } finally {
-      showLoading(false);
-    }
-  }
-  
-  function showPlaceholderMessage() {
-    tableHead.innerHTML = '';
-    tableBody.innerHTML = `<tr><td colspan="3" class="results-placeholder">${PLACEHOLDER_MSG}</td></tr>`;
-    if (lastUpdateSpan) lastUpdateSpan.textContent = '—';
-  }
+}
 
-  function showLoading(show) {
-    if (loadingIndicator) {
-      loadingIndicator.style.display = show ? 'block' : 'none';
-    }
-    if (reloadBtn) {
-      reloadBtn.disabled = show;
-      reloadBtn.style.opacity = show ? '0.5' : '1';
-    }
+function showPlaceholderMessage() {
+  tableHead.innerHTML = '';
+  tableBody.innerHTML = `<tr><td colspan="8" class="results-placeholder">${PLACEHOLDER_MSG}</td></tr>`;
+  if (lastUpdateSpan) lastUpdateSpan.textContent = '—';
+  updateTableScrollHint();
+}
+
+function showLoading(show) {
+  if (loadingIndicator) {
+    loadingIndicator.style.display = show ? 'block' : 'none';
   }
-  
-  // ====== CSV PARSER ======
-  function parseCSV(text){
-    const lines = text.trim().split(/\r?\n/);
-    if(lines.length===0) return [];
-    const headers = lines[0].split(',').map(h=>normalize(h));
-    return lines.slice(1)
-      .filter(l=>l.trim().length>0)
-      .map(line=>{
-        const cells = splitCSV(line);
-        const obj = {};
-        headers.forEach((h,i)=> obj[h] = (cells[i] ?? '').trim());
-        return obj;
-      });
+  if (reloadBtn) {
+    reloadBtn.disabled = show;
+    reloadBtn.style.opacity = show ? '0.5' : '1';
   }
-  
-  function normalize(h){
-    return h.toLowerCase()
-            .replace(/\s+/g,'')
-            .replace(/[^a-z0-9]/g,'');
-  }
-  
-  function splitCSV(line){
-    const out=[]; let cur=''; let q=false;
-    for(let i=0;i<line.length;i++){
-      const c=line[i];
-      if(c==='"'){ 
-        if(q && line[i+1]==='"'){ cur+='"'; i++; }
-        else { q=!q; }
-      } else if(c===',' && !q){
-        out.push(cur); cur='';
+}
+
+// ====== CSV PARSER ======
+function parseCSVRows(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (c === '"') {
+      if (inQuotes && text[i + 1] === '"') {
+        cell += '"';
+        i++;
       } else {
-        cur+=c;
+        inQuotes = !inQuotes;
       }
+    } else if (c === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+    } else if ((c === '\n' || c === '\r') && !inQuotes) {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell);
+      if (row.some(v => String(v).trim().length > 0)) rows.push(row);
+      row = [];
+      cell = '';
+    } else {
+      cell += c;
     }
-    out.push(cur);
-    return out;
   }
-  
-  // ====== RENDER ======
-  function renderTable(rows){
-    if(rows.length===0){
-      showPlaceholderMessage();
-      return;
-    }
-    const cols = Object.keys(rows[0]);
-    const equipoKey = cols.find(c=>/equipo|team/.test(c)) || cols[0];
-    const totalKey  = cols.find(c=>/total/.test(c));
 
-    // Identificar filas con 'D' en cualquier columna de WOD
-    const descalificados = [];
-    const clasificados = [];
-    rows.forEach(r => {
-      const tieneD = WOD_COLUMNS.some(k => r[k] && r[k].toString().trim().toUpperCase() === 'D');
-      if (tieneD) {
-        descalificados.push(r);
-      } else {
-        clasificados.push(r);
-      }
-    });
-
-    if(recalcularChk.checked){
-      clasificados.forEach(r=>{
-        r.__total = WOD_COLUMNS.reduce((acc,k)=>{
-          const val = parseFloat(r[k]);
-          return acc + (isNaN(val)?0:val);
-        },0);
-      });
-    }
-
-    // Ordenar de menor a mayor puntos (mejor puntuación primero)
-    clasificados.sort((a,b)=>{
-      const ta = parseFloat(recalcularChk.checked ? a.__total : (a[totalKey]||0));
-      const tb = parseFloat(recalcularChk.checked ? b.__total : (b[totalKey]||0));
-      if(isNaN(ta) && isNaN(tb)) return 0;
-      if(isNaN(ta)) return 1;
-      if(isNaN(tb)) return -1;
-      return ta - tb;
-    });
-
-    // Concatenar clasificados + descalificados
-    const allRows = [...clasificados, ...descalificados];
-
-    tableHead.innerHTML = `<tr><th>#</th><th>EQUIPO</th><th>TOTAL</th></tr>`;
-    let tableHTML = '';
-    allRows.forEach((r, i) => {
-      const rank = i + 1;
-      const tval = descalificados.includes(r) ? 'NA' : (recalcularChk.checked ? r.__total : r[totalKey]);
-      const badge = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
-      const teamName = r[equipoKey] || 'Sin nombre';
-      const rowClass = descalificados.includes(r) ? 'descalificado-row' : '';
-      
-      // Determinar categoría y puestos clasificados
-      const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
-      let clasificadosHasta = 3;
-      if (categoria === 'Mujeres Avanzadas') clasificadosHasta = 6;
-      
-      // Banner Lider solo para el primer puesto y no descalificado
-      const leaderBanner = (rank === 1 && !descalificados.includes(r)) ? `<span class='leader-banner'><span class='leader-ribbon'>Lider</span></span>` : '';
-      // Banner Clasificado para los puestos clasificados y no descalificados
-      const classificadoBanner = (rank <= clasificadosHasta && !descalificados.includes(r)) ? `<span class='classificado-banner'><span class='classificado-ribbon'>Clasificado</span></span>` : '';
-      
-      tableHTML += `
-        <tr class="team-row ${rowClass}" data-team-index="${i}">
-          <td><span class="rank-badge ${badge}">${rank}</span></td>
-          <td>
-            <span class="team-name" onclick="toggleTeamDetails(${i})">
-              <span class="expand-icon" id="expand-${i}">▶</span>
-              ${teamName}${leaderBanner}${classificadoBanner}
-            </span>
-          </td>
-          <td><strong>${tval === undefined ? 0 : tval}</strong></td>
-        </tr>
-      `;
-      
-      // Fila desplegable con detalles de WODs
-      const wodDetails = WOD_COLUMNS.filter(c => cols.includes(c) && r[c] && r[c] !== '');
-      if (wodDetails.length > 0) {
-        tableHTML += `
-          <tr class="wod-details ${rowClass}" id="wod-details-${i}">
-            <td colspan="3">
-              <div style="padding: 0.5rem 0;">
-                <strong>Resultados por WOD:</strong><br>
-                ${wodDetails.map(wod => {
-                  const wodName = formatHeader(wod);
-                  const wodValue = r[wod];
-                  return `<span style="display: inline-block; margin: 0.25rem 0.5rem; padding: 0.25rem 0.5rem; background: #e9ecef; border-radius: 4px; font-size: 0.8rem;">
-                    <strong>${wodName}:</strong> ${wodValue}
-                  </span>`;
-                }).join('')}
-              </div>
-            </td>
-          </tr>
-        `;
-      }
-    });
-    
-    tableBody.innerHTML = tableHTML;
+  if (cell.length || row.length) {
+    row.push(cell);
+    if (row.some(v => String(v).trim().length > 0)) rows.push(row);
   }
-  
-  function formatHeader(k){
-    if(k==='__total') return 'TOTAL';
-    return k
-      .replace(/^wod/,'WOD ')
-      .replace('2a','2A')
-      .replace('2b','2B')
-      .replace('wod4semifinal','WOD 4 Semifinal')
-      .replace('wod5afinal','WOD 5A Final')
-      .replace('wod5bfinal','WOD 5B Final')
-      .toUpperCase()
-      .replace(/EQUIPO|TEAM/,'EQUIPO');
+
+  return rows;
+}
+
+function parseResultsCSV(text) {
+  const rows = parseCSVRows(text.trim());
+  if (rows.length < 3) return { athletes: [], wodNames: [] };
+
+  const headerRow = rows[0].map(h => h.trim());
+  const wodNames = [];
+
+  for (let i = 2; i < headerRow.length; i++) {
+    if (headerRow[i]) wodNames.push(headerRow[i]);
   }
-  
-  // Función global para alternar detalles del equipo
-  window.toggleTeamDetails = function(teamIndex) {
-    const detailsRow = document.getElementById(`wod-details-${teamIndex}`);
-    const expandIcon = document.getElementById(`expand-${teamIndex}`);
-    
-    if (detailsRow) {
-      const isVisible = detailsRow.classList.contains('show');
-      
-      if (isVisible) {
-        detailsRow.classList.remove('show');
-        expandIcon.classList.remove('expanded');
-      } else {
-        detailsRow.classList.add('show');
-        expandIcon.classList.add('expanded');
+
+  const athletes = rows.slice(2)
+    .map(cells => {
+      const values = cells.map(v => String(v).trim());
+      if (!values[0]) return null;
+
+      const wods = [];
+      let col = 2;
+
+      for (let w = 0; w < wodNames.length; w++) {
+        wods.push({
+          name: wodNames[w],
+          puntos: values[col] ?? '',
+          detalle: values[col + 1] ?? ''
+        });
+        col += 2;
       }
-    }
-  };
-  
+
+      const total = wods.reduce((sum, wod) => {
+        const pts = parseFloat(wod.puntos);
+        return sum + (isNaN(pts) ? 0 : pts);
+      }, 0);
+
+      return {
+        atleta: values[0],
+        pais: values[1] ?? '',
+        wods,
+        total
+      };
+    })
+    .filter(Boolean);
+
+  athletes.sort((a, b) => a.total - b.total);
+
+  return { athletes, wodNames };
+}
+
+// ====== RENDER ======
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatDetalle(text) {
+  return escapeHtml(text).replace(/\r?\n/g, '<br>');
+}
+
+function normalizeCountryKey(pais) {
+  return pais
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function getCountryFlag(pais) {
+  const key = normalizeCountryKey(pais);
+  return COUNTRY_FLAGS[key] || '🏳️';
+}
+
+function formatWodPosition(puntos) {
+  const n = parseInt(puntos, 10);
+  if (isNaN(n)) return '—';
+  return `${n}º`;
+}
+
+function renderTable({ athletes, wodNames }) {
+  if (!athletes.length) {
+    showPlaceholderMessage();
+    return;
+  }
+
+  const colCount = 4 + wodNames.length;
+
+  const headCells = [
+    '<th class="col-pos"><span class="th-full">Posición</span><span class="th-short">#</span></th>',
+    '<th class="col-name"><span class="th-full">Nombre</span><span class="th-short">Atleta</span></th>',
+    '<th class="col-country"><span class="th-full">País</span><span class="th-short" aria-hidden="true">🌐</span></th>',
+    '<th class="col-puntos"><span class="th-full">Puntos</span><span class="th-short">Pts</span></th>',
+    ...wodNames.map(name => `<th class="col-wod">${escapeHtml(name)}</th>`)
+  ];
+
+  tableHead.innerHTML = `<tr>${headCells.join('')}</tr>`;
+
+  let tableHTML = '';
+
+  athletes.forEach((athlete, index) => {
+    const rank = index + 1;
+    const medal = RANK_MEDALS[rank] || '';
+    const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+    const flag = getCountryFlag(athlete.pais);
+
+    const wodCells = athlete.wods.map(wod =>
+      `<td class="wod-pos-cell">${formatWodPosition(wod.puntos)}</td>`
+    ).join('');
+
+    tableHTML += `
+      <tr class="team-row" data-team-index="${index}">
+        <td class="pos-cell">
+          <span class="rank-badge ${rankClass}">${rank}</span>
+          ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
+        </td>
+        <td>
+          <button type="button" class="team-name" onclick="toggleTeamDetails(${index})" aria-expanded="false" id="team-btn-${index}">
+            <span class="expand-icon" id="expand-${index}" aria-hidden="true">▶</span>
+            <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
+          </button>
+        </td>
+        <td class="country-cell">
+          <span class="country-flag" title="${escapeHtml(athlete.pais)}">${flag}</span>
+        </td>
+        <td class="points-cell"><strong>${athlete.total}</strong></td>
+        ${wodCells}
+      </tr>
+      <tr class="wod-details" id="wod-details-${index}">
+        <td colspan="${colCount}">
+          <div class="wod-details-panel">
+            ${athlete.wods.map(wod => `
+              <p class="wod-detail-line">
+                <span class="wod-detail-line__name">${escapeHtml(wod.name)}</span>
+                <span class="wod-detail-line__pos"> (${formatWodPosition(wod.puntos)})</span>
+                <span class="wod-detail-line__sep"> — </span>
+                <span class="wod-detail-line__value">${formatDetalle(wod.detalle)}</span>
+              </p>
+            `).join('')}
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableBody.innerHTML = tableHTML;
+  requestAnimationFrame(updateTableScrollHint);
+}
+
+window.toggleTeamDetails = function(teamIndex) {
+  const detailsRow = document.getElementById(`wod-details-${teamIndex}`);
+  const expandIcon = document.getElementById(`expand-${teamIndex}`);
+  const teamBtn = document.getElementById(`team-btn-${teamIndex}`);
+  const mainRow = document.querySelector(`tr.team-row[data-team-index="${teamIndex}"]`);
+
+  if (!detailsRow) return;
+
+  const isVisible = detailsRow.classList.contains('show');
+
+  if (isVisible) {
+    detailsRow.classList.remove('show');
+    expandIcon?.classList.remove('expanded');
+    teamBtn?.setAttribute('aria-expanded', 'false');
+    mainRow?.classList.remove('team-row--expanded');
+  } else {
+    detailsRow.classList.add('show');
+    expandIcon?.classList.add('expanded');
+    teamBtn?.setAttribute('aria-expanded', 'true');
+    mainRow?.classList.add('team-row--expanded');
+  }
+};
+
 // ====== PATROCINADORES ======
 document.addEventListener('DOMContentLoaded', cargarPatrocinadores);
 
 function cargarPatrocinadores() {
   const grid = document.getElementById('patrocinadoresGrid');
   if (!grid) return;
-  // Lista de archivos detectados en la carpeta (puedes agregar más si subes nuevos logos)
+
   const logos = [
     'Equimovi.jpeg',
     'Imagen1.png',
@@ -321,10 +441,10 @@ function cargarPatrocinadores() {
     'intellygence.png',
     'mues.png'
   ];
+
   grid.innerHTML = logos.map(file => `
     <div class="patrocinador-logo-box">
       <img src="assets/patrocinadores/${file}" alt="Patrocinador" class="patrocinador-logo-img" loading="lazy" />
     </div>
   `).join('');
 }
-  
