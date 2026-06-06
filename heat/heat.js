@@ -33,9 +33,29 @@ const HEAT_CATEGORIES = [
   { from: 13, to: 15, label: 'Categoría Hombres Avanzados' }
 ];
 
-function getHeatNumber() {
+const TOTAL_HEATS = Object.keys(HEAT_IMAGES).length;
+
+function isWodViewer() {
+  return /\/wod1\/?$/i.test(window.location.pathname);
+}
+
+function getHeatFromUrl() {
   const match = window.location.pathname.match(/\/heat(\d+)\/?/i);
   return match ? Number(match[1]) : null;
+}
+
+function getInitialHeatFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = Number(params.get('heat'));
+  if (fromQuery >= 1 && fromQuery <= TOTAL_HEATS) return fromQuery;
+
+  const hashMatch = window.location.hash.match(/^#(\d+)/);
+  if (hashMatch) {
+    const fromHash = Number(hashMatch[1]);
+    if (fromHash >= 1 && fromHash <= TOTAL_HEATS) return fromHash;
+  }
+
+  return 1;
 }
 
 function getCategory(heatNum) {
@@ -92,33 +112,11 @@ function renderMatchup(heatNum, images) {
   matchup.appendChild(createAthlete(heatNum, images[1]));
 }
 
-function initSponsorsGrid() {
-  const grid = document.getElementById('heatSponsorsGrid');
-  if (!grid || !SPONSOR_LOGOS.length) return;
-
-  grid.innerHTML = SPONSOR_LOGOS.map(file => `
-    <div class="patrocinador-logo-box heat-sponsor-box">
-      <img
-        src="../assets/patrocinadores/${encodeURIComponent(file)}"
-        alt="Patrocinador"
-        class="patrocinador-logo-img"
-        loading="lazy"
-      />
-    </div>
-  `).join('');
-}
-
-function initHeatPage() {
-  const heatNum = getHeatNumber();
-  const images = heatNum ? HEAT_IMAGES[heatNum] : null;
-
-  if (!heatNum || !images || !images.length) {
-    document.body.innerHTML = '<main style="color:#fff;padding:2rem;text-align:center;">Heat no encontrado.</main>';
-    return;
-  }
-
+function updatePageMeta(heatNum) {
   const category = getCategory(heatNum);
-  const title = `Heat ${heatNum} — Sollte Fest 07`;
+  const title = isWodViewer()
+    ? `WOD 1 — Heat ${heatNum} — Sollte Fest 07`
+    : `Heat ${heatNum} — Sollte Fest 07`;
 
   document.title = title;
 
@@ -132,9 +130,97 @@ function initHeatPage() {
 
   if (heatTitle) heatTitle.textContent = `Heat ${heatNum}`;
   if (heatCategory) heatCategory.textContent = category;
+}
 
+function updatePager(heatNum) {
+  const indicator = document.getElementById('heatIndicator');
+  const prevBtn = document.getElementById('heatPrev');
+  const nextBtn = document.getElementById('heatNext');
+
+  if (indicator) indicator.textContent = `${heatNum} / ${TOTAL_HEATS}`;
+  if (prevBtn) prevBtn.disabled = false;
+  if (nextBtn) nextBtn.disabled = false;
+}
+
+function updateViewerUrl(heatNum) {
+  if (!isWodViewer()) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set('heat', String(heatNum));
+  window.history.replaceState({ heat: heatNum }, '', url);
+}
+
+function renderHeat(heatNum) {
+  const images = HEAT_IMAGES[heatNum];
+  if (!images || !images.length) return false;
+
+  updatePageMeta(heatNum);
   renderMatchup(heatNum, images);
+  updatePager(heatNum);
+  updateViewerUrl(heatNum);
+  return true;
+}
+
+function initSponsorsGrid() {
+  const grid = document.getElementById('heatSponsorsGrid');
+  if (!grid || !SPONSOR_LOGOS.length || grid.childElementCount > 0) return;
+
+  grid.innerHTML = SPONSOR_LOGOS.map(file => `
+    <div class="patrocinador-logo-box heat-sponsor-box">
+      <img
+        src="../assets/patrocinadores/${encodeURIComponent(file)}"
+        alt="Patrocinador"
+        class="patrocinador-logo-img"
+        loading="lazy"
+      />
+    </div>
+  `).join('');
+}
+
+function initWodViewer() {
+  let currentHeat = getInitialHeatFromQuery();
+
+  const prevBtn = document.getElementById('heatPrev');
+  const nextBtn = document.getElementById('heatNext');
+
+  function goTo(target) {
+    let heatNum = target;
+    if (heatNum < 1) heatNum = TOTAL_HEATS;
+    if (heatNum > TOTAL_HEATS) heatNum = 1;
+    if (!renderHeat(heatNum)) return;
+    currentHeat = heatNum;
+  }
+
+  prevBtn?.addEventListener('click', () => goTo(currentHeat - 1));
+  nextBtn?.addEventListener('click', () => goTo(currentHeat + 1));
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft') goTo(currentHeat - 1);
+    if (event.key === 'ArrowRight') goTo(currentHeat + 1);
+  });
+
   initSponsorsGrid();
+  goTo(currentHeat);
+}
+
+function initSingleHeatPage() {
+  const heatNum = getHeatFromUrl();
+  const images = heatNum ? HEAT_IMAGES[heatNum] : null;
+
+  if (!heatNum || !images || !images.length) {
+    document.body.innerHTML = '<main style="color:#fff;padding:2rem;text-align:center;">Heat no encontrado.</main>';
+    return;
+  }
+
+  renderHeat(heatNum);
+  initSponsorsGrid();
+}
+
+function initHeatPage() {
+  if (isWodViewer()) {
+    initWodViewer();
+    return;
+  }
+  initSingleHeatPage();
 }
 
 document.addEventListener('DOMContentLoaded', initHeatPage);
