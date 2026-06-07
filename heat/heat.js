@@ -1,19 +1,19 @@
 const HEAT_IMAGES = {
-  1: ['panama.png', 'marruecos.png'],
-  2: ['belgica.png', 'senegal.png'],
-  3: ['austria.png', 'bajos.png', 'francia.png'],
-  4: ['canada.png', 'irak.png', 'jordania.png'],
-  5: ['eeuu.png', 'egipto.png', 'noruega.png'],
-  6: ['argelia.png', 'suiza.png', 'uruguay.png'],
+  1: ['belgica.png', 'senegal.png'],
+  2: ['panama.png', 'marruecos.png'],
+  3: ['jordania.png', 'suiza.png', 'uruguay.png'],
+  4: ['austria.png', 'eeuu.png', 'irak.png'],
+  5: ['bajos.png', 'canada.png', 'francia.png'],
+  6: ['argelia.png', 'egipto.png', 'noruega.png'],
   7: ['arabia.png', 'checa.png'],
   8: ['escocia.png', 'portugal.png', 'uzbe.png'],
   9: ['haiti.png', 'nueva zelanda.png'],
-  10: ['curazao.png', 'japon.png'],
-  11: ['espana.png', 'sudafrica.png'],
+  10: ['japon.png', 'mexico.png'],
+  11: ['curazao.png', 'inglaterra.png', 'sudafrica.png'],
   12: ['inglaterra.png', 'mexico.png', 'sudafrica.png'],
-  13: ['brasil.png', 'tiben.png', 'tunez.png'],
-  14: ['colombia.png', 'costa.png', 'qatar.png'],
-  15: ['cabo.png', 'ghana.png', 'iran.png']
+  13: ['brasil.png', 'iran.png', 'tiben.png'],
+  14: ['cabo.png', 'colombia.png', 'qatar.png'],
+  15: ['costa.png', 'ghana.png', 'tunez.png']
 };
 
 const SPONSOR_LOGOS = [
