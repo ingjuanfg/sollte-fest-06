@@ -103,7 +103,8 @@
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
 }
 
-.heat-semifinal {
+.heat-semifinal,
+.heat-final-label {
   margin: 0.15rem 0 0.35rem;
   font-size: clamp(2.6rem, 7.5vw, 4.75rem);
   font-weight: 900;
@@ -337,7 +338,8 @@
   margin-bottom: 0.5rem;
 }
 
-.heat-page--trio .heat-semifinal {
+.heat-page--trio .heat-semifinal,
+.heat-page--trio .heat-final-label {
   font-size: clamp(2.1rem, 6vw, 3.75rem);
 }
 
@@ -460,7 +462,8 @@
 }
 
 @media (min-width: 1600px) {
-  .heat-semifinal {
+  .heat-semifinal,
+  .heat-final-label {
     font-size: 5.25rem;
   }
 
@@ -516,15 +519,108 @@
   }
 }
 
-/* ── WOD viewer (/wod1) — panel semifinal premium ── */
+/* ── Final: 2 | copa | 2 ── */
+.heat-matchup--final {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.2rem, 0.8vw, 0.55rem);
+  width: 100%;
+  max-width: min(96vw, 540px);
+}
+
+.heat-matchup__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.35rem, 1vw, 0.65rem);
+}
+
+.heat-matchup__side--left {
+  align-items: flex-end;
+}
+
+.heat-matchup__side--right {
+  align-items: flex-start;
+}
+
+.heat-trophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
+  padding: 0;
+  z-index: 1;
+  background: transparent;
+}
+
+.heat-trophy__img {
+  display: block;
+  width: clamp(88px, 17vw, 155px);
+  height: auto;
+  max-height: clamp(120px, 22vh, 200px);
+  object-fit: contain;
+  object-position: center;
+  mix-blend-mode: screen;
+}
+
+.heat-page--final .heat-athlete__card {
+  max-width: clamp(68px, 13vw, 110px);
+}
+
+.heat-page--final .heat-athlete__card img {
+  border-radius: clamp(8px, 1.2vw, 12px);
+}
+
+/* ── WOD viewer (/wod1) — panel final premium, sin scroll ── */
+.heat-page--wod-viewer .heat-panel--athletes {
+  overflow: hidden;
+  padding: clamp(0.45rem, 1.2vw, 0.85rem) clamp(0.65rem, 2vw, 1.25rem);
+}
+
+.heat-page--wod-viewer .heat-panel__inner {
+  height: 100%;
+  max-height: 100%;
+  margin-top: 0;
+  gap: clamp(0.35rem, 1vh, 0.55rem);
+}
+
+.heat-page--wod-viewer .heat-panel--final,
 .heat-page--wod-viewer .heat-panel--semifinal {
+  overflow: hidden;
+}
+
+.heat-page--wod-viewer .heat-panel__inner--final,
+.heat-page--wod-viewer .heat-panel__inner--semifinal {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(0.35rem, 1vh, 0.65rem);
+  padding: clamp(0.45rem, 1.2vw, 0.85rem) clamp(0.55rem, 1.5vw, 1rem);
+  border: 1px solid rgba(255, 215, 120, 0.28);
+  border-radius: clamp(14px, 2vw, 22px);
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    0 0 50px rgba(255, 190, 60, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.heat-page--wod-viewer .heat-panel--final {
   background:
-    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255, 200, 80, 0.18), transparent 55%),
-    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(12, 77, 53, 0.45), transparent 60%),
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255, 200, 80, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(12, 77, 53, 0.5), transparent 60%),
     linear-gradient(165deg, #0e5238 0%, #062318 42%, #010806 100%);
 }
 
-.heat-page--wod-viewer .heat-panel--semifinal::before {
+.heat-page--wod-viewer .heat-panel--final::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -533,87 +629,100 @@
       -45deg,
       transparent,
       transparent 28px,
-      rgba(255, 215, 120, 0.025) 28px,
-      rgba(255, 215, 120, 0.025) 29px
+      rgba(255, 215, 120, 0.03) 28px,
+      rgba(255, 215, 120, 0.03) 29px
     );
   pointer-events: none;
   z-index: 0;
 }
 
-.heat-page--wod-viewer .heat-panel__inner--semifinal {
-  position: relative;
-  z-index: 1;
-  padding: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
-  border: 1px solid rgba(255, 215, 120, 0.22);
-  border-radius: clamp(16px, 2.5vw, 24px);
-  background: rgba(0, 0, 0, 0.22);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 20px 50px rgba(0, 0, 0, 0.45),
-    0 0 60px rgba(255, 190, 60, 0.08);
-  backdrop-filter: blur(6px);
-}
-
-.heat-semifinal-frame {
+.heat-final-frame {
   position: absolute;
-  inset: clamp(0.35rem, 1.2vw, 0.65rem);
+  inset: clamp(0.3rem, 1vw, 0.55rem);
   pointer-events: none;
   z-index: 2;
 }
 
-.heat-semifinal-corner {
+.heat-final-corner {
   position: absolute;
-  width: clamp(28px, 4vw, 44px);
-  height: clamp(28px, 4vw, 44px);
-  border-color: rgba(255, 210, 90, 0.75);
+  width: clamp(24px, 3.5vw, 40px);
+  height: clamp(24px, 3.5vw, 40px);
+  border-color: rgba(255, 210, 90, 0.8);
   border-style: solid;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-.heat-semifinal-corner--tl {
+.heat-final-corner--tl {
   top: 0;
   left: 0;
   border-width: 3px 0 0 3px;
   border-radius: 6px 0 0 0;
 }
 
-.heat-semifinal-corner--tr {
+.heat-final-corner--tr {
   top: 0;
   right: 0;
   border-width: 3px 3px 0 0;
   border-radius: 0 6px 0 0;
 }
 
-.heat-semifinal-corner--bl {
+.heat-final-corner--bl {
   bottom: 0;
   left: 0;
   border-width: 0 0 3px 3px;
   border-radius: 0 0 0 6px;
 }
 
-.heat-semifinal-corner--br {
+.heat-final-corner--br {
   bottom: 0;
   right: 0;
   border-width: 0 3px 3px 0;
   border-radius: 0 0 6px 0;
 }
 
-.heat-page--wod-viewer .heat-semifinal {
+.heat-page--wod-viewer .heat-final-label {
   background: linear-gradient(180deg, #fff6cc 0%, #ffd966 35%, #e6b422 70%, #c9971a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   filter: drop-shadow(0 4px 18px rgba(255, 200, 60, 0.45));
   letter-spacing: 0.16em;
+  margin: 0;
+  font-size: clamp(2rem, 5.5vh, 3.25rem);
+  line-height: 1;
+}
+
+.heat-page--wod-viewer .heat-header--final,
+.heat-page--wod-viewer .heat-header {
+  flex-shrink: 0;
+}
+
+.heat-page--wod-viewer .heat-header::before {
+  content: "★ GRAN FINAL ★";
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: clamp(0.58rem, 1.2vh, 0.72rem);
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  color: rgba(255, 215, 120, 0.78);
+}
+
+.heat-page--wod-viewer .heat-logo--final,
+.heat-page--wod-viewer .heat-logo {
+  max-width: clamp(90px, 14vh, 140px);
+  margin-bottom: 0.2rem;
+}
+
+.heat-page--wod-viewer .heat-eyebrow {
+  margin: 0;
+  font-size: clamp(0.6rem, 1.2vh, 0.72rem);
 }
 
 .heat-page--wod-viewer .heat-heat-num {
   color: #fff;
-  letter-spacing: 0.2em;
-  font-size: clamp(1.25rem, 3.5vw, 1.95rem);
-  position: relative;
-  display: inline-block;
-  padding: 0.15rem 0;
+  letter-spacing: 0.18em;
+  font-size: clamp(1rem, 2.8vh, 1.55rem);
+  margin: 0.15rem 0 0;
 }
 
 .heat-page--wod-viewer .heat-heat-num::after {
@@ -621,43 +730,53 @@
   display: block;
   width: 100%;
   height: 2px;
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   background: linear-gradient(90deg, transparent, rgba(255, 210, 90, 0.85), transparent);
 }
 
 .heat-page--wod-viewer .heat-category {
-  font-size: clamp(0.88rem, 2vw, 1.2rem);
+  font-size: clamp(0.75rem, 1.6vh, 0.95rem);
   color: rgba(255, 255, 255, 0.82);
-  letter-spacing: 0.03em;
+  margin-top: 0.2rem;
+  max-width: none;
 }
 
-.heat-page--wod-viewer .heat-header::before {
-  content: "★ RONDA ELIMINATORIA ★";
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: clamp(0.62rem, 1.4vw, 0.78rem);
-  font-weight: 800;
-  letter-spacing: 0.28em;
-  color: rgba(255, 215, 120, 0.75);
+.heat-page--wod-viewer .heat-matchup--final {
+  flex: 1;
+  min-height: 0;
+  max-width: 100%;
+  align-self: center;
+  margin: 0;
+  gap: clamp(0.15rem, 0.6vh, 0.35rem);
+}
+
+.heat-page--wod-viewer .heat-trophy {
+  filter: drop-shadow(0 0 18px rgba(255, 200, 70, 0.35));
+}
+
+.heat-page--wod-viewer .heat-trophy__img {
+  width: clamp(78px, 14vh, 128px);
+  max-height: clamp(110px, 20vh, 175px);
 }
 
 .heat-page--wod-viewer .heat-athlete__card {
-  padding: clamp(3px, 0.5vw, 5px);
+  padding: clamp(2px, 0.4vw, 4px);
   background: linear-gradient(145deg, #ffe082, #ffd54f, #ffb300, #ffd54f, #ffe082);
-  border-radius: clamp(14px, 2.2vw, 20px);
+  border-radius: clamp(10px, 1.6vw, 14px);
   overflow: visible;
+  max-width: clamp(58px, 11vh, 88px);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.35),
-    0 0 28px rgba(255, 190, 60, 0.35),
-    0 18px 42px rgba(0, 0, 0, 0.55);
+    0 0 20px rgba(255, 190, 60, 0.3),
+    0 10px 24px rgba(0, 0, 0, 0.5);
 }
 
 .heat-page--wod-viewer .heat-athlete__card::before {
   content: "";
   position: absolute;
-  inset: clamp(5px, 0.7vw, 8px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: clamp(10px, 1.6vw, 14px);
+  inset: clamp(4px, 0.6vw, 6px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: clamp(7px, 1.2vw, 10px);
   pointer-events: none;
   z-index: 2;
 }
@@ -669,40 +788,26 @@
   border-radius: inherit;
   background: linear-gradient(
     125deg,
-    rgba(255, 255, 255, 0.35) 0%,
-    transparent 35%,
+    rgba(255, 255, 255, 0.32) 0%,
+    transparent 40%,
     transparent 65%,
-    rgba(255, 255, 255, 0.12) 100%
+    rgba(255, 255, 255, 0.1) 100%
   );
   pointer-events: none;
   z-index: 3;
 }
 
-.heat-page--wod-viewer .heat-athlete__card img {
-  border-radius: clamp(10px, 1.6vw, 14px);
-  position: relative;
-  z-index: 1;
-}
-
-.heat-page--wod-viewer .heat-athlete__card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.5),
-    0 0 40px rgba(255, 200, 60, 0.5),
-    0 24px 50px rgba(0, 0, 0, 0.6);
-}
-
-.heat-page--wod-viewer .heat-vs__badge {
-  background: linear-gradient(145deg, #ffe082, #ffb300);
-  color: #1a1200;
-  border-color: rgba(255, 255, 255, 0.45);
-  box-shadow:
-    0 0 20px rgba(255, 190, 60, 0.4),
-    0 4px 16px rgba(0, 0, 0, 0.4);
-  font-weight: 900;
+.heat-page--wod-viewer .heat-pager--final,
+.heat-page--wod-viewer .heat-pager {
+  flex-shrink: 0;
+  margin: 0;
+  max-width: 100%;
 }
 
 .heat-page--wod-viewer .heat-pager__btn {
+  width: clamp(2.4rem, 5vh, 3rem);
+  height: clamp(2.4rem, 5vh, 3rem);
+  font-size: clamp(1.35rem, 3vh, 1.75rem);
   border-color: rgba(255, 210, 90, 0.35);
   background: linear-gradient(145deg, #0e5238, #083828);
   box-shadow:
@@ -710,25 +815,22 @@
     0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
-.heat-page--wod-viewer .heat-pager__btn:hover {
-  background: linear-gradient(145deg, #126844, #0c4d35);
-  box-shadow:
-    0 0 22px rgba(255, 190, 60, 0.25),
-    0 4px 16px rgba(0, 0, 0, 0.35);
-}
-
 .heat-page--wod-viewer .heat-pager__indicator {
   color: rgba(255, 235, 180, 0.95);
-  letter-spacing: 0.08em;
+  font-size: clamp(0.8rem, 1.8vh, 1rem);
 }
 
-.heat-page--wod-viewer .heat-sponsors__title {
-  color: rgba(255, 235, 180, 0.85);
-  letter-spacing: 0.14em;
+.heat-page--wod-viewer .heat-sponsors {
+  display: none;
 }
 
-.heat-page--wod-viewer .heat-sponsors .patrocinador-logo-box.heat-sponsor-box {
-  box-shadow:
-    0 4px 18px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 215, 120, 0.2);
+@media (min-width: 1600px) {
+  .heat-page--wod-viewer .heat-trophy__img {
+    width: 138px;
+    max-height: 190px;
+  }
+
+  .heat-page--wod-viewer .heat-athlete__card {
+    max-width: 96px;
+  }
 }

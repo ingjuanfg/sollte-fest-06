@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>WOD 1 — Sollte Fest 07</title>
+  <title>Final — Sollte Fest 07</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="WOD 1 — Todos los heats — Sollte Fest 07 Mundialista" />
+  <meta name="description" content="Final — Sollte Fest 07 Mundialista" />
   <meta name="theme-color" content="#0c4d35" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,41 +12,36 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../heat/heat.css">
 </head>
-<body class="heat-page heat-page--wod-viewer">
+<body class="heat-page heat-page--wod-viewer heat-page--final">
   <div class="heat-layout">
-    <section class="heat-panel heat-panel--athletes heat-panel--semifinal" aria-labelledby="heatTitle">
-      <div class="heat-panel__inner heat-panel__inner--semifinal">
-        <div class="heat-semifinal-frame" aria-hidden="true">
-          <span class="heat-semifinal-corner heat-semifinal-corner--tl"></span>
-          <span class="heat-semifinal-corner heat-semifinal-corner--tr"></span>
-          <span class="heat-semifinal-corner heat-semifinal-corner--bl"></span>
-          <span class="heat-semifinal-corner heat-semifinal-corner--br"></span>
+    <section class="heat-panel heat-panel--athletes heat-panel--final" aria-labelledby="heatTitle">
+      <div class="heat-panel__inner heat-panel__inner--final">
+        <div class="heat-final-frame" aria-hidden="true">
+          <span class="heat-final-corner heat-final-corner--tl"></span>
+          <span class="heat-final-corner heat-final-corner--tr"></span>
+          <span class="heat-final-corner heat-final-corner--bl"></span>
+          <span class="heat-final-corner heat-final-corner--br"></span>
         </div>
-        <header class="heat-header">
+        <header class="heat-header heat-header--final">
           <img
             src="../assets/sollte_logo_nombre_icono.png"
             alt="Sollte Fest"
-            class="heat-logo"
+            class="heat-logo heat-logo--final"
             onerror="this.style.display='none'"
           />
           <p class="heat-eyebrow">Sollte Fest 07 — Mundialista</p>
-          <p class="heat-semifinal" id="heatSemifinal">SEMIFINAL</p>
+          <p class="heat-final-label" id="heatFinal">FINAL</p>
           <h1 class="heat-heat-num" id="heatTitle">HEAT 1</h1>
           <p class="heat-category" id="heatCategory">Categoría</p>
         </header>
 
         <div class="heat-matchup" id="heatMatchup"></div>
 
-        <nav class="heat-pager" aria-label="Navegación entre heats">
+        <nav class="heat-pager heat-pager--final" aria-label="Navegación entre heats">
           <button type="button" id="heatPrev" class="heat-pager__btn" aria-label="Heat anterior">‹</button>
-          <span class="heat-pager__indicator" id="heatIndicator">1 / 11</span>
+          <span class="heat-pager__indicator" id="heatIndicator">1 / 5</span>
           <button type="button" id="heatNext" class="heat-pager__btn" aria-label="Heat siguiente">›</button>
         </nav>
-
-        <section class="heat-sponsors" aria-label="Patrocinadores">
-          <p class="heat-sponsors__title">Nuestros Patrocinadores</p>
-          <div class="heat-sponsors__grid" id="heatSponsorsGrid"></div>
-        </section>
       </div>
     </section>
 

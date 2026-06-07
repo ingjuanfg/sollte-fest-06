@@ -1,17 +1,18 @@
-Atleta,Pais,WOD 1,,WOD 2.A,,WOD 2.B,,WOD 3,
-,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 2.A,,WOD 2.B,,WOD 3,,WOD 4,
+,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
 Tiben Ledesma,Australia,5,10:04,6,69 Saltos,6,165 lbs,7,"10:00
 3 Ronda 300 mts
-Tiebreak: 4:30"
+Tiebreak: 4:30",5,12:15
 Bri,Tunez,9,"11:00
-21 Burpees",7,64 Saltos,9,135 lbs,NA,NA
+21 Burpees",7,64 Saltos,9,135 lbs,NA,NA,NA,NA
 Dari,Brasil,7,10:37,3,86 Saltos,5,165 lbs,,"10:00
-6 C2B"
-Daniel Mesa,Qatar,1,7:05,1,157 Saltos,7,155 lbs,2,7:43
+6 C2B",4,9:04
+Daniel Mesa,Qatar,1,7:05,1,157 Saltos,7,155 lbs,2,7:43,1,5:55
 Mateo Villa,Costa de Marfil,4,8:52,8,40 Saltos,8,155 lbs,6,"10:00
 3 Ronda 300 mts
-Tiebreak: 3:37"
-Juan Diego,Colombia,2,7:53,4,85 Saltos,3,195 lbs,1,7:02
-Sebas Jaimes,Ghana,8,10:45,9,16 Saltos,4,180 lbs,5,9:51
-Julian Garcia,Iran,6,10:09,2,133 Saltos,2,205 lbs,3,7:58
-Santiago Ceballos,Cabo Verde,3,8:05,5,82 Saltos,1,210 lbs,4,9:40
+Tiebreak: 3:37",NA,NA
+Juan Diego,Colombia,2,7:53,4,85 Saltos,3,195 lbs,1,7:02,3,7:58
+Sebas Jaimes,Ghana,8,10:45,9,16 Saltos,4,180 lbs,5,9:51,NA,NA
+Julian Garcia,Iran,6,10:09,2,133 Saltos,2,205 lbs,3,7:58,2,6:45
+Santiago Ceballos,Cabo Verde,3,8:05,5,82 Saltos,1,210 lbs,4,9:40,6,"15:00
+3 HSW"

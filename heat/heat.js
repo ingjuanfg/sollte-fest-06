@@ -1,15 +1,9 @@
 const HEAT_IMAGES = {
-  1: ['belgica.png', 'senegal.png'],
-  2: ['marruecos.png', 'panama.png'],
-  3: ['checa.png', 'escocia.png', 'nueva zelanda.png'],
-  4: ['haiti.png', 'portugal.png', 'uzbe.png'],
-  5: ['eeuu.png', 'irak.png', 'uruguay.png'],
-  6: ['austria.png', 'bajos.png', 'canada.png'],
-  7: ['argelia.png', 'egipto.png', 'francia.png'],
-  8: ['japon.png', 'mexico.png'],
-  9: ['curazao.png', 'inglaterra.png', 'sudafrica.png'],
-  10: ['brasil.png', 'cabo.png', 'tiben.png'],
-  11: ['colombia.png', 'iran.png', 'qatar.png']
+  1: ['belgica.png', 'marruecos.png', 'panama.png', 'senegal.png'],
+  2: ['checa.png', 'haiti.png', 'portugal.png', 'uzbe.png'],
+  3: ['argelia.png', 'canada.png', 'egipto.png', 'francia.png'],
+  4: ['curazao.png', 'inglaterra.png', 'japon.png'],
+  5: ['cabo.png', 'colombia.png', 'iran.png', 'qatar.png']
 };
 
 const SPONSOR_LOGOS = [
@@ -22,13 +16,14 @@ const SPONSOR_LOGOS = [
 ];
 
 const HEAT_CATEGORIES = [
-  { from: 1, to: 2, label: 'Categoría Hombres Principiantes' },
-  { from: 3, to: 4, label: 'Categoría Mujeres Principiantes' },
-  { from: 5, to: 7, label: 'Categoría Hombres Intermedios' },
-  { from: 8, to: 9, label: 'Categoría Mujeres Avanzadas' },
-  { from: 10, to: 11, label: 'Categoría Hombres Avanzados' }
+  { from: 1, to: 1, label: 'Categoría Hombres Principiantes' },
+  { from: 2, to: 2, label: 'Categoría Mujeres Principiantes' },
+  { from: 3, to: 3, label: 'Categoría Hombres Intermedios' },
+  { from: 4, to: 4, label: 'Categoría Mujeres Avanzadas' },
+  { from: 5, to: 5, label: 'Categoría Hombres Avanzados' }
 ];
 
+const TROPHY_IMAGE = '../assets/copa-final.png';
 const TOTAL_HEATS = Object.keys(HEAT_IMAGES).length;
 
 function isWodViewer() {
@@ -81,38 +76,67 @@ function createAthlete(heatNum, filename) {
   return article;
 }
 
-function createVsBadge() {
-  const vs = document.createElement('div');
-  vs.className = 'heat-vs';
-  vs.setAttribute('aria-hidden', 'true');
-  vs.innerHTML = '<span class="heat-vs__badge">VS</span>';
-  return vs;
+function createTrophy() {
+  const trophy = document.createElement('div');
+  trophy.className = 'heat-trophy';
+
+  const img = document.createElement('img');
+  img.src = TROPHY_IMAGE;
+  img.alt = 'Copa Mundial FIFA';
+  img.className = 'heat-trophy__img';
+  img.loading = 'eager';
+
+  trophy.appendChild(img);
+  return trophy;
+}
+
+function createSide(className) {
+  const side = document.createElement('div');
+  side.className = `heat-matchup__side ${className}`;
+  return side;
+}
+
+function renderFinalMatchup(heatNum, images, matchup) {
+  matchup.classList.add('heat-matchup--final');
+  matchup.replaceChildren();
+
+  const left = createSide('heat-matchup__side--left');
+  const right = createSide('heat-matchup__side--right');
+  const trophy = createTrophy();
+
+  if (images.length >= 4) {
+    left.appendChild(createAthlete(heatNum, images[0]));
+    left.appendChild(createAthlete(heatNum, images[1]));
+    right.appendChild(createAthlete(heatNum, images[2]));
+    right.appendChild(createAthlete(heatNum, images[3]));
+  } else if (images.length === 3) {
+    left.appendChild(createAthlete(heatNum, images[0]));
+    left.appendChild(createAthlete(heatNum, images[1]));
+    right.appendChild(createAthlete(heatNum, images[2]));
+  } else if (images.length === 2) {
+    left.appendChild(createAthlete(heatNum, images[0]));
+    right.appendChild(createAthlete(heatNum, images[1]));
+  }
+
+  matchup.appendChild(left);
+  matchup.appendChild(trophy);
+  matchup.appendChild(right);
 }
 
 function renderMatchup(heatNum, images) {
   const matchup = document.getElementById('heatMatchup');
   if (!matchup) return;
 
-  const isTrio = images.length === 3;
-  document.body.classList.toggle('heat-page--trio', isTrio);
-  matchup.classList.toggle('heat-matchup--trio', isTrio);
-  matchup.replaceChildren();
+  document.body.classList.remove('heat-page--trio');
+  matchup.classList.remove('heat-matchup--trio', 'heat-matchup--final');
+  document.body.classList.toggle('heat-page--final', images.length >= 2);
 
-  if (isTrio) {
-    images.forEach(file => matchup.appendChild(createAthlete(heatNum, file)));
-    return;
-  }
-
-  matchup.appendChild(createAthlete(heatNum, images[0]));
-  matchup.appendChild(createVsBadge());
-  matchup.appendChild(createAthlete(heatNum, images[1]));
+  renderFinalMatchup(heatNum, images, matchup);
 }
 
 function updatePageMeta(heatNum) {
   const category = getCategory(heatNum);
-  const title = isWodViewer()
-    ? `Semifinal — Heat ${heatNum} — Sollte Fest 07`
-    : `Semifinal — Heat ${heatNum} — Sollte Fest 07`;
+  const title = `Final — Heat ${heatNum} — Sollte Fest 07`;
 
   document.title = title;
 
@@ -121,11 +145,11 @@ function updatePageMeta(heatNum) {
     metaDesc.content = `${title} — ${category}`;
   }
 
-  const heatSemifinal = document.getElementById('heatSemifinal');
+  const heatFinal = document.getElementById('heatFinal');
   const heatTitle = document.getElementById('heatTitle');
   const heatCategory = document.getElementById('heatCategory');
 
-  if (heatSemifinal) heatSemifinal.textContent = 'SEMIFINAL';
+  if (heatFinal) heatFinal.textContent = 'FINAL';
   if (heatTitle) heatTitle.textContent = `HEAT ${heatNum}`;
   if (heatCategory) heatCategory.textContent = category;
 }
@@ -159,6 +183,8 @@ function renderHeat(heatNum) {
 }
 
 function initSponsorsGrid() {
+  if (isWodViewer()) return;
+
   const grid = document.getElementById('heatSponsorsGrid');
   if (!grid || !SPONSOR_LOGOS.length || grid.childElementCount > 0) return;
 
@@ -196,7 +222,6 @@ function initWodViewer() {
     if (event.key === 'ArrowRight') goTo(currentHeat + 1);
   });
 
-  initSponsorsGrid();
   goTo(currentHeat);
 }
 

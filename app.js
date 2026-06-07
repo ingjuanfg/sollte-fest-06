@@ -69,15 +69,16 @@ const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 const HONORARY_CATEGORY = 'Mujeres Principiantes';
 const HONORARY_ATHLETE = 'esmeralda bustamante';
 
-const PRINCIPIANTES_HOMBRES_CATEGORY = 'Hombres Principiantes';
 const CLASSIFIED_DISPLAY_RANK_LIMIT = 3;
-const INTERMEDIOS_CLASSIFIED_LIMIT = 4;
+const CLASSIFIED_TOP_FOUR = 4;
 
 const ELIMINATED_CATEGORY = 'Hombres Intermedios';
 const ELIMINATED_COUNT = 3;
 
 const ADVANCED_CATEGORIES = ['Mujeres Avanzadas', 'Hombres Avanzados'];
-const FEMININE_CATEGORIES = [HONORARY_CATEGORY];
+const HOMBRES_AVANZADOS_CATEGORY = 'Hombres Avanzados';
+const SANTIAGO_AVANZADOS_NAME = 'santiago ceballos';
+const DARI_AVANZADOS_NAME = 'dari';
 
 // ====== DOM ======
 const categoriaSelect = document.getElementById('categoriaSelect');
@@ -406,6 +407,27 @@ function orderAvanzadosAthletes(athletes) {
   return [...withoutNA, ...withNA];
 }
 
+function isSantiagoAvanzados(name) {
+  return normalizeAthleteName(name) === SANTIAGO_AVANZADOS_NAME;
+}
+
+function isDariAvanzados(name) {
+  return normalizeAthleteName(name) === DARI_AVANZADOS_NAME;
+}
+
+function orderHombresAvanzadosAthletes(athletes) {
+  const ordered = [...orderAvanzadosAthletes(athletes)];
+  const santiagoIdx = ordered.findIndex(athlete => isSantiagoAvanzados(athlete.atleta));
+  const dariIdx = ordered.findIndex(athlete => isDariAvanzados(athlete.atleta));
+
+  if (santiagoIdx === -1 || dariIdx === -1 || santiagoIdx === dariIdx) {
+    return ordered;
+  }
+
+  [ordered[santiagoIdx], ordered[dariIdx]] = [ordered[dariIdx], ordered[santiagoIdx]];
+  return ordered;
+}
+
 function isAdvancedCategory(categoria) {
   return ADVANCED_CATEGORIES.includes(categoria);
 }
@@ -414,23 +436,15 @@ function shouldMarkLastThreeEliminated(categoria) {
   return categoria === ELIMINATED_CATEGORY || categoria === 'Hombres Avanzados';
 }
 
-function getEliminatedLabel(categoria) {
-  return FEMININE_CATEGORIES.includes(categoria) ? 'ELIMINADA' : 'ELIMINADO';
-}
-
 function getClassifiedLabel(categoria) {
   return categoria === HONORARY_CATEGORY ? 'CLASIFICADA' : 'CLASIFICADO';
 }
 
 function isClassifiedAthlete(athlete, categoria) {
-  if (categoria === PRINCIPIANTES_HOMBRES_CATEGORY) return true;
   if (categoria === HONORARY_CATEGORY) {
-    return !athlete.isEliminated && athlete.displayRank <= CLASSIFIED_DISPLAY_RANK_LIMIT;
+    return athlete.displayRank <= CLASSIFIED_DISPLAY_RANK_LIMIT;
   }
-  if (categoria === ELIMINATED_CATEGORY) {
-    return !athlete.isEliminated && athlete.displayRank <= INTERMEDIOS_CLASSIFIED_LIMIT;
-  }
-  return false;
+  return athlete.displayRank <= CLASSIFIED_TOP_FOUR;
 }
 
 function prepareAthletesForDisplay(athletes, categoria) {
@@ -457,6 +471,8 @@ function prepareAthletesForDisplay(athletes, categoria) {
 
   if (categoria === ELIMINATED_CATEGORY) {
     ordered = orderIntermediosAthletes(athletes);
+  } else if (categoria === HOMBRES_AVANZADOS_CATEGORY) {
+    ordered = orderHombresAvanzadosAthletes(athletes);
   } else if (isAdvancedCategory(categoria)) {
     ordered = orderAvanzadosAthletes(athletes);
   } else {
@@ -507,7 +523,6 @@ function renderTable({ athletes, wodNames }, categoria) {
   tableHead.innerHTML = `<tr>${headCells.join('')}</tr>`;
 
   const displayAthletes = prepareAthletesForDisplay(athletes, categoria);
-  const eliminatedLabel = getEliminatedLabel(categoria);
   const classifiedLabel = getClassifiedLabel(categoria);
   let tableHTML = '';
 
@@ -518,12 +533,6 @@ function renderTable({ athletes, wodNames }, categoria) {
     const honoraryClass = isHonorary ? ' team-row--honorary' : '';
     const eliminatedClass = isEliminated ? ' team-row--eliminated' : '';
     const flag = getCountryFlag(athlete.pais);
-
-    const eliminatedBadge = isEliminated
-      ? `<span class="leader-banner eliminado-banner" aria-label="${eliminatedLabel === 'ELIMINADA' ? 'Eliminada' : 'Eliminado'}">
-           <span class="leader-ribbon">${eliminatedLabel}</span>
-         </span>`
-      : '';
 
     const classifiedBadge = isClassified
       ? `<span class="classificado-banner" aria-label="${classifiedLabel === 'CLASIFICADA' ? 'Clasificada' : 'Clasificado'}">
@@ -548,7 +557,6 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
             ${classifiedBadge}
-            ${eliminatedBadge}
           </div>
         </td>
         <td class="country-cell">
