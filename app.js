@@ -291,6 +291,7 @@ function parseResultsCSV(text) {
       }
 
       const total = wods.reduce((sum, wod) => {
+        if (isNAValue(wod.puntos)) return sum;
         const pts = parseFloat(wod.puntos);
         return sum + (isNaN(pts) ? 0 : pts);
       }, 0);
@@ -336,6 +337,7 @@ function getCountryFlag(pais) {
 }
 
 function formatWodPosition(puntos) {
+  if (isNAValue(puntos)) return 'NA';
   const n = parseInt(puntos, 10);
   if (isNaN(n)) return '—';
   return `${n}º`;
@@ -353,24 +355,66 @@ function isHonoraryAthlete(name) {
   return normalizeAthleteName(name) === HONORARY_ATHLETE;
 }
 
-function prepareAthletesForDisplay(athletes, categoria) {
+function isNAValue(value) {
+  return String(value).trim().toUpperCase() === 'NA';
+}
+
+function athleteHasNA(athlete) {
+  return athlete.wods.some(wod => isNAValue(wod.puntos) || isNAValue(wod.detalle));
+}
+
+function orderIntermediosAthletes(athletes) {
   const sorted = [...athletes].sort((a, b) => a.total - b.total);
+  const withNA = sorted.filter(athlete => athleteHasNA(athlete));
+  const withoutNA = sorted.filter(athlete => !athleteHasNA(athlete));
+
+  if (!withNA.length) return sorted;
+
+  const ordered = [...withoutNA];
+  const insertAt = Math.max(0, ordered.length + withNA.length - 3);
+  ordered.splice(insertAt, 0, ...withNA);
+  return ordered;
+}
+
+function orderMujeresPrincipiantesAthletes(athletes) {
+  const sorted = [...athletes].sort((a, b) => a.total - b.total);
+  const honorary = sorted.find(athlete => isHonoraryAthlete(athlete.atleta));
+  const withNA = sorted.filter(
+    athlete => athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta)
+  );
+  const middle = sorted.filter(
+    athlete => !athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta)
+  );
+
+  const ordered = [];
+  if (honorary) ordered.push(honorary);
+  ordered.push(...middle, ...withNA);
+  return ordered;
+}
+
+function getEliminatedLabel(categoria) {
+  return categoria === HONORARY_CATEGORY ? 'ELIMINADA' : 'ELIMINADO';
+}
+
+function prepareAthletesForDisplay(athletes, categoria) {
   let ordered;
 
   if (categoria === HONORARY_CATEGORY) {
-    const honorary = sorted.find(athlete => isHonoraryAthlete(athlete.atleta));
-    const rest = sorted.filter(athlete => !isHonoraryAthlete(athlete.atleta));
-    ordered = honorary ? [honorary, ...rest] : sorted;
+    ordered = orderMujeresPrincipiantesAthletes(athletes);
 
     return ordered.map((athlete, index) => ({
       ...athlete,
       displayRank: index === 0 ? 1 : index,
       isHonorary: isHonoraryAthlete(athlete.atleta),
-      isEliminated: false
+      isEliminated: athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta)
     }));
   }
 
-  ordered = sorted;
+  if (categoria === ELIMINATED_CATEGORY) {
+    ordered = orderIntermediosAthletes(athletes);
+  } else {
+    ordered = [...athletes].sort((a, b) => a.total - b.total);
+  }
 
   return ordered.map((athlete, index) => ({
     ...athlete,
@@ -410,6 +454,7 @@ function renderTable({ athletes, wodNames }, categoria) {
   tableHead.innerHTML = `<tr>${headCells.join('')}</tr>`;
 
   const displayAthletes = prepareAthletesForDisplay(athletes, categoria);
+  const eliminatedLabel = getEliminatedLabel(categoria);
   let tableHTML = '';
 
   displayAthletes.forEach((athlete, index) => {
@@ -421,8 +466,8 @@ function renderTable({ athletes, wodNames }, categoria) {
     const flag = getCountryFlag(athlete.pais);
 
     const eliminatedBadge = isEliminated
-      ? `<span class="leader-banner eliminado-banner" aria-label="Eliminado">
-           <span class="leader-ribbon">ELIMINADO</span>
+      ? `<span class="leader-banner eliminado-banner" aria-label="${eliminatedLabel === 'ELIMINADA' ? 'Eliminada' : 'Eliminado'}">
+           <span class="leader-ribbon">${eliminatedLabel}</span>
          </span>`
       : '';
 
