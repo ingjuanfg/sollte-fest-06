@@ -72,6 +72,9 @@ const HONORARY_ATHLETE = 'esmeralda bustamante';
 const ELIMINATED_CATEGORY = 'Hombres Intermedios';
 const ELIMINATED_COUNT = 3;
 
+const ADVANCED_CATEGORIES = ['Mujeres Avanzadas', 'Hombres Avanzados'];
+const FEMININE_CATEGORIES = [HONORARY_CATEGORY];
+
 // ====== DOM ======
 const categoriaSelect = document.getElementById('categoriaSelect');
 const tableHead       = document.getElementById('tableHead');
@@ -392,8 +395,23 @@ function orderMujeresPrincipiantesAthletes(athletes) {
   return ordered;
 }
 
+function orderAvanzadosAthletes(athletes) {
+  const sorted = [...athletes].sort((a, b) => a.total - b.total);
+  const withNA = sorted.filter(athlete => athleteHasNA(athlete));
+  const withoutNA = sorted.filter(athlete => !athleteHasNA(athlete));
+  return [...withoutNA, ...withNA];
+}
+
+function isAdvancedCategory(categoria) {
+  return ADVANCED_CATEGORIES.includes(categoria);
+}
+
+function shouldMarkLastThreeEliminated(categoria) {
+  return categoria === ELIMINATED_CATEGORY || categoria === 'Hombres Avanzados';
+}
+
 function getEliminatedLabel(categoria) {
-  return categoria === HONORARY_CATEGORY ? 'ELIMINADA' : 'ELIMINADO';
+  return FEMININE_CATEGORIES.includes(categoria) ? 'ELIMINADA' : 'ELIMINADO';
 }
 
 function prepareAthletesForDisplay(athletes, categoria) {
@@ -412,6 +430,8 @@ function prepareAthletesForDisplay(athletes, categoria) {
 
   if (categoria === ELIMINATED_CATEGORY) {
     ordered = orderIntermediosAthletes(athletes);
+  } else if (isAdvancedCategory(categoria)) {
+    ordered = orderAvanzadosAthletes(athletes);
   } else {
     ordered = [...athletes].sort((a, b) => a.total - b.total);
   }
@@ -420,7 +440,7 @@ function prepareAthletesForDisplay(athletes, categoria) {
     ...athlete,
     displayRank: index + 1,
     isHonorary: false,
-    isEliminated: categoria === ELIMINATED_CATEGORY && index >= ordered.length - ELIMINATED_COUNT
+    isEliminated: shouldMarkLastThreeEliminated(categoria) && index >= ordered.length - ELIMINATED_COUNT
   }));
 }
 
