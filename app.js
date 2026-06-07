@@ -69,11 +69,13 @@ const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 const HONORARY_CATEGORY = 'Mujeres Principiantes';
 const HONORARY_ATHLETE = 'esmeralda bustamante';
 
-const CLASSIFIED_DISPLAY_RANK_LIMIT = 3;
-const CLASSIFIED_TOP_FOUR = 4;
+const PODIUM_BADGES = {
+  1: { label: 'Campeon', ribbonClass: 'podium-ribbon--gold' },
+  2: { label: 'Subcampeon', ribbonClass: 'podium-ribbon--silver' },
+  3: { label: 'Tercer Puesto', ribbonClass: 'podium-ribbon--bronze' }
+};
 
 const ELIMINATED_CATEGORY = 'Hombres Intermedios';
-const ELIMINATED_COUNT = 3;
 
 const ADVANCED_CATEGORIES = ['Mujeres Avanzadas', 'Hombres Avanzados'];
 const HOMBRES_AVANZADOS_CATEGORY = 'Hombres Avanzados';
@@ -432,21 +434,6 @@ function isAdvancedCategory(categoria) {
   return ADVANCED_CATEGORIES.includes(categoria);
 }
 
-function shouldMarkLastThreeEliminated(categoria) {
-  return categoria === ELIMINATED_CATEGORY || categoria === 'Hombres Avanzados';
-}
-
-function getClassifiedLabel(categoria) {
-  return categoria === HONORARY_CATEGORY ? 'CLASIFICADA' : 'CLASIFICADO';
-}
-
-function isClassifiedAthlete(athlete, categoria) {
-  if (categoria === HONORARY_CATEGORY) {
-    return athlete.displayRank <= CLASSIFIED_DISPLAY_RANK_LIMIT;
-  }
-  return athlete.displayRank <= CLASSIFIED_TOP_FOUR;
-}
-
 function prepareAthletesForDisplay(athletes, categoria) {
   let ordered;
 
@@ -455,16 +442,10 @@ function prepareAthletesForDisplay(athletes, categoria) {
 
     return ordered.map((athlete, index) => {
       const displayRank = index === 0 ? 1 : index;
-      const isEliminated = athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta);
-      const athleteData = {
+      return {
         ...athlete,
         displayRank,
-        isHonorary: isHonoraryAthlete(athlete.atleta),
-        isEliminated
-      };
-      return {
-        ...athleteData,
-        isClassified: isClassifiedAthlete(athleteData, categoria)
+        isHonorary: isHonoraryAthlete(athlete.atleta)
       };
     });
   }
@@ -479,24 +460,28 @@ function prepareAthletesForDisplay(athletes, categoria) {
     ordered = [...athletes].sort((a, b) => a.total - b.total);
   }
 
-  return ordered.map((athlete, index) => {
-    const athleteData = {
-      ...athlete,
-      displayRank: index + 1,
-      isHonorary: false,
-      isEliminated: shouldMarkLastThreeEliminated(categoria) && index >= ordered.length - ELIMINATED_COUNT
-    };
-    return {
-      ...athleteData,
-      isClassified: isClassifiedAthlete(athleteData, categoria)
-    };
-  });
+  return ordered.map((athlete, index) => ({
+    ...athlete,
+    displayRank: index + 1,
+    isHonorary: false
+  }));
 }
 
-function getDisplayRankClass(displayRank, isHonorary) {
-  if (isHonorary || displayRank === 1) return 'top1';
+function getDisplayRankClass(displayRank) {
+  if (displayRank === 1) return 'top1';
   if (displayRank === 2) return 'top2';
   if (displayRank === 3) return 'top3';
+  return '';
+}
+
+function getPodiumBadge(displayRank) {
+  return PODIUM_BADGES[displayRank] || null;
+}
+
+function getPodiumRowClass(displayRank) {
+  if (displayRank === 1) return ' team-row--podium-gold';
+  if (displayRank === 2) return ' team-row--podium-silver';
+  if (displayRank === 3) return ' team-row--podium-bronze';
   return '';
 }
 
@@ -523,20 +508,19 @@ function renderTable({ athletes, wodNames }, categoria) {
   tableHead.innerHTML = `<tr>${headCells.join('')}</tr>`;
 
   const displayAthletes = prepareAthletesForDisplay(athletes, categoria);
-  const classifiedLabel = getClassifiedLabel(categoria);
   let tableHTML = '';
 
   displayAthletes.forEach((athlete, index) => {
-    const { displayRank, isHonorary, isEliminated, isClassified } = athlete;
+    const { displayRank } = athlete;
     const medal = getDisplayMedal(displayRank);
-    const rankClass = getDisplayRankClass(displayRank, isHonorary);
-    const honoraryClass = isHonorary ? ' team-row--honorary' : '';
-    const eliminatedClass = isEliminated ? ' team-row--eliminated' : '';
+    const rankClass = getDisplayRankClass(displayRank);
+    const podiumRowClass = getPodiumRowClass(displayRank);
     const flag = getCountryFlag(athlete.pais);
 
-    const classifiedBadge = isClassified
-      ? `<span class="classificado-banner" aria-label="${classifiedLabel === 'CLASIFICADA' ? 'Clasificada' : 'Clasificado'}">
-           <span class="classificado-ribbon">${classifiedLabel}</span>
+    const podium = getPodiumBadge(displayRank);
+    const podiumBadge = podium
+      ? `<span class="podium-banner" aria-label="${podium.label}">
+           <span class="podium-ribbon ${podium.ribbonClass}">${podium.label}</span>
          </span>`
       : '';
 
@@ -545,7 +529,7 @@ function renderTable({ athletes, wodNames }, categoria) {
     ).join('');
 
     tableHTML += `
-      <tr class="team-row${honoraryClass}${eliminatedClass}" data-team-index="${index}">
+      <tr class="team-row${podiumRowClass}" data-team-index="${index}">
         <td class="pos-cell">
           <span class="rank-badge ${rankClass}">${displayRank}</span>
           ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
@@ -556,7 +540,7 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="expand-icon" id="expand-${index}" aria-hidden="true">▶</span>
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
-            ${classifiedBadge}
+            ${podiumBadge}
           </div>
         </td>
         <td class="country-cell">

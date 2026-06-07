@@ -420,30 +420,43 @@
     outline-offset: -2px;
   }
 
-  #tablaResultados tbody tr.team-row--honorary {
-    background: linear-gradient(90deg, #fce4f0, #f8d4e8);
+  #tablaResultados tbody tr.team-row--podium-gold {
+    background: linear-gradient(90deg, #fff8e1, #fff3cc);
   }
 
-  #tablaResultados tbody tr.team-row--honorary:hover {
-    background: linear-gradient(90deg, #f8d4e8, #f3c0db);
+  #tablaResultados tbody tr.team-row--podium-gold:hover {
+    background: linear-gradient(90deg, #fff3cc, #ffe9a8);
   }
 
-  #tablaResultados tbody tr.team-row--honorary.team-row--expanded {
-    background: linear-gradient(90deg, #f8d4e8, #f3c0db);
-    outline-color: #e879a8;
+  #tablaResultados tbody tr.team-row--podium-gold.team-row--expanded {
+    background: linear-gradient(90deg, #fff3cc, #ffe9a8);
+    outline-color: #d4a017;
   }
 
-  #tablaResultados tbody tr.team-row--eliminated {
-    background: linear-gradient(90deg, #fde8e8, #fad4d4);
+  #tablaResultados tbody tr.team-row--podium-silver {
+    background: linear-gradient(90deg, #f5f5f5, #ececec);
   }
 
-  #tablaResultados tbody tr.team-row--eliminated:hover {
-    background: linear-gradient(90deg, #fad4d4, #f5bcbc);
+  #tablaResultados tbody tr.team-row--podium-silver:hover {
+    background: linear-gradient(90deg, #ececec, #e0e0e0);
   }
 
-  #tablaResultados tbody tr.team-row--eliminated.team-row--expanded {
-    background: linear-gradient(90deg, #fad4d4, #f5bcbc);
-    outline-color: #e57373;
+  #tablaResultados tbody tr.team-row--podium-silver.team-row--expanded {
+    background: linear-gradient(90deg, #ececec, #e0e0e0);
+    outline-color: #9e9e9e;
+  }
+
+  #tablaResultados tbody tr.team-row--podium-bronze {
+    background: linear-gradient(90deg, #fdf3ea, #f5e6d8);
+  }
+
+  #tablaResultados tbody tr.team-row--podium-bronze:hover {
+    background: linear-gradient(90deg, #f5e6d8, #edd5c0);
+  }
+
+  #tablaResultados tbody tr.team-row--podium-bronze.team-row--expanded {
+    background: linear-gradient(90deg, #f5e6d8, #edd5c0);
+    outline-color: #b87333;
   }
 
   .team-name-cell {
@@ -453,23 +466,12 @@
     gap: 0.45rem 0.6rem;
   }
 
-  .eliminado-banner {
+  .podium-banner {
     margin-left: 0;
     flex-shrink: 0;
   }
 
-  .eliminado-banner .leader-ribbon {
-    font-size: 0.72rem;
-    padding: 0.1rem 0.65rem;
-    letter-spacing: 0.08em;
-  }
-
-  .classificado-banner {
-    margin-left: 0;
-    flex-shrink: 0;
-  }
-
-  .classificado-banner .classificado-ribbon {
+  .podium-banner .podium-ribbon {
     font-size: 0.72rem;
     padding: 0.1rem 0.65rem;
     letter-spacing: 0.08em;
@@ -1027,49 +1029,7 @@
   color: #fff !important;
 }
 
-.leader-banner {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0.9rem;
-  margin-right: 0;
-  position: relative;
-  height: 1.3rem;
-}
-.leader-banner + .classificado-banner {
-  margin-left: 10px;
-}
-.leader-ribbon {
-  background: linear-gradient(90deg, #c62828 0%, #e53935 100%);
-  color: #fff;
-  font-weight: 800;
-  font-size: 0.82rem;
-  padding: 0.08rem 0.7rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 2px 8px rgba(198,40,40,0.15);
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 1;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
-}
-.leader-ribbon::before, .leader-ribbon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 0.4rem;
-  height: 0.7rem;
-  background: #b71c1c;
-  z-index: 0;
-  transform: translateY(-50%);
-}
-.leader-ribbon::before {
-  left: -0.4rem;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
-}
-.leader-ribbon::after {
-  right: -0.4rem;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-.classificado-banner {
+.podium-banner {
   display: inline-flex;
   align-items: center;
   margin-left: 0.6rem;
@@ -1077,57 +1037,85 @@
   position: relative;
   height: 1.1rem;
 }
-.classificado-ribbon {
-  background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+
+.podium-ribbon {
   color: #fff;
   font-weight: 700;
   font-size: 0.75rem;
   padding: 0.05rem 0.55rem;
   border-radius: 0.22rem;
-  box-shadow: 0 2px 8px rgba(56,142,60,0.12);
-  letter-spacing: 1px;
+  letter-spacing: 0.06em;
   position: relative;
   z-index: 1;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.12);
 }
-.classificado-ribbon::before, .classificado-ribbon::after {
+
+.podium-ribbon--gold {
+  background: linear-gradient(90deg, #c9971a 0%, #ffd54f 50%, #e6b422 100%);
+  color: #3d2e00;
+  box-shadow: 0 2px 8px rgba(212, 160, 23, 0.35);
+}
+
+.podium-ribbon--gold::before,
+.podium-ribbon--gold::after {
+  background: #a67c00;
+}
+
+.podium-ribbon--silver {
+  background: linear-gradient(90deg, #9e9e9e 0%, #e0e0e0 50%, #bdbdbd 100%);
+  color: #2e2e2e;
+  box-shadow: 0 2px 8px rgba(158, 158, 158, 0.3);
+}
+
+.podium-ribbon--silver::before,
+.podium-ribbon--silver::after {
+  background: #757575;
+}
+
+.podium-ribbon--bronze {
+  background: linear-gradient(90deg, #a0522d 0%, #cd7f32 50%, #b87333 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(184, 115, 51, 0.35);
+}
+
+.podium-ribbon--bronze::before,
+.podium-ribbon--bronze::after {
+  background: #8b4513;
+}
+
+.podium-ribbon::before,
+.podium-ribbon::after {
   content: '';
   position: absolute;
   top: 50%;
   width: 0.32rem;
   height: 0.55rem;
-  background: #2e7031;
   z-index: 0;
   transform: translateY(-50%);
 }
-.classificado-ribbon::before {
+
+.podium-ribbon::before {
   left: -0.32rem;
   clip-path: polygon(100% 0, 0 50%, 100% 100%);
 }
-.classificado-ribbon::after {
+
+.podium-ribbon::after {
   right: -0.32rem;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
+
 @media (max-width: 600px) {
-  .leader-banner {
-    height: 1rem;
-  }
-  .leader-ribbon {
-    font-size: 0.7rem;
-    padding: 0.05rem 0.45rem;
-  }
-  .leader-ribbon::before, .leader-ribbon::after {
-    width: 0.28rem;
-    height: 0.5rem;
-  }
-  .classificado-banner {
+  .podium-banner {
     height: 0.85rem;
   }
-  .classificado-ribbon {
+
+  .podium-ribbon {
     font-size: 0.62rem;
     padding: 0.03rem 0.32rem;
   }
-  .classificado-ribbon::before, .classificado-ribbon::after {
+
+  .podium-ribbon::before,
+  .podium-ribbon::after {
     width: 0.18rem;
     height: 0.32rem;
   }
