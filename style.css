@@ -464,6 +464,17 @@
     letter-spacing: 0.08em;
   }
 
+  .classificado-banner {
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+
+  .classificado-banner .classificado-ribbon {
+    font-size: 0.72rem;
+    padding: 0.1rem 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
   .pos-cell {
     text-align: center;
     white-space: nowrap;

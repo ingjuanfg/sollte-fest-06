@@ -69,6 +69,9 @@ const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 const HONORARY_CATEGORY = 'Mujeres Principiantes';
 const HONORARY_ATHLETE = 'esmeralda bustamante';
 
+const PRINCIPIANTES_HOMBRES_CATEGORY = 'Hombres Principiantes';
+const CLASSIFIED_DISPLAY_RANK_LIMIT = 3;
+
 const ELIMINATED_CATEGORY = 'Hombres Intermedios';
 const ELIMINATED_COUNT = 3;
 
@@ -414,18 +417,38 @@ function getEliminatedLabel(categoria) {
   return FEMININE_CATEGORIES.includes(categoria) ? 'ELIMINADA' : 'ELIMINADO';
 }
 
+function getClassifiedLabel(categoria) {
+  return categoria === HONORARY_CATEGORY ? 'CLASIFICADA' : 'CLASIFICADO';
+}
+
+function isClassifiedAthlete(athlete, categoria) {
+  if (categoria === PRINCIPIANTES_HOMBRES_CATEGORY) return true;
+  if (categoria === HONORARY_CATEGORY) {
+    return !athlete.isEliminated && athlete.displayRank <= CLASSIFIED_DISPLAY_RANK_LIMIT;
+  }
+  return false;
+}
+
 function prepareAthletesForDisplay(athletes, categoria) {
   let ordered;
 
   if (categoria === HONORARY_CATEGORY) {
     ordered = orderMujeresPrincipiantesAthletes(athletes);
 
-    return ordered.map((athlete, index) => ({
-      ...athlete,
-      displayRank: index === 0 ? 1 : index,
-      isHonorary: isHonoraryAthlete(athlete.atleta),
-      isEliminated: athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta)
-    }));
+    return ordered.map((athlete, index) => {
+      const displayRank = index === 0 ? 1 : index;
+      const isEliminated = athleteHasNA(athlete) && !isHonoraryAthlete(athlete.atleta);
+      const athleteData = {
+        ...athlete,
+        displayRank,
+        isHonorary: isHonoraryAthlete(athlete.atleta),
+        isEliminated
+      };
+      return {
+        ...athleteData,
+        isClassified: isClassifiedAthlete(athleteData, categoria)
+      };
+    });
   }
 
   if (categoria === ELIMINATED_CATEGORY) {
@@ -436,12 +459,18 @@ function prepareAthletesForDisplay(athletes, categoria) {
     ordered = [...athletes].sort((a, b) => a.total - b.total);
   }
 
-  return ordered.map((athlete, index) => ({
-    ...athlete,
-    displayRank: index + 1,
-    isHonorary: false,
-    isEliminated: shouldMarkLastThreeEliminated(categoria) && index >= ordered.length - ELIMINATED_COUNT
-  }));
+  return ordered.map((athlete, index) => {
+    const athleteData = {
+      ...athlete,
+      displayRank: index + 1,
+      isHonorary: false,
+      isEliminated: shouldMarkLastThreeEliminated(categoria) && index >= ordered.length - ELIMINATED_COUNT
+    };
+    return {
+      ...athleteData,
+      isClassified: isClassifiedAthlete(athleteData, categoria)
+    };
+  });
 }
 
 function getDisplayRankClass(displayRank, isHonorary) {
@@ -475,10 +504,11 @@ function renderTable({ athletes, wodNames }, categoria) {
 
   const displayAthletes = prepareAthletesForDisplay(athletes, categoria);
   const eliminatedLabel = getEliminatedLabel(categoria);
+  const classifiedLabel = getClassifiedLabel(categoria);
   let tableHTML = '';
 
   displayAthletes.forEach((athlete, index) => {
-    const { displayRank, isHonorary, isEliminated } = athlete;
+    const { displayRank, isHonorary, isEliminated, isClassified } = athlete;
     const medal = getDisplayMedal(displayRank);
     const rankClass = getDisplayRankClass(displayRank, isHonorary);
     const honoraryClass = isHonorary ? ' team-row--honorary' : '';
@@ -488,6 +518,12 @@ function renderTable({ athletes, wodNames }, categoria) {
     const eliminatedBadge = isEliminated
       ? `<span class="leader-banner eliminado-banner" aria-label="${eliminatedLabel === 'ELIMINADA' ? 'Eliminada' : 'Eliminado'}">
            <span class="leader-ribbon">${eliminatedLabel}</span>
+         </span>`
+      : '';
+
+    const classifiedBadge = isClassified
+      ? `<span class="classificado-banner" aria-label="${classifiedLabel === 'CLASIFICADA' ? 'Clasificada' : 'Clasificado'}">
+           <span class="classificado-ribbon">${classifiedLabel}</span>
          </span>`
       : '';
 
@@ -507,6 +543,7 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="expand-icon" id="expand-${index}" aria-hidden="true">▶</span>
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
+            ${classifiedBadge}
             ${eliminatedBadge}
           </div>
         </td>
