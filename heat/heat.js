@@ -1,13 +1,13 @@
 const HEAT_IMAGES = {
   1: ['belgica.png', 'senegal.png'],
-  2: ['panama.png', 'marruecos.png'],
-  3: ['jordania.png', 'suiza.png', 'uruguay.png'],
-  4: ['austria.png', 'eeuu.png', 'irak.png'],
+  2: ['marruecos.png', 'panama.png'],
+  3: ['checa.png', 'escocia.png', 'nueva zelanda.png'],
+  4: ['haiti.png', 'portugal.png', 'uzbe.png'],
   5: ['bajos.png', 'canada.png', 'francia.png'],
   6: ['argelia.png', 'egipto.png', 'noruega.png'],
   7: ['arabia.png', 'checa.png'],
-  8: ['checa.png', 'escocia.png', 'nueva zelanda.png'],
-  9: ['haiti.png', 'portugal.png', 'uzbe.png'],
+  8: ['jordania.png', 'suiza.png', 'uruguay.png'],
+  9: ['austria.png', 'eeuu.png', 'irak.png'],
   10: ['japon.png', 'mexico.png'],
   11: ['curazao.png', 'inglaterra.png', 'sudafrica.png'],
   12: ['costa.png', 'ghana.png', 'tunez.png'],
@@ -27,10 +27,12 @@ const SPONSOR_LOGOS = [
 
 const HEAT_CATEGORIES = [
   { from: 1, to: 2, label: 'Categoría Hombres Principiantes' },
-  { from: 3, to: 6, label: 'Categoría Hombres Intermedios' },
-  { from: 7, to: 9, label: 'Categoría Mujeres Principiantes' },
-  { from: 10, to: 12, label: 'Categoría Mujeres Avanzadas' },
-  { from: 13, to: 15, label: 'Categoría Hombres Avanzados' }
+  { from: 3, to: 4, label: 'Categoría Mujeres Principiantes' },
+  { from: 5, to: 6, label: 'Categoría Hombres Intermedios' },
+  { from: 7, to: 7, label: 'Categoría Mujeres Principiantes' },
+  { from: 8, to: 9, label: 'Categoría Hombres Intermedios' },
+  { from: 10, to: 11, label: 'Categoría Mujeres Avanzadas' },
+  { from: 12, to: 15, label: 'Categoría Hombres Avanzados' }
 ];
 
 const TOTAL_HEATS = Object.keys(HEAT_IMAGES).length;
