@@ -1,0 +1,454 @@
+/* ── Podio — pantalla completa ── */
+.podio-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #010806;
+}
+
+.podio-layout {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.podio-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.5rem, 1.5vw, 1rem) clamp(0.65rem, 2vw, 1.5rem);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255, 200, 80, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(12, 77, 53, 0.5), transparent 60%),
+    linear-gradient(165deg, #0e5238 0%, #062318 42%, #010806 100%);
+}
+
+.podio-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 28px,
+      rgba(255, 215, 120, 0.03) 28px,
+      rgba(255, 215, 120, 0.03) 29px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.podio-panel__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: clamp(0.35rem, 1vh, 0.65rem);
+  padding: clamp(0.45rem, 1.2vw, 0.85rem) clamp(0.55rem, 1.5vw, 1rem);
+  border: 1px solid rgba(255, 215, 120, 0.28);
+  border-radius: clamp(14px, 2vw, 22px);
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    0 0 50px rgba(255, 190, 60, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.podio-frame {
+  position: absolute;
+  inset: clamp(0.3rem, 1vw, 0.55rem);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.podio-corner {
+  position: absolute;
+  width: clamp(24px, 3.5vw, 40px);
+  height: clamp(24px, 3.5vw, 40px);
+  border-color: rgba(255, 210, 90, 0.8);
+  border-style: solid;
+  opacity: 0.95;
+}
+
+.podio-corner--tl {
+  top: 0;
+  left: 0;
+  border-width: 3px 0 0 3px;
+  border-radius: 6px 0 0 0;
+}
+
+.podio-corner--tr {
+  top: 0;
+  right: 0;
+  border-width: 3px 3px 0 0;
+  border-radius: 0 6px 0 0;
+}
+
+.podio-corner--bl {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 3px 3px;
+  border-radius: 0 0 0 6px;
+}
+
+.podio-corner--br {
+  bottom: 0;
+  right: 0;
+  border-width: 0 3px 3px 0;
+  border-radius: 0 0 6px 0;
+}
+
+/* ── Header ── */
+.podio-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.podio-header::before {
+  content: "★ PODIO OFICIAL ★";
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: clamp(0.58rem, 1.2vh, 0.72rem);
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  color: rgba(255, 215, 120, 0.78);
+}
+
+.podio-logo {
+  display: block;
+  max-width: clamp(90px, 14vh, 140px);
+  margin-bottom: 0.2rem;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+}
+
+.podio-eyebrow {
+  margin: 0;
+  font-size: clamp(0.6rem, 1.2vh, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.podio-label {
+  background: linear-gradient(180deg, #fff6cc 0%, #ffd966 35%, #e6b422 70%, #c9971a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 18px rgba(255, 200, 60, 0.45));
+  letter-spacing: 0.16em;
+  margin: 0.1rem 0 0;
+  font-size: clamp(2rem, 5.5vh, 3.25rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.podio-title {
+  margin: 0.15rem 0 0;
+  color: #fff;
+  letter-spacing: 0.18em;
+  font-size: clamp(1rem, 2.8vh, 1.55rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.podio-title::after {
+  content: "";
+  display: block;
+  width: min(280px, 70vw);
+  height: 2px;
+  margin: 0.25rem auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 210, 90, 0.85), transparent);
+}
+
+.podio-category {
+  margin: 0.2rem 0 0;
+  font-size: clamp(0.75rem, 1.6vh, 0.95rem);
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 90vw;
+}
+
+/* ── Stage & columns ── */
+.podio-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: min(960px, 96vw);
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+.podio-columns {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  align-items: end;
+  gap: clamp(0.35rem, 1.2vw, 0.75rem);
+  width: 100%;
+}
+
+.podio-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.podio-column__photos {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: clamp(0.35rem, 1vh, 0.65rem);
+}
+
+.podio-column__photo-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.25rem, 0.8vh, 0.5rem);
+}
+
+.podio-column__photo-row--dual {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.25rem, 0.8vw, 0.45rem);
+}
+
+.podio-column--1 .podio-column__photos .podio-trophy {
+  position: relative;
+  z-index: 4;
+  margin-bottom: clamp(-1.75rem, -4vh, -1rem);
+  pointer-events: none;
+}
+
+.podio-column__photos--dual .podio-trophy {
+  margin-bottom: clamp(-1.5rem, -3.5vh, -0.85rem);
+}
+
+/* ── Trophy ── */
+.podio-trophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 3;
+  filter: drop-shadow(0 0 22px rgba(255, 200, 70, 0.45));
+}
+
+.podio-trophy__img {
+  display: block;
+  width: clamp(56px, 10vh, 96px);
+  height: auto;
+  max-height: clamp(80px, 14vh, 130px);
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
+.podio-stage--dual-first .podio-trophy__img {
+  width: clamp(48px, 8vh, 78px);
+  max-height: clamp(68px, 11vh, 105px);
+}
+
+/* ── Athlete photos ── */
+.podio-photo {
+  position: relative;
+  padding: clamp(3px, 0.5vw, 5px);
+  border-radius: clamp(10px, 1.6vw, 14px);
+  overflow: visible;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+.podio-photo::before {
+  content: "";
+  position: absolute;
+  inset: clamp(4px, 0.6vw, 6px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: clamp(7px, 1.2vw, 10px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.podio-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    transparent 40%,
+    transparent 65%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+.podio-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: clamp(7px, 1.2vw, 10px);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.podio-column--1 .podio-photo {
+  width: clamp(88px, 16vw, 148px);
+}
+
+.podio-column--2 .podio-photo,
+.podio-column--3 .podio-photo {
+  width: clamp(72px, 13vw, 120px);
+}
+
+.podio-stage--dual-first .podio-column--1 .podio-photo {
+  width: clamp(68px, 12vw, 112px);
+}
+
+.podio-photo--gold {
+  background: linear-gradient(145deg, #ffe082, #ffd54f, #ffb300, #ffd54f, #ffe082);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 24px rgba(255, 190, 60, 0.45),
+    0 12px 28px rgba(0, 0, 0, 0.5);
+}
+
+.podio-photo--silver {
+  background: linear-gradient(145deg, #f5f5f5, #e0e0e0, #bdbdbd, #e0e0e0, #f5f5f5);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 18px rgba(192, 192, 192, 0.35),
+    0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+.podio-photo--bronze {
+  background: linear-gradient(145deg, #e8c4a0, #cd7f32, #b87333, #cd7f32, #e8c4a0);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 18px rgba(184, 115, 51, 0.35),
+    0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Podium blocks (footer base) ── */
+.podio-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: clamp(8px, 1.2vw, 12px) clamp(8px, 1.2vw, 12px) 0 0;
+  position: relative;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.25),
+    0 -4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.podio-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+.podio-block__num {
+  font-size: clamp(1.75rem, 5vh, 3rem);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.06em;
+  padding: clamp(0.35rem, 1vh, 0.65rem) 0;
+}
+
+.podio-block--1 {
+  height: clamp(88px, 18vh, 148px);
+  background: linear-gradient(180deg, #ffd54f 0%, #e6b422 55%, #a67c00 100%);
+}
+
+.podio-block--2 {
+  height: clamp(64px, 13vh, 108px);
+  background: linear-gradient(180deg, #e8e8e8 0%, #bdbdbd 55%, #757575 100%);
+}
+
+.podio-block--3 {
+  height: clamp(48px, 10vh, 82px);
+  background: linear-gradient(180deg, #e8c4a0 0%, #cd7f32 55%, #8b4513 100%);
+}
+
+/* ── Pager ── */
+.podio-pager {
+  flex-shrink: 0;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.podio-pager .heat-pager__btn {
+  width: clamp(2.4rem, 5vh, 3rem);
+  height: clamp(2.4rem, 5vh, 3rem);
+  font-size: clamp(1.35rem, 3vh, 1.75rem);
+  border-color: rgba(255, 210, 90, 0.35);
+  background: linear-gradient(145deg, #0e5238, #083828);
+  box-shadow:
+    0 0 16px rgba(255, 190, 60, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.podio-pager .heat-pager__indicator {
+  color: rgba(255, 235, 180, 0.95);
+  font-size: clamp(0.8rem, 1.8vh, 1rem);
+}
+
+@media (min-width: 1200px) {
+  .podio-column--1 .podio-photo {
+    width: 148px;
+  }
+
+  .podio-column--2 .podio-photo,
+  .podio-column--3 .podio-photo {
+    width: 120px;
+  }
+
+  .podio-stage--dual-first .podio-column--1 .podio-photo {
+    width: 108px;
+  }
+
+  .podio-trophy__img {
+    width: 96px;
+    max-height: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .podio-columns {
+    gap: 0.25rem;
+  }
+
+  .podio-block__num {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Podio — Sollte Fest 07</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Podio — Sollte Fest 07 Mundialista" />
+  <meta name="theme-color" content="#0c4d35" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../heat/heat.css">
+  <link rel="stylesheet" href="podio.css">
+</head>
+<body class="podio-page">
+  <div class="podio-layout">
+    <div class="podio-panel">
+      <div class="podio-panel__inner">
+        <div class="podio-frame" aria-hidden="true">
+          <span class="podio-corner podio-corner--tl"></span>
+          <span class="podio-corner podio-corner--tr"></span>
+          <span class="podio-corner podio-corner--bl"></span>
+          <span class="podio-corner podio-corner--br"></span>
+        </div>
+
+        <header class="podio-header">
+          <img
+            src="../assets/sollte_logo_nombre_icono.png"
+            alt="Sollte Fest"
+            class="podio-logo"
+            onerror="this.style.display='none'"
+          />
+          <p class="podio-eyebrow">Sollte Fest 07 — Mundialista</p>
+          <p class="podio-label" id="podioLabel">PODIO</p>
+          <h1 class="podio-title" id="podioTitle">PODIO 1</h1>
+          <p class="podio-category" id="podioCategory">Categoría</p>
+        </header>
+
+        <div class="podio-stage" id="podioStage" aria-live="polite"></div>
+
+        <nav class="heat-pager heat-pager--final podio-pager" aria-label="Navegación entre podios">
+          <button type="button" id="podioPrev" class="heat-pager__btn" aria-label="Podio anterior">‹</button>
+          <span class="heat-pager__indicator" id="podioIndicator">1 / 5</span>
+          <button type="button" id="podioNext" class="heat-pager__btn" aria-label="Podio siguiente">›</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script src="podio.js"></script>
+</body>
+</html>
