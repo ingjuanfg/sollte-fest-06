@@ -3,17 +3,13 @@ const HEAT_IMAGES = {
   2: ['marruecos.png', 'panama.png'],
   3: ['checa.png', 'escocia.png', 'nueva zelanda.png'],
   4: ['haiti.png', 'portugal.png', 'uzbe.png'],
-  5: ['bajos.png', 'canada.png', 'francia.png'],
-  6: ['argelia.png', 'egipto.png', 'noruega.png'],
-  7: ['arabia.png', 'checa.png'],
-  8: ['jordania.png', 'suiza.png', 'uruguay.png'],
-  9: ['austria.png', 'eeuu.png', 'irak.png'],
-  10: ['japon.png', 'mexico.png'],
-  11: ['curazao.png', 'inglaterra.png', 'sudafrica.png'],
-  12: ['costa.png', 'ghana.png', 'tunez.png'],
-  13: ['brasil.png', 'iran.png', 'tiben.png'],
-  14: ['cabo.png', 'colombia.png', 'qatar.png'],
-  15: ['costa.png', 'ghana.png', 'tunez.png']
+  5: ['eeuu.png', 'irak.png', 'uruguay.png'],
+  6: ['austria.png', 'bajos.png', 'canada.png'],
+  7: ['argelia.png', 'egipto.png', 'francia.png'],
+  8: ['japon.png', 'mexico.png'],
+  9: ['curazao.png', 'inglaterra.png', 'sudafrica.png'],
+  10: ['brasil.png', 'cabo.png', 'tiben.png'],
+  11: ['colombia.png', 'iran.png', 'qatar.png']
 };
 
 const SPONSOR_LOGOS = [
@@ -28,11 +24,9 @@ const SPONSOR_LOGOS = [
 const HEAT_CATEGORIES = [
   { from: 1, to: 2, label: 'Categoría Hombres Principiantes' },
   { from: 3, to: 4, label: 'Categoría Mujeres Principiantes' },
-  { from: 5, to: 6, label: 'Categoría Hombres Intermedios' },
-  { from: 7, to: 7, label: 'Categoría Mujeres Principiantes' },
-  { from: 8, to: 9, label: 'Categoría Hombres Intermedios' },
-  { from: 10, to: 11, label: 'Categoría Mujeres Avanzadas' },
-  { from: 12, to: 15, label: 'Categoría Hombres Avanzados' }
+  { from: 5, to: 7, label: 'Categoría Hombres Intermedios' },
+  { from: 8, to: 9, label: 'Categoría Mujeres Avanzadas' },
+  { from: 10, to: 11, label: 'Categoría Hombres Avanzados' }
 ];
 
 const TOTAL_HEATS = Object.keys(HEAT_IMAGES).length;
@@ -117,20 +111,22 @@ function renderMatchup(heatNum, images) {
 function updatePageMeta(heatNum) {
   const category = getCategory(heatNum);
   const title = isWodViewer()
-    ? `WOD 1 — Heat ${heatNum} — Sollte Fest 07`
-    : `Heat ${heatNum} — Sollte Fest 07`;
+    ? `Semifinal — Heat ${heatNum} — Sollte Fest 07`
+    : `Semifinal — Heat ${heatNum} — Sollte Fest 07`;
 
   document.title = title;
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
-    metaDesc.content = `${title} — ${category} — WOD #1 Partido Inaugural`;
+    metaDesc.content = `${title} — ${category}`;
   }
 
+  const heatSemifinal = document.getElementById('heatSemifinal');
   const heatTitle = document.getElementById('heatTitle');
   const heatCategory = document.getElementById('heatCategory');
 
-  if (heatTitle) heatTitle.textContent = `Heat ${heatNum}`;
+  if (heatSemifinal) heatSemifinal.textContent = 'SEMIFINAL';
+  if (heatTitle) heatTitle.textContent = `HEAT ${heatNum}`;
   if (heatCategory) heatCategory.textContent = category;
 }
 

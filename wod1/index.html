@@ -14,8 +14,14 @@
 </head>
 <body class="heat-page heat-page--wod-viewer">
   <div class="heat-layout">
-    <section class="heat-panel heat-panel--athletes" aria-labelledby="heatTitle">
-      <div class="heat-panel__inner">
+    <section class="heat-panel heat-panel--athletes heat-panel--semifinal" aria-labelledby="heatTitle">
+      <div class="heat-panel__inner heat-panel__inner--semifinal">
+        <div class="heat-semifinal-frame" aria-hidden="true">
+          <span class="heat-semifinal-corner heat-semifinal-corner--tl"></span>
+          <span class="heat-semifinal-corner heat-semifinal-corner--tr"></span>
+          <span class="heat-semifinal-corner heat-semifinal-corner--bl"></span>
+          <span class="heat-semifinal-corner heat-semifinal-corner--br"></span>
+        </div>
         <header class="heat-header">
           <img
             src="../assets/sollte_logo_nombre_icono.png"
@@ -24,16 +30,16 @@
             onerror="this.style.display='none'"
           />
           <p class="heat-eyebrow">Sollte Fest 07 — Mundialista</p>
-          <h1 class="heat-title" id="heatTitle">Heat 1</h1>
+          <p class="heat-semifinal" id="heatSemifinal">SEMIFINAL</p>
+          <h1 class="heat-heat-num" id="heatTitle">HEAT 1</h1>
           <p class="heat-category" id="heatCategory">Categoría</p>
-          <p class="heat-subtitle">Competidores de este heat</p>
         </header>
 
         <div class="heat-matchup" id="heatMatchup"></div>
 
         <nav class="heat-pager" aria-label="Navegación entre heats">
           <button type="button" id="heatPrev" class="heat-pager__btn" aria-label="Heat anterior">‹</button>
-          <span class="heat-pager__indicator" id="heatIndicator">1 / 15</span>
+          <span class="heat-pager__indicator" id="heatIndicator">1 / 11</span>
           <button type="button" id="heatNext" class="heat-pager__btn" aria-label="Heat siguiente">›</button>
         </nav>
 
