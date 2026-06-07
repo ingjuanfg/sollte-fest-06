@@ -71,6 +71,7 @@ const HONORARY_ATHLETE = 'esmeralda bustamante';
 
 const PRINCIPIANTES_HOMBRES_CATEGORY = 'Hombres Principiantes';
 const CLASSIFIED_DISPLAY_RANK_LIMIT = 3;
+const INTERMEDIOS_CLASSIFIED_LIMIT = 4;
 
 const ELIMINATED_CATEGORY = 'Hombres Intermedios';
 const ELIMINATED_COUNT = 3;
@@ -425,6 +426,9 @@ function isClassifiedAthlete(athlete, categoria) {
   if (categoria === PRINCIPIANTES_HOMBRES_CATEGORY) return true;
   if (categoria === HONORARY_CATEGORY) {
     return !athlete.isEliminated && athlete.displayRank <= CLASSIFIED_DISPLAY_RANK_LIMIT;
+  }
+  if (categoria === ELIMINATED_CATEGORY) {
+    return !athlete.isEliminated && athlete.displayRank <= INTERMEDIOS_CLASSIFIED_LIMIT;
   }
   return false;
 }
