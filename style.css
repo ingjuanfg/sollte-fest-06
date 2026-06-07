@@ -433,6 +433,37 @@
     outline-color: #e879a8;
   }
 
+  #tablaResultados tbody tr.team-row--eliminated {
+    background: linear-gradient(90deg, #fde8e8, #fad4d4);
+  }
+
+  #tablaResultados tbody tr.team-row--eliminated:hover {
+    background: linear-gradient(90deg, #fad4d4, #f5bcbc);
+  }
+
+  #tablaResultados tbody tr.team-row--eliminated.team-row--expanded {
+    background: linear-gradient(90deg, #fad4d4, #f5bcbc);
+    outline-color: #e57373;
+  }
+
+  .team-name-cell {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.6rem;
+  }
+
+  .eliminado-banner {
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+
+  .eliminado-banner .leader-ribbon {
+    font-size: 0.72rem;
+    padding: 0.1rem 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
   .pos-cell {
     text-align: center;
     white-space: nowrap;

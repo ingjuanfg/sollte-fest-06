@@ -1,10 +1,10 @@
 // ====== CONFIG ======
 const CSV_LOCAL = {
-  "Hombres Principiantes": "data/Hombres Principiantes.csv",
-  "Mujeres Principiantes": "data/Mujeres Principiantes.csv",
-  "Hombres Intermedios":   "data/Hombres Intermedios.csv",
-  "Mujeres Avanzadas":     "data/Mujeres Avanzadas.csv",
-  "Hombres Avanzados":     "data/Hombres Avanzados.csv"
+  "Hombres Principiantes": "data/Sollte Fest Resultados - Hombres Principiantes.csv",
+  "Mujeres Principiantes": "data/Sollte Fest Resultados - Mujeres Principiantes.csv",
+  "Hombres Intermedios":   "data/Sollte Fest Resultados - Hombres Intermedios.csv",
+  "Mujeres Avanzadas":     "data/Sollte Fest Resultados - Mujeres Avanzadas.csv",
+  "Hombres Avanzados":     "data/Sollte Fest Resultados - Hombres Avanzados.csv"
 };
 
 const PLACEHOLDER_MSG = 'Aquí podrás ver los resultados próximamente';
@@ -68,6 +68,9 @@ const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
 const HONORARY_CATEGORY = 'Mujeres Principiantes';
 const HONORARY_ATHLETE = 'esmeralda bustamante';
+
+const ELIMINATED_CATEGORY = 'Hombres Intermedios';
+const ELIMINATED_COUNT = 3;
 
 // ====== DOM ======
 const categoriaSelect = document.getElementById('categoriaSelect');
@@ -189,7 +192,7 @@ async function loadData() {
   showLoading(true);
 
   try {
-    const res = await fetch(url + '?t=' + Date.now());
+    const res = await fetch(encodeURI(url) + '?t=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     const parsed = parseResultsCSV(text);
@@ -352,23 +355,28 @@ function isHonoraryAthlete(name) {
 
 function prepareAthletesForDisplay(athletes, categoria) {
   const sorted = [...athletes].sort((a, b) => a.total - b.total);
+  let ordered;
 
-  if (categoria !== HONORARY_CATEGORY) {
-    return sorted.map((athlete, index) => ({
+  if (categoria === HONORARY_CATEGORY) {
+    const honorary = sorted.find(athlete => isHonoraryAthlete(athlete.atleta));
+    const rest = sorted.filter(athlete => !isHonoraryAthlete(athlete.atleta));
+    ordered = honorary ? [honorary, ...rest] : sorted;
+
+    return ordered.map((athlete, index) => ({
       ...athlete,
-      displayRank: index + 1,
-      isHonorary: false
+      displayRank: index === 0 ? 1 : index,
+      isHonorary: isHonoraryAthlete(athlete.atleta),
+      isEliminated: false
     }));
   }
 
-  const honorary = sorted.find(athlete => isHonoraryAthlete(athlete.atleta));
-  const rest = sorted.filter(athlete => !isHonoraryAthlete(athlete.atleta));
-  const ordered = honorary ? [honorary, ...rest] : sorted;
+  ordered = sorted;
 
   return ordered.map((athlete, index) => ({
     ...athlete,
-    displayRank: index === 0 ? 1 : index,
-    isHonorary: isHonoraryAthlete(athlete.atleta)
+    displayRank: index + 1,
+    isHonorary: false,
+    isEliminated: categoria === ELIMINATED_CATEGORY && index >= ordered.length - ELIMINATED_COUNT
   }));
 }
 
@@ -405,27 +413,37 @@ function renderTable({ athletes, wodNames }, categoria) {
   let tableHTML = '';
 
   displayAthletes.forEach((athlete, index) => {
-    const { displayRank, isHonorary } = athlete;
+    const { displayRank, isHonorary, isEliminated } = athlete;
     const medal = getDisplayMedal(displayRank);
     const rankClass = getDisplayRankClass(displayRank, isHonorary);
     const honoraryClass = isHonorary ? ' team-row--honorary' : '';
+    const eliminatedClass = isEliminated ? ' team-row--eliminated' : '';
     const flag = getCountryFlag(athlete.pais);
+
+    const eliminatedBadge = isEliminated
+      ? `<span class="leader-banner eliminado-banner" aria-label="Eliminado">
+           <span class="leader-ribbon">ELIMINADO</span>
+         </span>`
+      : '';
 
     const wodCells = athlete.wods.map(wod =>
       `<td class="wod-pos-cell">${formatWodPosition(wod.puntos)}</td>`
     ).join('');
 
     tableHTML += `
-      <tr class="team-row${honoraryClass}" data-team-index="${index}">
+      <tr class="team-row${honoraryClass}${eliminatedClass}" data-team-index="${index}">
         <td class="pos-cell">
           <span class="rank-badge ${rankClass}">${displayRank}</span>
           ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
         </td>
-        <td>
-          <button type="button" class="team-name" onclick="toggleTeamDetails(${index})" aria-expanded="false" id="team-btn-${index}">
-            <span class="expand-icon" id="expand-${index}" aria-hidden="true">▶</span>
-            <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
-          </button>
+        <td class="name-cell">
+          <div class="team-name-cell">
+            <button type="button" class="team-name" onclick="toggleTeamDetails(${index})" aria-expanded="false" id="team-btn-${index}">
+              <span class="expand-icon" id="expand-${index}" aria-hidden="true">▶</span>
+              <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
+            </button>
+            ${eliminatedBadge}
+          </div>
         </td>
         <td class="country-cell">
           <span class="country-flag" title="${escapeHtml(athlete.pais)}">${flag}</span>
