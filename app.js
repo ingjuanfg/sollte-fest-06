@@ -79,8 +79,6 @@ const ELIMINATED_CATEGORY = 'Hombres Intermedios';
 
 const ADVANCED_CATEGORIES = ['Mujeres Avanzadas', 'Hombres Avanzados'];
 const HOMBRES_AVANZADOS_CATEGORY = 'Hombres Avanzados';
-const SANTIAGO_AVANZADOS_NAME = 'santiago ceballos';
-const DARI_AVANZADOS_NAME = 'dari';
 
 // ====== DOM ======
 const categoriaSelect = document.getElementById('categoriaSelect');
@@ -409,27 +407,6 @@ function orderAvanzadosAthletes(athletes) {
   return [...withoutNA, ...withNA];
 }
 
-function isSantiagoAvanzados(name) {
-  return normalizeAthleteName(name) === SANTIAGO_AVANZADOS_NAME;
-}
-
-function isDariAvanzados(name) {
-  return normalizeAthleteName(name) === DARI_AVANZADOS_NAME;
-}
-
-function orderHombresAvanzadosAthletes(athletes) {
-  const ordered = [...orderAvanzadosAthletes(athletes)];
-  const santiagoIdx = ordered.findIndex(athlete => isSantiagoAvanzados(athlete.atleta));
-  const dariIdx = ordered.findIndex(athlete => isDariAvanzados(athlete.atleta));
-
-  if (santiagoIdx === -1 || dariIdx === -1 || santiagoIdx === dariIdx) {
-    return ordered;
-  }
-
-  [ordered[santiagoIdx], ordered[dariIdx]] = [ordered[dariIdx], ordered[santiagoIdx]];
-  return ordered;
-}
-
 function isAdvancedCategory(categoria) {
   return ADVANCED_CATEGORIES.includes(categoria);
 }
@@ -453,7 +430,7 @@ function prepareAthletesForDisplay(athletes, categoria) {
   if (categoria === ELIMINATED_CATEGORY) {
     ordered = orderIntermediosAthletes(athletes);
   } else if (categoria === HOMBRES_AVANZADOS_CATEGORY) {
-    ordered = orderHombresAvanzadosAthletes(athletes);
+    ordered = [...athletes].sort((a, b) => a.total - b.total);
   } else if (isAdvancedCategory(categoria)) {
     ordered = orderAvanzadosAthletes(athletes);
   } else {
