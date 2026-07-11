@@ -1,4 +1,6 @@
 const TROPHY_IMAGE = '../assets/copa-final.png';
+const SEDE_STORAGE_KEY = 'sollte-sede';
+const DEFAULT_SEDE = 'pereira';
 
 const PODIO_SLIDES = [
   {
@@ -45,13 +47,23 @@ const PODIO_SLIDES = [
 
 const TOTAL_PODIOS = PODIO_SLIDES.length;
 
+function getSede() {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = (params.get('sede') || '').toLowerCase();
+  if (fromQuery === 'pereira' || fromQuery === 'envigado') return fromQuery;
+
+  const stored = (localStorage.getItem(SEDE_STORAGE_KEY) || '').toLowerCase();
+  if (stored === 'pereira' || stored === 'envigado') return stored;
+  return DEFAULT_SEDE;
+}
+
 function formatAlt(filename) {
   const base = filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
   return base.charAt(0).toUpperCase() + base.slice(1);
 }
 
-function getPodioAssetUrl(folder, filename) {
-  return `../assets/podio/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
+function getPodioAssetUrl(sede, folder, filename) {
+  return `../assets/podio/${encodeURIComponent(sede)}/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}`;
 }
 
 function getInitialPodioFromQuery() {
@@ -68,14 +80,17 @@ function getInitialPodioFromQuery() {
   return 1;
 }
 
-function createPhoto(folder, filename, medalClass) {
+function createPhoto(sede, folder, filename, medalClass) {
   const photo = document.createElement('div');
   photo.className = `podio-photo podio-photo--${medalClass}`;
 
   const img = document.createElement('img');
-  img.src = getPodioAssetUrl(folder, filename);
+  img.src = getPodioAssetUrl(sede, folder, filename);
   img.alt = formatAlt(filename);
   img.loading = 'eager';
+  img.onerror = () => {
+    photo.classList.add('podio-photo--missing');
+  };
 
   photo.appendChild(img);
   return photo;
@@ -95,7 +110,7 @@ function createTrophy() {
   return trophy;
 }
 
-function createColumn(position, medalClass, files, folder, options = {}) {
+function createColumn(sede, position, medalClass, files, folder, options = {}) {
   const column = document.createElement('div');
   column.className = `podio-column podio-column--${position}`;
 
@@ -112,7 +127,7 @@ function createColumn(position, medalClass, files, folder, options = {}) {
   if (options.dualFirst) photosRow.classList.add('podio-column__photo-row--dual');
 
   files.forEach(filename => {
-    photosRow.appendChild(createPhoto(folder, filename, medalClass));
+    photosRow.appendChild(createPhoto(sede, folder, filename, medalClass));
   });
 
   photosWrap.appendChild(photosRow);
@@ -126,7 +141,7 @@ function createColumn(position, medalClass, files, folder, options = {}) {
   return column;
 }
 
-function renderPodioStage(slide) {
+function renderPodioStage(slide, sede) {
   const stage = document.getElementById('podioStage');
   if (!stage) return;
 
@@ -137,21 +152,22 @@ function renderPodioStage(slide) {
   const columns = document.createElement('div');
   columns.className = 'podio-columns';
 
-  columns.appendChild(createColumn(2, 'silver', slide.second, slide.folder));
-  columns.appendChild(createColumn(1, 'gold', slide.first, slide.folder, {
+  columns.appendChild(createColumn(sede, 2, 'silver', slide.second, slide.folder));
+  columns.appendChild(createColumn(sede, 1, 'gold', slide.first, slide.folder, {
     showTrophy: true,
     dualFirst: isDualFirst
   }));
-  columns.appendChild(createColumn(3, 'bronze', slide.third, slide.folder));
+  columns.appendChild(createColumn(sede, 3, 'bronze', slide.third, slide.folder));
 
   stage.appendChild(columns);
 }
 
-function updatePageMeta(index) {
+function updatePageMeta(index, sede) {
   const slide = PODIO_SLIDES[index - 1];
   if (!slide) return;
 
-  const title = `${slide.title} — Sollte Fest 07`;
+  const sedeLabel = sede === 'envigado' ? 'Envigado' : 'Pereira';
+  const title = `${slide.title} — ${sedeLabel} — Sollte Fest 07`;
   document.title = title;
 
   const metaDesc = document.querySelector('meta[name="description"]');
@@ -163,7 +179,7 @@ function updatePageMeta(index) {
 
   if (podioLabel) podioLabel.textContent = 'PODIO';
   if (podioTitle) podioTitle.textContent = slide.title;
-  if (podioCategory) podioCategory.textContent = slide.category;
+  if (podioCategory) podioCategory.textContent = `${slide.category} · ${sedeLabel}`;
 }
 
 function updatePager(index) {
@@ -171,24 +187,26 @@ function updatePager(index) {
   if (indicator) indicator.textContent = `${index} / ${TOTAL_PODIOS}`;
 }
 
-function updateViewerUrl(index) {
+function updateViewerUrl(index, sede) {
   const url = new URL(window.location.href);
   url.searchParams.set('podio', String(index));
-  window.history.replaceState({ podio: index }, '', url);
+  url.searchParams.set('sede', sede);
+  window.history.replaceState({ podio: index, sede }, '', url);
 }
 
-function renderPodio(index) {
+function renderPodio(index, sede) {
   const slide = PODIO_SLIDES[index - 1];
   if (!slide) return false;
 
-  updatePageMeta(index);
-  renderPodioStage(slide);
+  updatePageMeta(index, sede);
+  renderPodioStage(slide, sede);
   updatePager(index);
-  updateViewerUrl(index);
+  updateViewerUrl(index, sede);
   return true;
 }
 
 function initPodioViewer() {
+  const sede = getSede();
   let currentPodio = getInitialPodioFromQuery();
 
   const prevBtn = document.getElementById('podioPrev');
@@ -198,7 +216,7 @@ function initPodioViewer() {
     let podioNum = target;
     if (podioNum < 1) podioNum = TOTAL_PODIOS;
     if (podioNum > TOTAL_PODIOS) podioNum = 1;
-    if (!renderPodio(podioNum)) return;
+    if (!renderPodio(podioNum, sede)) return;
     currentPodio = podioNum;
   }
 

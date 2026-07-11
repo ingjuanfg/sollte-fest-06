@@ -1,24 +1,56 @@
 // ====== CONFIG ======
-const CSV_LOCAL = {
-  "Hombres Principiantes": "data/Sollte Fest Resultados - Hombres Principiantes.csv",
-  "Mujeres Principiantes": "data/Sollte Fest Resultados - Mujeres Principiantes.csv",
-  "Hombres Intermedios":   "data/Sollte Fest Resultados - Hombres Intermedios.csv",
-  "Mujeres Avanzadas":     "data/Sollte Fest Resultados - Mujeres Avanzadas.csv",
-  "Hombres Avanzados":     "data/Sollte Fest Resultados - Hombres Avanzados.csv"
+const CATEGORIES_BY_SEDE = {
+  pereira: [
+    { label: 'Principiante Mujer', file: 'Resultados Sollte Fest 07 Pereira - Prinp Mujer.csv' },
+    { label: 'Principiante Hombre', file: 'Resultados Sollte Fest 07 Pereira - Prinp Hombre.csv' },
+    { label: 'Intermedio Mujer', file: 'Resultados Sollte Fest 07 Pereira - Interm Mujer.csv' },
+    { label: 'Intermedio Hombre', file: 'Resultados Sollte Fest 07 Pereira - Interm Hombre.csv' },
+    { label: 'Avanzado Hombre', file: 'Resultados Sollte Fest 07 Pereira - Avanz Hombre.csv' },
+    { label: 'Elite Mixto', file: 'Resultados Sollte Fest 07 Pereira - Elite.csv' }
+  ],
+  envigado: [
+    { label: 'Hombres Principiantes', file: 'Sollte Fest Resultados - Hombres Principiantes.csv' },
+    { label: 'Mujeres Principiantes', file: 'Sollte Fest Resultados - Mujeres Principiantes.csv' },
+    { label: 'Hombres Intermedios', file: 'Sollte Fest Resultados - Hombres Intermedios.csv' },
+    { label: 'Mujeres Avanzadas', file: 'Sollte Fest Resultados - Mujeres Avanzadas.csv' },
+    { label: 'Hombres Avanzados', file: 'Sollte Fest Resultados - Hombres Avanzados.csv' }
+  ]
 };
+
+const DEFAULT_SEDE = 'pereira';
+const SEDE_STORAGE_KEY = 'sollte-sede';
+
+let currentSede = DEFAULT_SEDE;
+let setCategoriaFn = null;
+let rebuildCategoriaOptionsFn = null;
+
+function getCategoriesForSede(sede = currentSede) {
+  return CATEGORIES_BY_SEDE[sede] || CATEGORIES_BY_SEDE.pereira;
+}
+
+function getCsvPath(categoria, sede = currentSede) {
+  const found = getCategoriesForSede(sede).find(item => item.label === categoria);
+  if (found) return `data/${sede}/${found.file}`;
+  return `data/${sede}/${categoria}.csv`;
+}
 
 const PLACEHOLDER_MSG = 'Aquí podrás ver los resultados próximamente';
 
 const COUNTRY_FLAGS = {
   'paises bajos': '🇳🇱',
+  'holanda': '🇳🇱',
   'austria': '🇦🇹',
+  'austri': '🇦🇹',
   'francia': '🇫🇷',
   'canada': '🇨🇦',
   'jordania': '🇯🇴',
   'irak': '🇮🇶',
+  'iraq': '🇮🇶',
   'noruega': '🇳🇴',
   'egipto': '🇪🇬',
   'estados unidos': '🇺🇸',
+  'eeuu': '🇺🇸',
+  'usa': '🇺🇸',
   'uruguay': '🇺🇾',
   'suiza': '🇨🇭',
   'argelia': '🇩🇿',
@@ -42,7 +74,9 @@ const COUNTRY_FLAGS = {
   'uzbe': '🇺🇿',
   'uzbekistan': '🇺🇿',
   'haiti': '🇭🇹',
+  'haití': '🇭🇹',
   'nueva zelanda': '🇳🇿',
+  'zelanda': '🇳🇿',
   'curazao': '🇨🇼',
   'curacao': '🇨🇼',
   'japon': '🇯🇵',
@@ -56,12 +90,38 @@ const COUNTRY_FLAGS = {
   'colombia': '🇨🇴',
   'costa': '🇨🇷',
   'costa rica': '🇨🇷',
+  'costarica': '🇨🇷',
   'qatar': '🇶🇦',
   'cabo': '🇨🇻',
   'cabo verde': '🇨🇻',
   'ghana': '🇬🇭',
   'iran': '🇮🇷',
-  'irán': '🇮🇷'
+  'irán': '🇮🇷',
+  'alemania': '🇩🇪',
+  'argentina': '🇦🇷',
+  'australia': '🇦🇺',
+  'bosnia': '🇧🇦',
+  'camerun': '🇨🇲',
+  'camerún': '🇨🇲',
+  'chile': '🇨🇱',
+  'china': '🇨🇳',
+  'congo': '🇨🇬',
+  'costa de marfil': '🇨🇮',
+  'marfil': '🇨🇮',
+  'croacia': '🇭🇷',
+  'dinamarca': '🇩🇰',
+  'filandia': '🇫🇮',
+  'finlandia': '🇫🇮',
+  'italia': '🇮🇹',
+  'korea': '🇰🇷',
+  'corea': '🇰🇷',
+  'corea del sur': '🇰🇷',
+  'nigeria': '🇳🇬',
+  'paraguay': '🇵🇾',
+  'polonia': '🇵🇱',
+  'suecia': '🇸🇪',
+  'turquia': '🇹🇷',
+  'turquía': '🇹🇷'
 };
 
 const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
@@ -97,9 +157,43 @@ let resizeHintTimer;
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
+  initSedeSwitch();
   initCategoriaPicker();
   reloadBtn.addEventListener('click', loadData);
   window.addEventListener('resize', scheduleTableHintUpdate);
+}
+
+function initSedeSwitch() {
+  const stored = localStorage.getItem(SEDE_STORAGE_KEY);
+  currentSede = stored === 'envigado' || stored === 'pereira' ? stored : DEFAULT_SEDE;
+
+  const buttons = document.querySelectorAll('.sede-switch__btn');
+  if (!buttons.length) return;
+
+  function applySede(sede, { reload = true } = {}) {
+    currentSede = sede;
+    localStorage.setItem(SEDE_STORAGE_KEY, sede);
+    buttons.forEach(btn => {
+      const active = btn.dataset.sede === sede;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    cargarPatrocinadores(sede);
+    const categories = getCategoriesForSede(sede);
+    rebuildCategoriaOptionsFn?.(categories);
+    if (reload) {
+      setCategoriaFn?.(categories[0]?.label, { close: true });
+    }
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.sede === currentSede) return;
+      applySede(btn.dataset.sede);
+    });
+  });
+
+  applySede(currentSede, { reload: false });
 }
 
 function scheduleTableHintUpdate() {
@@ -133,30 +227,40 @@ function initCategoriaPicker() {
   const menu = document.getElementById('categoriaMenu');
   if (!categoriaSelect || !trigger || !valueSpan || !menu) return;
 
-  Object.keys(CSV_LOCAL).forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    categoriaSelect.appendChild(opt);
+  function rebuildCategoriaOptions(categories) {
+    categoriaSelect.innerHTML = '';
+    menu.innerHTML = '';
 
-    const item = document.createElement('li');
-    item.role = 'option';
-    item.dataset.value = cat;
-    item.textContent = cat;
-    item.tabIndex = -1;
-    item.addEventListener('click', () => setCategoria(cat));
-    menu.appendChild(item);
-  });
+    categories.forEach(({ label }) => {
+      const opt = document.createElement('option');
+      opt.value = label;
+      opt.textContent = label;
+      categoriaSelect.appendChild(opt);
 
-  function setCategoria(cat) {
-    categoriaSelect.value = cat;
-    valueSpan.textContent = cat;
+      const item = document.createElement('li');
+      item.role = 'option';
+      item.dataset.value = label;
+      item.textContent = label;
+      item.tabIndex = -1;
+      item.addEventListener('click', () => setCategoria(label));
+      menu.appendChild(item);
+    });
+  }
+
+  function setCategoria(cat, { close = true } = {}) {
+    const categories = getCategoriesForSede();
+    const valid = categories.some(item => item.label === cat);
+    const nextCat = valid ? cat : categories[0]?.label;
+    if (!nextCat) return;
+
+    categoriaSelect.value = nextCat;
+    valueSpan.textContent = nextCat;
     menu.querySelectorAll('[role="option"]').forEach(item => {
-      const selected = item.dataset.value === cat;
+      const selected = item.dataset.value === nextCat;
       item.classList.toggle('is-selected', selected);
       item.setAttribute('aria-selected', selected);
     });
-    closeMenu();
+    if (close) closeMenu();
     loadData();
   }
 
@@ -190,12 +294,17 @@ function initCategoriaPicker() {
     if (e.key === 'Escape') closeMenu();
   });
 
-  setCategoria(Object.keys(CSV_LOCAL)[0]);
+  setCategoriaFn = setCategoria;
+  rebuildCategoriaOptionsFn = rebuildCategoriaOptions;
+
+  rebuildCategoriaOptions(getCategoriesForSede());
+  setCategoria(getCategoriesForSede()[0]?.label);
 }
 
 async function loadData() {
-  const categoria = categoriaSelect.value || Object.keys(CSV_LOCAL)[0];
-  const url = CSV_LOCAL[categoria];
+  const categories = getCategoriesForSede();
+  const categoria = categoriaSelect.value || categories[0]?.label;
+  const url = getCsvPath(categoria);
 
   showLoading(true);
 
@@ -205,7 +314,8 @@ async function loadData() {
     const text = await res.text();
     const parsed = parseResultsCSV(text);
     renderTable(parsed, categoria);
-    lastUpdateSpan.textContent = `Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
+    const sedeLabel = currentSede === 'envigado' ? 'Envigado' : 'Pereira';
+    lastUpdateSpan.textContent = `${sedeLabel} • Categoría: ${categoria} • Actualizado: ${new Date().toLocaleString()}`;
   } catch (err) {
     console.error(err);
     showPlaceholderMessage();
@@ -444,7 +554,12 @@ function prepareAthletesForDisplay(athletes, categoria) {
   }));
 }
 
+function isPereiraSede() {
+  return currentSede === 'pereira';
+}
+
 function getDisplayRankClass(displayRank) {
+  if (isPereiraSede()) return '';
   if (displayRank === 1) return 'top1';
   if (displayRank === 2) return 'top2';
   if (displayRank === 3) return 'top3';
@@ -452,10 +567,12 @@ function getDisplayRankClass(displayRank) {
 }
 
 function getPodiumBadge(displayRank) {
+  if (isPereiraSede()) return null;
   return PODIUM_BADGES[displayRank] || null;
 }
 
 function getPodiumRowClass(displayRank) {
+  if (isPereiraSede()) return '';
   if (displayRank === 1) return ' team-row--podium-gold';
   if (displayRank === 2) return ' team-row--podium-silver';
   if (displayRank === 3) return ' team-row--podium-bronze';
@@ -463,6 +580,7 @@ function getPodiumRowClass(displayRank) {
 }
 
 function getDisplayMedal(displayRank) {
+  if (isPereiraSede()) return '';
   return RANK_MEDALS[displayRank] || '';
 }
 
@@ -571,24 +689,48 @@ window.toggleTeamDetails = function(teamIndex) {
 };
 
 // ====== PATROCINADORES ======
-document.addEventListener('DOMContentLoaded', cargarPatrocinadores);
-
-function cargarPatrocinadores() {
-  const grid = document.getElementById('patrocinadoresGrid');
-  if (!grid) return;
-
-  const logos = [
+const SPONSORS_BY_SEDE = {
+  pereira: [
+    'IMG_1427.PNG',
+    'IMG_1428.PNG',
+    'IMG_1429.PNG',
+    'IMG_1430.PNG',
+    'IMG_1431.PNG',
+    'IMG_1432.PNG',
+    'IMG_1433.PNG',
+    'IMG_1434.PNG',
+    'IMG_1435.PNG',
+    'IMG_1436.PNG',
+    'IMG_1437.PNG',
+    'IMG_1438.PNG'
+  ],
+  envigado: [
     'Equimovi.jpeg',
     'Imagen1.png',
     'LOGO DOMIVET.png',
     'culto.png',
     'intellygence.png',
     'mues.png'
-  ];
+  ]
+};
+
+function cargarPatrocinadores(sede = currentSede) {
+  const grid = document.getElementById('patrocinadoresGrid');
+  if (!grid) return;
+
+  const logos = SPONSORS_BY_SEDE[sede] || SPONSORS_BY_SEDE.pereira;
+  grid.dataset.sede = sede;
+  grid.classList.toggle('patrocinadores-grid--pereira', sede === 'pereira');
+  grid.classList.toggle('patrocinadores-grid--envigado', sede === 'envigado');
 
   grid.innerHTML = logos.map(file => `
     <div class="patrocinador-logo-box">
-      <img src="assets/patrocinadores/${file}" alt="Patrocinador" class="patrocinador-logo-img" loading="lazy" />
+      <img
+        src="assets/patrocinadores/${sede}/${encodeURIComponent(file)}"
+        alt="Patrocinador"
+        class="patrocinador-logo-img"
+        loading="lazy"
+      />
     </div>
   `).join('');
 }

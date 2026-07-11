@@ -67,7 +67,48 @@
     text-shadow: 0 2px 12px rgba(13, 77, 53, 0.55), 0 1px 3px rgba(0, 0, 0, 0.35);
     letter-spacing: -0.5px;
   }
-  
+
+  .sede-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 0.35rem;
+  }
+
+  .sede-switch__btn {
+    font: inherit;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    min-width: 8.5rem;
+    padding: 0.7rem 1.35rem;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 215, 120, 0.55);
+    background: rgba(0, 0, 0, 0.28);
+    color: rgba(255, 255, 255, 0.88);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  }
+
+  .sede-switch__btn:hover {
+    border-color: rgba(255, 215, 120, 0.9);
+    background: rgba(14, 82, 56, 0.75);
+  }
+
+  .sede-switch__btn.is-active {
+    background: linear-gradient(145deg, #ffd966, #e6b422);
+    border-color: #ffd54f;
+    color: #2a1f00;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 10px 28px rgba(255, 190, 60, 0.35);
+  }
+
+  .sede-switch__btn:focus-visible {
+    outline: 2px solid #ffd54f;
+    outline-offset: 3px;
+  }
+
   .results-section { 
     position:relative; 
     max-width: 1200px;
@@ -719,6 +760,19 @@
       font-size: clamp(1.35rem, 5vw, 2rem);
       line-height: 1.15;
     }
+
+    .sede-switch {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .sede-switch__btn {
+      min-width: 7.5rem;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.95rem;
+    }
+
     .update-info {
       position: static;
       text-align: center;
@@ -908,12 +962,29 @@
 
 .patrocinadores-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(0.55rem, 2vw, 1.25rem);
   justify-items: center;
   width: 100%;
   max-width: min(100%, 540px);
   margin: 0 auto;
+}
+
+.patrocinadores-grid--pereira {
+  max-width: min(100%, 720px);
+}
+
+.patrocinadores-grid--pereira .patrocinador-logo-box {
+  background: #8f8e8c;
+}
+
+.patrocinadores-grid--pereira .patrocinador-logo-img {
+  background: transparent;
+  box-shadow: none;
+}
+
+.patrocinadores-grid--envigado {
+  max-width: min(100%, 540px);
 }
 
 .patrocinador-logo-box {
@@ -946,11 +1017,17 @@
   box-shadow: 0 0 0 2px #fff, 0 2px 8px 0 rgba(0, 0, 0, 0.07);
 }
 
-/* Tablet: 3×2 */
+/* Tablet */
 @media (min-width: 600px) {
   .patrocinadores-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     max-width: 620px;
     gap: clamp(0.75rem, 2vw, 1.25rem);
+  }
+
+  .patrocinadores-grid--pereira {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 720px;
   }
 
   .patrocinador-logo-box {
@@ -958,12 +1035,22 @@
   }
 }
 
-/* Desktop: fila única (5 o 6 logos) */
+/* Desktop */
 @media (min-width: 900px) {
   .patrocinadores-grid {
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    max-width: 960px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 720px;
     gap: 1.25rem;
+  }
+
+  .patrocinadores-grid--pereira {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 960px;
+  }
+
+  .patrocinadores-grid--envigado {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 720px;
   }
 
   .patrocinador-logo-box {
@@ -974,8 +1061,12 @@
 /* Monitores grandes */
 @media (min-width: 1200px) {
   .patrocinadores-grid {
-    max-width: 1100px;
+    max-width: 860px;
     gap: 1.5rem;
+  }
+
+  .patrocinadores-grid--pereira {
+    max-width: 1100px;
   }
 
   .patrocinador-logo-box {
