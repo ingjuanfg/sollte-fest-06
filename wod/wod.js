@@ -86,13 +86,26 @@ function parseHeatsCSV(text) {
     .sort((a, b) => a.heatNum - b.heatNum);
 }
 
+const COUNTRY_IMAGE_ALIASES = {
+  'costa de marfil': 'marfil',
+  'costa rica': 'costarica',
+  'cabo verde': 'cabo',
+  'nueva zelanda': 'zelanda',
+  'corea del sur': 'korea',
+  'corea': 'korea',
+  'finlandia': 'filandia',
+  'estados unidos': 'eeuu',
+  'paises bajos': 'holanda'
+};
+
 function countryToImage(country) {
   const key = String(country)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .trim();
-  return `${ATLETAS_BASE}/${encodeURIComponent(key)}.png`;
+  const fileKey = COUNTRY_IMAGE_ALIASES[key] || key;
+  return `${ATLETAS_BASE}/${encodeURIComponent(fileKey)}.png`;
 }
 
 function createAthleteCard(athlete) {

@@ -1043,3 +1043,294 @@
     max-width: min(42vw, 180px);
   }
 }
+
+/* ══════════════════════════════════════════
+   STAGE — pantalla completa 3:2 (solo atletas)
+   ══════════════════════════════════════════ */
+.heat-page--stage {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #010806;
+}
+
+.heat-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(0.45rem, 1.4vh, 0.9rem) clamp(0.7rem, 2vw, 1.4rem);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255, 200, 80, 0.2), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(12, 77, 53, 0.45), transparent 60%),
+    linear-gradient(165deg, #0e5238 0%, #062318 42%, #010806 100%);
+}
+
+.heat-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 28px,
+      rgba(255, 215, 120, 0.03) 28px,
+      rgba(255, 215, 120, 0.03) 29px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heat-stage__frame {
+  position: absolute;
+  inset: clamp(0.25rem, 0.9vh, 0.5rem);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.heat-stage__header,
+.heat-stage .heat-matchup,
+.heat-stage__pager {
+  position: relative;
+  z-index: 1;
+}
+
+.heat-stage__header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.05rem;
+  padding-bottom: clamp(0.15rem, 0.6vh, 0.4rem);
+}
+
+.heat-stage__header::before {
+  content: "★ HEATS WOD 1 ★";
+  font-size: clamp(0.5rem, 1.3vh, 0.7rem);
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  color: rgba(255, 215, 120, 0.78);
+}
+
+.heat-stage__logo {
+  display: block;
+  max-height: clamp(36px, 7vh, 68px);
+  width: auto;
+  margin: 0.1rem 0;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+}
+
+.heat-stage__eyebrow,
+.heat-stage__meta,
+.heat-stage__sede {
+  margin: 0;
+  font-size: clamp(0.55rem, 1.4vh, 0.78rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.heat-stage__wod {
+  margin: 0.05rem 0 0;
+  font-size: clamp(1.35rem, 5vh, 2.75rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  background: linear-gradient(180deg, #fff6cc 0%, #ffd966 35%, #e6b422 70%, #c9971a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 16px rgba(255, 200, 60, 0.4));
+}
+
+.heat-stage__heat {
+  margin: 0.1rem 0 0;
+  font-size: clamp(0.85rem, 2.8vh, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.heat-stage__heat::after {
+  content: "";
+  display: block;
+  width: min(220px, 40vw);
+  height: 2px;
+  margin: 0.2rem auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 210, 90, 0.85), transparent);
+}
+
+.heat-page--stage .heat-matchup {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.heat-page--stage .heat-matchup--grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(0.2rem, 1vh, 0.6rem) 0;
+  max-width: none;
+}
+
+.heat-page--stage .heat-grid {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  gap: clamp(0.45rem, 1.5vh, 1rem) clamp(0.55rem, 1.8vw, 1.35rem);
+  align-content: center;
+  justify-content: center;
+  align-items: end;
+}
+
+.heat-page--stage .heat-athlete {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  gap: clamp(0.25rem, 0.7vh, 0.45rem);
+}
+
+.heat-page--stage .heat-athlete__card {
+  width: 100%;
+  max-width: none;
+  padding: clamp(3px, 0.45vw, 6px);
+  border-radius: clamp(10px, 1.4vw, 16px);
+  background: linear-gradient(145deg, #ffe082, #ffd54f, #ffb300, #ffd54f, #ffe082);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 28px rgba(255, 190, 60, 0.35),
+    0 14px 30px rgba(0, 0, 0, 0.5);
+}
+
+.heat-page--stage .heat-athlete__card img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: clamp(7px, 1vw, 12px);
+}
+
+.heat-page--stage .heat-athlete__name {
+  font-size: clamp(0.58rem, 1.8vh, 0.95rem);
+}
+
+/* Tamaños pensados para 3:2 — llenan el área útil sin salirse del viewport */
+.heat-page--stage.heat-page--count-1 .heat-grid {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.heat-page--stage.heat-page--count-1 .heat-athlete {
+  width: min(32vw, 58vh, 340px);
+}
+
+.heat-page--stage.heat-page--count-2 .heat-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: min(92vw, 920px);
+}
+
+.heat-page--stage.heat-page--count-2 .heat-athlete {
+  width: min(34vw, 52vh, 320px);
+  max-width: 100%;
+  justify-self: center;
+}
+
+.heat-page--stage.heat-page--count-3 .heat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: min(96vw, 1100px);
+}
+
+.heat-page--stage.heat-page--count-3 .heat-athlete {
+  width: min(26vw, 46vh, 280px);
+  max-width: 100%;
+  justify-self: center;
+}
+
+.heat-page--stage.heat-page--count-4 .heat-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: min(78vw, 780px);
+  align-content: center;
+}
+
+.heat-page--stage.heat-page--count-4 .heat-athlete {
+  width: min(28vw, 34vh, 260px);
+  max-width: 100%;
+  justify-self: center;
+}
+
+.heat-page--stage.heat-page--count-5 .heat-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  max-width: min(96vw, 1080px);
+}
+
+.heat-page--stage.heat-page--count-5 .heat-athlete {
+  width: min(22vw, 30vh, 220px);
+  max-width: 100%;
+  justify-self: center;
+}
+
+.heat-page--stage .heat-stage__pager {
+  flex: 0 0 auto;
+  margin: 0 auto;
+  padding-top: clamp(0.15rem, 0.6vh, 0.4rem);
+}
+
+.heat-page--stage .heat-pager__btn {
+  width: clamp(2.2rem, 5vh, 3rem);
+  height: clamp(2.2rem, 5vh, 3rem);
+  font-size: clamp(1.25rem, 3vh, 1.75rem);
+  border-color: rgba(255, 210, 90, 0.35);
+  background: linear-gradient(145deg, #0e5238, #083828);
+  color: #fff;
+  box-shadow:
+    0 0 16px rgba(255, 190, 60, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.heat-page--stage .heat-pager__indicator {
+  color: rgba(255, 235, 180, 0.95);
+  font-size: clamp(0.75rem, 2vh, 1.05rem);
+  font-weight: 700;
+}
+
+/* Proyección 3:2 típica (ej. 1920×1280, 1500×1000) */
+@media (min-aspect-ratio: 3/2) and (max-aspect-ratio: 16/9) {
+  .heat-page--stage.heat-page--count-2 .heat-athlete {
+    width: min(30vw, 58vh, 360px);
+  }
+
+  .heat-page--stage.heat-page--count-3 .heat-athlete {
+    width: min(24vw, 52vh, 310px);
+  }
+
+  .heat-page--stage.heat-page--count-4 .heat-athlete {
+    width: min(24vw, 38vh, 290px);
+  }
+
+  .heat-page--stage.heat-page--count-5 .heat-athlete {
+    width: min(20vw, 34vh, 240px);
+  }
+}
+
+@media (max-width: 900px) {
+  .heat-page--stage.heat-page--count-2 .heat-athlete,
+  .heat-page--stage.heat-page--count-3 .heat-athlete,
+  .heat-page--stage.heat-page--count-4 .heat-athlete {
+    width: min(40vw, 36vh, 220px);
+  }
+}
