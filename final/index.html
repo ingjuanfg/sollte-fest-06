@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Final — Sollte Fest 07</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Final — Sollte Fest 07 Mundialista" />
+  <meta name="theme-color" content="#0c4d35" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../wod/wod.css">
+</head>
+<body class="heat-page heat-page--stage">
+  <div class="heat-stage">
+    <div class="heat-stage__frame" aria-hidden="true">
+      <span class="heat-final-corner heat-final-corner--tl"></span>
+      <span class="heat-final-corner heat-final-corner--tr"></span>
+      <span class="heat-final-corner heat-final-corner--bl"></span>
+      <span class="heat-final-corner heat-final-corner--br"></span>
+    </div>
+
+    <header class="heat-stage__header">
+      <p class="heat-stage__kicker" id="heatKicker">★ HEATS FINAL ★</p>
+      <img
+        src="../assets/sollte_logo_nombre_icono.png"
+        alt="Sollte Fest"
+        class="heat-stage__logo"
+        onerror="this.style.display='none'"
+      />
+      <p class="heat-stage__eyebrow">Sollte Fest 07 — Mundialista</p>
+      <p class="heat-stage__meta" id="wodLabel">Pereira · heats</p>
+      <p class="heat-stage__wod" id="heatFinal">FINAL</p>
+      <h1 class="heat-stage__heat" id="heatTitle">HEAT 1</h1>
+      <p class="heat-stage__sede" id="heatCategory">Pereira</p>
+    </header>
+
+    <div class="heat-matchup" id="heatMatchup" aria-live="polite"></div>
+
+    <nav class="heat-pager heat-pager--final heat-stage__pager" aria-label="Navegación entre heats">
+      <button type="button" id="heatPrev" class="heat-pager__btn" aria-label="Heat anterior">‹</button>
+      <span class="heat-pager__indicator" id="heatIndicator">1 / 1</span>
+      <button type="button" id="heatNext" class="heat-pager__btn" aria-label="Heat siguiente">›</button>
+    </nav>
+  </div>
+
+  <script src="../wod/wod.js"></script>
+</body>
+</html>

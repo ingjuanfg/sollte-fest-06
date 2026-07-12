@@ -3,7 +3,12 @@ const ATLETAS_BASE = '../assets/atletas';
 const SEDE_STORAGE_KEY = 'sollte-sede';
 const DEFAULT_SEDE = 'pereira';
 
+function isFinalPage() {
+  return /\/final\/?$/i.test(window.location.pathname);
+}
+
 function getWodNumberFromPath() {
+  if (isFinalPage()) return null;
   const match = window.location.pathname.match(/\/wod(\d+)\/?/i);
   return match ? Number(match[1]) : 1;
 }
@@ -20,6 +25,9 @@ function getSede() {
 
 function getHeatsCsvPath(sede, wodNum) {
   const label = sede === 'envigado' ? 'Envigado' : 'Pereira';
+  if (isFinalPage()) {
+    return `./Heats Sollte Fest ${label} - final.csv`;
+  }
   return `./Heats Sollte Fest ${label} - wod${wodNum}.csv`;
 }
 
@@ -171,7 +179,10 @@ function renderEmptyMatchup(matchup, message) {
 
 function updatePageMeta(wodNum, heatNum, sede, totalHeats) {
   const sedeLabel = sede === 'envigado' ? 'Envigado' : 'Pereira';
-  document.title = `WOD ${wodNum} — Heat ${heatNum} — ${sedeLabel} — Sollte Fest 07`;
+  const isFinal = isFinalPage();
+  document.title = isFinal
+    ? `Final — Heat ${heatNum} — ${sedeLabel} — Sollte Fest 07`
+    : `WOD ${wodNum} — Heat ${heatNum} — ${sedeLabel} — Sollte Fest 07`;
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.content = document.title;
@@ -182,11 +193,11 @@ function updatePageMeta(wodNum, heatNum, sede, totalHeats) {
   const wodLabel = document.getElementById('wodLabel');
   const heatKicker = document.getElementById('heatKicker');
 
-  if (heatFinal) heatFinal.textContent = `WOD #${wodNum}`;
+  if (heatFinal) heatFinal.textContent = isFinal ? 'FINAL' : `WOD #${wodNum}`;
   if (heatTitle) heatTitle.textContent = `HEAT ${heatNum}`;
   if (heatCategory) heatCategory.textContent = sedeLabel;
   if (wodLabel) wodLabel.textContent = `${sedeLabel} · ${totalHeats} heats`;
-  if (heatKicker) heatKicker.textContent = `★ HEATS WOD ${wodNum} ★`;
+  if (heatKicker) heatKicker.textContent = isFinal ? '★ HEATS FINAL ★' : `★ HEATS WOD ${wodNum} ★`;
 }
 
 function updatePager(index, total) {
@@ -236,6 +247,7 @@ async function initWodPage() {
 
   const wodNum = getWodNumberFromPath();
   const sede = getSede();
+  const isFinal = isFinalPage();
   let heats = [];
 
   try {
@@ -245,7 +257,9 @@ async function initWodPage() {
     const sedeLabel = sede === 'envigado' ? 'Envigado' : 'Pereira';
     renderEmptyMatchup(
       matchup,
-      `Aún no hay heats de ${sedeLabel} para WOD ${wodNum}.`
+      isFinal
+        ? `Aún no hay heats de ${sedeLabel} para la Final.`
+        : `Aún no hay heats de ${sedeLabel} para WOD ${wodNum}.`
     );
     updatePager(0, 0);
     updatePageMeta(wodNum, 1, sede, 0);
