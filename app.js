@@ -584,12 +584,7 @@ function prepareAthletesForDisplay(athletes, categoria) {
   }));
 }
 
-function isPereiraSede() {
-  return currentSede === 'pereira';
-}
-
 function getDisplayRankClass(displayRank) {
-  if (isPereiraSede()) return '';
   if (displayRank === 1) return 'top1';
   if (displayRank === 2) return 'top2';
   if (displayRank === 3) return 'top3';
@@ -597,12 +592,10 @@ function getDisplayRankClass(displayRank) {
 }
 
 function getPodiumBadge(displayRank) {
-  if (isPereiraSede()) return null;
   return PODIUM_BADGES[displayRank] || null;
 }
 
 function getPodiumRowClass(displayRank) {
-  if (isPereiraSede()) return '';
   if (displayRank === 1) return ' team-row--podium-gold';
   if (displayRank === 2) return ' team-row--podium-silver';
   if (displayRank === 3) return ' team-row--podium-bronze';
@@ -610,7 +603,6 @@ function getPodiumRowClass(displayRank) {
 }
 
 function getDisplayMedal(displayRank) {
-  if (isPereiraSede()) return '';
   return RANK_MEDALS[displayRank] || '';
 }
 
@@ -639,14 +631,12 @@ function renderTable({ athletes, wodNames }, categoria) {
     const { displayRank, isRetirado } = athlete;
     const medal = getDisplayMedal(displayRank);
     const rankClass = getDisplayRankClass(displayRank);
-    const podiumRowClass = getPodiumRowClass(displayRank);
-    const isFinalista = !isRetirado && displayRank >= 1 && displayRank <= 4;
+    const podiumRowClass = !isRetirado ? getPodiumRowClass(displayRank) : '';
     const retiradoClass = isRetirado ? ' team-row--retirado' : '';
-    const finalistaClass = isFinalista ? ' team-row--finalista' : '';
-    const restClass = !isRetirado && !isFinalista ? ' team-row--rest' : '';
+    const restClass = !isRetirado && displayRank > 3 ? ' team-row--rest' : '';
     const flag = getCountryFlag(athlete.pais);
 
-    const podium = getPodiumBadge(displayRank);
+    const podium = !isRetirado ? getPodiumBadge(displayRank) : null;
     const podiumBadge = podium
       ? `<span class="podium-banner" aria-label="${podium.label}">
            <span class="podium-ribbon ${podium.ribbonClass}">${podium.label}</span>
@@ -658,10 +648,10 @@ function renderTable({ athletes, wodNames }, categoria) {
     ).join('');
 
     tableHTML += `
-      <tr class="team-row${podiumRowClass}${retiradoClass}${finalistaClass}${restClass}" data-team-index="${index}">
+      <tr class="team-row${podiumRowClass}${retiradoClass}${restClass}" data-team-index="${index}">
         <td class="pos-cell">
-          <span class="rank-badge ${rankClass}">${displayRank}</span>
-          ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
+          <span class="rank-badge ${!isRetirado ? rankClass : ''}">${displayRank}</span>
+          ${!isRetirado && medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
         </td>
         <td class="name-cell">
           <div class="team-name-cell">
@@ -670,7 +660,6 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
             ${podiumBadge}
-            ${isFinalista ? '<span class="finalista-badge">FINALISTA</span>' : ''}
             ${isRetirado ? '<span class="retirado-badge">RETIRADO</span>' : ''}
           </div>
         </td>

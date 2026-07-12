@@ -206,16 +206,33 @@ function renderCategoryBlock(category) {
   const tbody = document.createElement('tbody');
   category.athletes.forEach(athlete => {
     const tr = document.createElement('tr');
-    const isFinalista = !athlete.isRetirado && athlete.displayRank >= 1 && athlete.displayRank <= 4;
+    const rank = athlete.displayRank;
+    const isPodium = !athlete.isRetirado && rank >= 1 && rank <= 3;
+
     if (athlete.isRetirado) tr.classList.add('is-retirado');
-    else if (isFinalista) tr.classList.add('is-finalista');
+    else if (rank === 1) tr.classList.add('is-gold');
+    else if (rank === 2) tr.classList.add('is-silver');
+    else if (rank === 3) tr.classList.add('is-bronze');
     else tr.classList.add('is-rest');
 
+    const podiumLabel =
+      rank === 1 ? 'Campeon' :
+      rank === 2 ? 'Subcampeon' :
+      rank === 3 ? 'Tercer Puesto' : '';
+
+    const medal =
+      rank === 1 ? '🥇' :
+      rank === 2 ? '🥈' :
+      rank === 3 ? '🥉' : '';
+
     tr.innerHTML = `
-      <td class="col-pos">${athlete.displayRank}</td>
+      <td class="col-pos">
+        <span class="score-rank">${rank}</span>
+        ${isPodium ? `<span class="score-medal" aria-hidden="true">${medal}</span>` : ''}
+      </td>
       <td class="col-name">
         <span class="score-name">${escapeHtml(athlete.atleta)}</span>
-        ${isFinalista ? '<span class="score-badge score-badge--finalista">FINALISTA</span>' : ''}
+        ${isPodium ? `<span class="score-badge score-badge--podium score-badge--${rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'}">${podiumLabel}</span>` : ''}
         ${athlete.isRetirado ? '<span class="score-badge score-badge--retirado">RETIRADO</span>' : ''}
       </td>
       <td class="col-flag" title="${escapeHtml(athlete.pais)}">${getCountryFlag(athlete.pais)}</td>

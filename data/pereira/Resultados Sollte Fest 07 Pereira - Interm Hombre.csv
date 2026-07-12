@@ -1,39 +1,43 @@
-Atleta,Pais,WOD 1,,WOD 2,,WOD 3,,WOD 4,
-,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 2,,WOD 3,,WOD 4,,WOD FINAL,,WOD FINAL,,WOD FINAL,
+,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle,Puntos,A,Puntos,B,Puntos,C
 NICO RIOS,holanda,4,"11:00
 6 BMU (3 Ronda)",3,135 lbs,7,"14:00
 600 mts
-Tiebreak 7:20",5,6:31
+Tiebreak 7:20",5,6:31,5,NA,5,NA,5,NA
 SAMU FLOREZ,colombia,12,"11:00
 10 HSPU (1 ronda)",5,115 lbs,8,"14:00
 600 mts
-Tiebreak 8:25",11,9:59
+Tiebreak 8:25",11,9:59,5,NA,5,NA,5,NA
 TOÑO,austria,9,"11:00
 3 Cluster (2 Ronda)",4,125 lbs,10,"14:00
 200 mts
 Tiebreak: 10:01",12,"10:00
-13 Hang P S"
+13 Hang P S",5,NA,5,NA,5,NA
 JUANCA ROJAS,qatar,10,"11:00
 9 HSPU (2 Ronda)",4,125 lbs,6,"14:00
 600 mts
-Tiebreak 7:06",10,8:58
+Tiebreak 7:06",10,8:58,5,NA,5,NA,5,NA
 ALEJO RODAS,curazao,5,"11:00
 8 HSPU (8 Ronda)",6,105 lbs,12,"14:00
-20 Cal Ski",4,5:28
+20 Cal Ski",4,5:28,5,NA,5,NA,5,NA
 SANTI HOYOS,nueva zelanda,3,"11:00
 9 BMU (3 Ronda)
-",4,125 lbs,3,12:59,7,7:12
-JACOBO GIL,uruguay,2,9:20,2,145 lbs,5,13:59,3,5:13
-SANTI VALENCIA,ghana,1,8:35,2,145 lbs,1,12:04,1,4:28
+",4,125 lbs,3,12:59,7,7:12,2,36,2,6:59,3,"13:00
+30 DU - 2 Ronda"
+JACOBO GIL,uruguay,2,9:20,2,145 lbs,5,13:59,3,5:13,3,32,3,"9:00
+5 mts HSW - 3 Ronda",1,12:16
+SANTI VALENCIA,ghana,1,8:35,2,145 lbs,1,12:04,1,4:28,1,46,4,"9:00
+4 Lunges - 3 Ronda",4,"13:00
+25 DU - 1 Ronda"
 EDGAR,argentina,11,"11:00
-9 Cluster (1 Ronda)",3,135 lbs,2,12:26,2,4:42
+9 Cluster (1 Ronda)",3,135 lbs,2,12:26,2,4:42,4,29,1,6:08,2,12:33
 JUAN ANDRES BRAVO,eeuu,8,"11:00
-5 Cluster (2 Ronda)",3,135 lbs,4,13:31,8,7:35
+5 Cluster (2 Ronda)",3,135 lbs,4,13:31,8,7:35,5,NA,5,NA,5,NA
 JULIAN MURILLO,brasil,7,"11:00
 3 HSPU (3 Ronda)",1,165 lbs,9,"14:00
 200 mts
-Tiebreak: 10:00",6,6:59
+Tiebreak: 10:00",6,6:59,5,NA,5,NA,5,NA
 JUAN TRUJILLO,costa rica,6,"11:00
 4 HSPU (3 Ronda)",3,135 lbs,11,"14:00
 200 mts
-Tiebreak: 10:40",9,8:24
+Tiebreak: 10:40",9,8:24,5,NA,5,NA,5,NA
