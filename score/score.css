@@ -168,9 +168,40 @@ html, body {
 
 .score-table .col-name {
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-weight: 700;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.score-name {
+  vertical-align: middle;
+  display: inline;
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  font-size: 0.62em;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.08rem 0.4rem;
+  white-space: nowrap;
+}
+
+.score-badge--finalista {
+  color: #c8f7c5;
+  background: rgba(56, 142, 60, 0.45);
+  border: 1px solid rgba(129, 199, 132, 0.45);
+}
+
+.score-badge--retirado {
+  color: #ffcdd2;
+  background: rgba(198, 40, 40, 0.35);
+  border: 1px solid rgba(229, 115, 115, 0.4);
 }
 
 .score-table .col-flag {
@@ -184,6 +215,14 @@ html, body {
   text-align: right;
   font-weight: 800;
   color: var(--score-gold);
+}
+
+.score-table tr.is-finalista {
+  background: rgba(76, 175, 80, 0.22);
+}
+
+.score-table tr.is-rest {
+  background: rgba(158, 158, 158, 0.18);
 }
 
 .score-table tr.is-retirado {

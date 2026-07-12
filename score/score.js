@@ -206,10 +206,18 @@ function renderCategoryBlock(category) {
   const tbody = document.createElement('tbody');
   category.athletes.forEach(athlete => {
     const tr = document.createElement('tr');
-    if (athlete.isRetirado) tr.className = 'is-retirado';
+    const isFinalista = !athlete.isRetirado && athlete.displayRank >= 1 && athlete.displayRank <= 4;
+    if (athlete.isRetirado) tr.classList.add('is-retirado');
+    else if (isFinalista) tr.classList.add('is-finalista');
+    else tr.classList.add('is-rest');
+
     tr.innerHTML = `
       <td class="col-pos">${athlete.displayRank}</td>
-      <td class="col-name">${escapeHtml(athlete.atleta)}</td>
+      <td class="col-name">
+        <span class="score-name">${escapeHtml(athlete.atleta)}</span>
+        ${isFinalista ? '<span class="score-badge score-badge--finalista">FINALISTA</span>' : ''}
+        ${athlete.isRetirado ? '<span class="score-badge score-badge--retirado">RETIRADO</span>' : ''}
+      </td>
       <td class="col-flag" title="${escapeHtml(athlete.pais)}">${getCountryFlag(athlete.pais)}</td>
       <td class="col-pts">${athlete.isRetirado ? '—' : athlete.total}</td>
     `;

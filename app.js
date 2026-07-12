@@ -640,7 +640,10 @@ function renderTable({ athletes, wodNames }, categoria) {
     const medal = getDisplayMedal(displayRank);
     const rankClass = getDisplayRankClass(displayRank);
     const podiumRowClass = getPodiumRowClass(displayRank);
+    const isFinalista = !isRetirado && displayRank >= 1 && displayRank <= 4;
     const retiradoClass = isRetirado ? ' team-row--retirado' : '';
+    const finalistaClass = isFinalista ? ' team-row--finalista' : '';
+    const restClass = !isRetirado && !isFinalista ? ' team-row--rest' : '';
     const flag = getCountryFlag(athlete.pais);
 
     const podium = getPodiumBadge(displayRank);
@@ -655,7 +658,7 @@ function renderTable({ athletes, wodNames }, categoria) {
     ).join('');
 
     tableHTML += `
-      <tr class="team-row${podiumRowClass}${retiradoClass}" data-team-index="${index}">
+      <tr class="team-row${podiumRowClass}${retiradoClass}${finalistaClass}${restClass}" data-team-index="${index}">
         <td class="pos-cell">
           <span class="rank-badge ${rankClass}">${displayRank}</span>
           ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
@@ -667,6 +670,7 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
             ${podiumBadge}
+            ${isFinalista ? '<span class="finalista-badge">FINALISTA</span>' : ''}
             ${isRetirado ? '<span class="retirado-badge">RETIRADO</span>' : ''}
           </div>
         </td>
