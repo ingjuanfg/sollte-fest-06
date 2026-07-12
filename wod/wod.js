@@ -3,6 +3,11 @@ const ATLETAS_BASE = '../assets/atletas';
 const SEDE_STORAGE_KEY = 'sollte-sede';
 const DEFAULT_SEDE = 'pereira';
 
+function getWodNumberFromPath() {
+  const match = window.location.pathname.match(/\/wod(\d+)\/?/i);
+  return match ? Number(match[1]) : 1;
+}
+
 function getSede() {
   const params = new URLSearchParams(window.location.search);
   const fromQuery = (params.get('sede') || '').toLowerCase();
@@ -13,9 +18,9 @@ function getSede() {
   return DEFAULT_SEDE;
 }
 
-function getHeatsCsvPath(sede) {
+function getHeatsCsvPath(sede, wodNum) {
   const label = sede === 'envigado' ? 'Envigado' : 'Pereira';
-  return `./Heats Sollte Fest ${label} - wod1.csv`;
+  return `./Heats Sollte Fest ${label} - wod${wodNum}.csv`;
 }
 
 function parseCSVRows(text) {
@@ -112,6 +117,10 @@ function createAthleteCard(athlete) {
   const article = document.createElement('article');
   article.className = 'heat-athlete';
 
+  const caption = document.createElement('p');
+  caption.className = 'heat-athlete__name';
+  caption.textContent = athlete.name;
+
   const card = document.createElement('div');
   card.className = 'heat-athlete__card';
 
@@ -123,13 +132,9 @@ function createAthleteCard(athlete) {
     img.style.opacity = '0.35';
   };
 
-  const caption = document.createElement('p');
-  caption.className = 'heat-athlete__name';
-  caption.textContent = athlete.name;
-
   card.appendChild(img);
-  article.appendChild(card);
   article.appendChild(caption);
+  article.appendChild(card);
   return article;
 }
 
@@ -164,9 +169,9 @@ function renderEmptyMatchup(matchup, message) {
   matchup.appendChild(empty);
 }
 
-function updatePageMeta(heatNum, sede, totalHeats) {
+function updatePageMeta(wodNum, heatNum, sede, totalHeats) {
   const sedeLabel = sede === 'envigado' ? 'Envigado' : 'Pereira';
-  document.title = `WOD 1 — Heat ${heatNum} — ${sedeLabel} — Sollte Fest 07`;
+  document.title = `WOD ${wodNum} — Heat ${heatNum} — ${sedeLabel} — Sollte Fest 07`;
 
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.content = document.title;
@@ -175,11 +180,13 @@ function updatePageMeta(heatNum, sede, totalHeats) {
   const heatTitle = document.getElementById('heatTitle');
   const heatCategory = document.getElementById('heatCategory');
   const wodLabel = document.getElementById('wodLabel');
+  const heatKicker = document.getElementById('heatKicker');
 
-  if (heatFinal) heatFinal.textContent = 'WOD #1';
+  if (heatFinal) heatFinal.textContent = `WOD #${wodNum}`;
   if (heatTitle) heatTitle.textContent = `HEAT ${heatNum}`;
   if (heatCategory) heatCategory.textContent = sedeLabel;
   if (wodLabel) wodLabel.textContent = `${sedeLabel} · ${totalHeats} heats`;
+  if (heatKicker) heatKicker.textContent = `★ HEATS WOD ${wodNum} ★`;
 }
 
 function updatePager(index, total) {
@@ -213,8 +220,8 @@ function getInitialHeatIndex(total) {
   return 1;
 }
 
-async function loadHeats(sede) {
-  const path = getHeatsCsvPath(sede);
+async function loadHeats(sede, wodNum) {
+  const path = getHeatsCsvPath(sede, wodNum);
   const res = await fetch(encodeURI(path) + '?t=' + Date.now());
   if (!res.ok) {
     throw new Error(`No se encontró ${path}`);
@@ -227,27 +234,28 @@ async function initWodPage() {
   const matchup = document.getElementById('heatMatchup');
   if (!matchup) return;
 
+  const wodNum = getWodNumberFromPath();
   const sede = getSede();
   let heats = [];
 
   try {
-    heats = await loadHeats(sede);
+    heats = await loadHeats(sede, wodNum);
   } catch (err) {
     console.error(err);
     const sedeLabel = sede === 'envigado' ? 'Envigado' : 'Pereira';
     renderEmptyMatchup(
       matchup,
-      `Aún no hay heats de ${sedeLabel} para WOD 1.`
+      `Aún no hay heats de ${sedeLabel} para WOD ${wodNum}.`
     );
     updatePager(0, 0);
-    updatePageMeta(1, sede, 0);
+    updatePageMeta(wodNum, 1, sede, 0);
     return;
   }
 
   if (!heats.length) {
     renderEmptyMatchup(matchup, 'No hay atletas en el archivo de heats.');
     updatePager(0, 0);
-    updatePageMeta(1, sede, 0);
+    updatePageMeta(wodNum, 1, sede, 0);
     return;
   }
 
@@ -261,7 +269,7 @@ async function initWodPage() {
     const entry = heats[next - 1];
     if (!entry) return;
 
-    updatePageMeta(entry.heatNum, sede, heats.length);
+    updatePageMeta(wodNum, entry.heatNum, sede, heats.length);
     renderAthleteGrid(entry.athletes, matchup);
     updatePager(next, heats.length);
     updateViewerUrl(next, sede);

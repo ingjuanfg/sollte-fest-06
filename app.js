@@ -409,7 +409,7 @@ function parseResultsCSV(text) {
       }
 
       const total = wods.reduce((sum, wod) => {
-        if (isNAValue(wod.puntos)) return sum;
+        if (isNAValue(wod.puntos) || isRetiradoValue(wod.puntos)) return sum;
         const pts = parseFloat(wod.puntos);
         return sum + (isNaN(pts) ? 0 : pts);
       }, 0);
@@ -418,7 +418,9 @@ function parseResultsCSV(text) {
         atleta: values[0],
         pais: values[1] ?? '',
         wods,
-        total
+        total,
+        isRetirado: [values[1], ...wods.flatMap(wod => [wod.puntos, wod.detalle])]
+          .some(isRetiradoValue)
       };
     })
     .filter(Boolean);
@@ -455,6 +457,7 @@ function getCountryFlag(pais) {
 }
 
 function formatWodPosition(puntos) {
+  if (isRetiradoValue(puntos)) return 'RETIRADO';
   if (isNAValue(puntos)) return 'NA';
   const n = parseInt(puntos, 10);
   if (isNaN(n)) return '—';
@@ -475,6 +478,17 @@ function isHonoraryAthlete(name) {
 
 function isNAValue(value) {
   return String(value).trim().toUpperCase() === 'NA';
+}
+
+function isRetiradoValue(value) {
+  return String(value).trim().toUpperCase() === 'RETIRADO';
+}
+
+function athleteIsRetirado(athlete) {
+  if (isRetiradoValue(athlete.pais)) return true;
+  return athlete.wods.some(
+    wod => isRetiradoValue(wod.puntos) || isRetiradoValue(wod.detalle)
+  );
 }
 
 function athleteHasNA(athlete) {
@@ -521,18 +535,31 @@ function isAdvancedCategory(categoria) {
   return ADVANCED_CATEGORIES.includes(categoria);
 }
 
+function orderWithRetiradosLast(athletes) {
+  const active = [];
+  const retirados = [];
+
+  athletes.forEach(athlete => {
+    if (athlete.isRetirado || athleteIsRetirado(athlete)) retirados.push(athlete);
+    else active.push(athlete);
+  });
+
+  return [...active, ...retirados];
+}
+
 function prepareAthletesForDisplay(athletes, categoria) {
   let ordered;
 
   if (categoria === HONORARY_CATEGORY) {
-    ordered = orderMujeresPrincipiantesAthletes(athletes);
+    ordered = orderWithRetiradosLast(orderMujeresPrincipiantesAthletes(athletes));
 
     return ordered.map((athlete, index) => {
       const displayRank = index === 0 ? 1 : index;
       return {
         ...athlete,
         displayRank,
-        isHonorary: isHonoraryAthlete(athlete.atleta)
+        isHonorary: isHonoraryAthlete(athlete.atleta),
+        isRetirado: athlete.isRetirado || athleteIsRetirado(athlete)
       };
     });
   }
@@ -547,10 +574,13 @@ function prepareAthletesForDisplay(athletes, categoria) {
     ordered = [...athletes].sort((a, b) => a.total - b.total);
   }
 
+  ordered = orderWithRetiradosLast(ordered);
+
   return ordered.map((athlete, index) => ({
     ...athlete,
     displayRank: index + 1,
-    isHonorary: false
+    isHonorary: false,
+    isRetirado: athlete.isRetirado || athleteIsRetirado(athlete)
   }));
 }
 
@@ -606,10 +636,11 @@ function renderTable({ athletes, wodNames }, categoria) {
   let tableHTML = '';
 
   displayAthletes.forEach((athlete, index) => {
-    const { displayRank } = athlete;
+    const { displayRank, isRetirado } = athlete;
     const medal = getDisplayMedal(displayRank);
     const rankClass = getDisplayRankClass(displayRank);
     const podiumRowClass = getPodiumRowClass(displayRank);
+    const retiradoClass = isRetirado ? ' team-row--retirado' : '';
     const flag = getCountryFlag(athlete.pais);
 
     const podium = getPodiumBadge(displayRank);
@@ -620,11 +651,11 @@ function renderTable({ athletes, wodNames }, categoria) {
       : '';
 
     const wodCells = athlete.wods.map(wod =>
-      `<td class="wod-pos-cell">${formatWodPosition(wod.puntos)}</td>`
+      `<td class="wod-pos-cell${isRetiradoValue(wod.puntos) ? ' wod-pos-cell--retirado' : ''}">${formatWodPosition(wod.puntos)}</td>`
     ).join('');
 
     tableHTML += `
-      <tr class="team-row${podiumRowClass}" data-team-index="${index}">
+      <tr class="team-row${podiumRowClass}${retiradoClass}" data-team-index="${index}">
         <td class="pos-cell">
           <span class="rank-badge ${rankClass}">${displayRank}</span>
           ${medal ? `<span class="rank-medal" aria-hidden="true">${medal}</span>` : ''}
@@ -636,6 +667,7 @@ function renderTable({ athletes, wodNames }, categoria) {
               <span class="team-name__text">${escapeHtml(athlete.atleta)}</span>
             </button>
             ${podiumBadge}
+            ${isRetirado ? '<span class="retirado-badge">RETIRADO</span>' : ''}
           </div>
         </td>
         <td class="country-cell">

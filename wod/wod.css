@@ -1112,11 +1112,17 @@
 }
 
 .heat-stage__header::before {
-  content: "★ HEATS WOD 1 ★";
+  content: none;
+  display: none;
+}
+
+.heat-stage__kicker {
+  margin: 0 0 0.1rem;
   font-size: clamp(0.5rem, 1.3vh, 0.7rem);
   font-weight: 800;
   letter-spacing: 0.28em;
   color: rgba(255, 215, 120, 0.78);
+  text-transform: uppercase;
 }
 
 .heat-stage__logo {
@@ -1190,23 +1196,49 @@
   max-width: 100%;
   max-height: 100%;
   margin: 0 auto;
-  gap: clamp(0.45rem, 1.5vh, 1rem) clamp(0.55rem, 1.8vw, 1.35rem);
+  gap: clamp(0.55rem, 1.6vh, 1.1rem) clamp(0.7rem, 2vw, 1.4rem);
   align-content: center;
   justify-content: center;
-  align-items: end;
+  align-items: start;
+  justify-items: center;
 }
 
 .heat-page--stage .heat-athlete {
-  width: 100%;
-  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: var(--athlete-size, 220px);
+  max-width: 100%;
   height: auto;
   min-height: 0;
-  gap: clamp(0.25rem, 0.7vh, 0.45rem);
+  gap: clamp(0.3rem, 0.8vh, 0.5rem);
+}
+
+.heat-page--stage .heat-athlete__name {
+  order: 0;
+  width: 100%;
+  min-height: 2.4em;
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  font-size: clamp(0.62rem, 1.7vh, 0.92rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 245, 210, 0.95);
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
 }
 
 .heat-page--stage .heat-athlete__card {
+  order: 1;
   width: 100%;
+  aspect-ratio: 3 / 4;
   max-width: none;
+  flex: 0 0 auto;
   padding: clamp(3px, 0.45vw, 6px);
   border-radius: clamp(10px, 1.4vw, 16px);
   background: linear-gradient(145deg, #ffe082, #ffd54f, #ffb300, #ffd54f, #ffe082);
@@ -1214,74 +1246,76 @@
     0 0 0 1px rgba(255, 255, 255, 0.35),
     0 0 28px rgba(255, 190, 60, 0.35),
     0 14px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .heat-page--stage .heat-athlete__card img {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  aspect-ratio: auto;
   max-height: none;
-  aspect-ratio: 3 / 4;
   object-fit: cover;
+  object-position: center top;
   border-radius: clamp(7px, 1vw, 12px);
 }
 
-.heat-page--stage .heat-athlete__name {
-  font-size: clamp(0.58rem, 1.8vh, 0.95rem);
+/* Tamaño fijo por cantidad — todas las cards iguales */
+.heat-page--stage.heat-page--count-1 {
+  --athlete-size: min(32vw, 54vh, 320px);
 }
 
-/* Tamaños pensados para 3:2 — llenan el área útil sin salirse del viewport */
 .heat-page--stage.heat-page--count-1 .heat-grid {
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
+  grid-template-columns: var(--athlete-size);
 }
 
-.heat-page--stage.heat-page--count-1 .heat-athlete {
-  width: min(32vw, 58vh, 340px);
+.heat-page--stage.heat-page--count-2 {
+  --athlete-size: min(34vw, 48vh, 300px);
 }
 
 .heat-page--stage.heat-page--count-2 .heat-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: min(92vw, 920px);
+  grid-template-columns: repeat(2, var(--athlete-size));
+  max-width: none;
 }
 
-.heat-page--stage.heat-page--count-2 .heat-athlete {
-  width: min(34vw, 52vh, 320px);
-  max-width: 100%;
-  justify-self: center;
+.heat-page--stage.heat-page--count-3 {
+  --athlete-size: min(26vw, 42vh, 260px);
 }
 
 .heat-page--stage.heat-page--count-3 .heat-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: min(96vw, 1100px);
+  grid-template-columns: repeat(3, var(--athlete-size));
+  max-width: none;
 }
 
-.heat-page--stage.heat-page--count-3 .heat-athlete {
-  width: min(26vw, 46vh, 280px);
-  max-width: 100%;
-  justify-self: center;
+.heat-page--stage.heat-page--count-4 {
+  --athlete-size: min(22vw, 26vh, 200px);
 }
 
 .heat-page--stage.heat-page--count-4 .heat-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: min(78vw, 780px);
-  align-content: center;
+  grid-template-columns: repeat(2, var(--athlete-size));
+  max-width: none;
+  row-gap: clamp(0.7rem, 2vh, 1.2rem);
 }
 
-.heat-page--stage.heat-page--count-4 .heat-athlete {
-  width: min(28vw, 34vh, 260px);
-  max-width: 100%;
-  justify-self: center;
+.heat-page--stage.heat-page--count-5 {
+  --athlete-size: min(18vw, 22vh, 170px);
 }
 
 .heat-page--stage.heat-page--count-5 .heat-grid {
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  max-width: min(96vw, 1080px);
+  max-width: min(92vw, 980px);
+  row-gap: clamp(0.65rem, 1.8vh, 1.1rem);
 }
 
 .heat-page--stage.heat-page--count-5 .heat-athlete {
-  width: min(22vw, 30vh, 220px);
-  max-width: 100%;
+  width: var(--athlete-size);
   justify-self: center;
+}
+
+.heat-page--stage.heat-page--count-4 .heat-athlete__name,
+.heat-page--stage.heat-page--count-5 .heat-athlete__name {
+  min-height: 2.6em;
+  font-size: clamp(0.55rem, 1.4vh, 0.78rem);
 }
 
 .heat-page--stage .heat-stage__pager {
@@ -1310,27 +1344,34 @@
 
 /* Proyección 3:2 típica (ej. 1920×1280, 1500×1000) */
 @media (min-aspect-ratio: 3/2) and (max-aspect-ratio: 16/9) {
-  .heat-page--stage.heat-page--count-2 .heat-athlete {
-    width: min(30vw, 58vh, 360px);
+  .heat-page--stage.heat-page--count-2 {
+    --athlete-size: min(30vw, 54vh, 340px);
   }
 
-  .heat-page--stage.heat-page--count-3 .heat-athlete {
-    width: min(24vw, 52vh, 310px);
+  .heat-page--stage.heat-page--count-3 {
+    --athlete-size: min(24vw, 48vh, 290px);
   }
 
-  .heat-page--stage.heat-page--count-4 .heat-athlete {
-    width: min(24vw, 38vh, 290px);
+  .heat-page--stage.heat-page--count-4 {
+    --athlete-size: min(20vw, 28vh, 210px);
   }
 
-  .heat-page--stage.heat-page--count-5 .heat-athlete {
-    width: min(20vw, 34vh, 240px);
+  .heat-page--stage.heat-page--count-5 {
+    --athlete-size: min(16vw, 24vh, 180px);
   }
 }
 
 @media (max-width: 900px) {
-  .heat-page--stage.heat-page--count-2 .heat-athlete,
-  .heat-page--stage.heat-page--count-3 .heat-athlete,
-  .heat-page--stage.heat-page--count-4 .heat-athlete {
-    width: min(40vw, 36vh, 220px);
+  .heat-page--stage.heat-page--count-2,
+  .heat-page--stage.heat-page--count-3 {
+    --athlete-size: min(40vw, 34vh, 210px);
+  }
+
+  .heat-page--stage.heat-page--count-4 {
+    --athlete-size: min(36vw, 26vh, 180px);
+  }
+
+  .heat-page--stage.heat-page--count-5 {
+    --athlete-size: min(34vw, 22vh, 150px);
   }
 }
