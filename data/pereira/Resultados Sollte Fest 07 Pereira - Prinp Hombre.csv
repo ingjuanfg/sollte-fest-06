@@ -1,9 +1,9 @@
-Atleta,Pais,WOD 1,
-,,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 2,
+,,Puntos,Detalle,Puntos,Detalle
 SANTI CONTRERAS,mexico,5,"9:00
-12 Pull Ups"
-SEBAS CORREA,panama,2,5:52
+12 Pull Ups",5,NA
+SEBAS CORREA,panama,2,5:52,1,10:06
 SEBAS ESTRADA,sudafrica,4,"9:00
-9 Pull Ups"
-JUANJO ORTIZ,turquia,3,6:24
-FELIPE RIOS,croacia,1,5:22
+9 Pull Ups",4,13:14
+JUANJO ORTIZ,turquia,3,6:24,2,11:13
+FELIPE RIOS,croacia,1,5:22,3,11:21

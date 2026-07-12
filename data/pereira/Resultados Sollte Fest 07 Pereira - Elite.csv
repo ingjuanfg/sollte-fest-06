@@ -1,40 +1,50 @@
-Atleta,Pais,WOD 1,
-,,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 2,
+,,Puntos,Detalle,Puntos,Detalle
 ANDRES DUQUE,costa de marfil,17,"14:00
-8 Pull Over (2 Ronda)"
+8 Pull Over (2 Ronda)",14,"16:00
+600 mts
+8:49"
 SANTI,polonia,16,"14:00
-12 Pull Over (2 Ronda)"
+12 Pull Over (2 Ronda)",11,15:10
 PRI,dinamarca,8,"14:00
 9 RMU (3 Ronda)
-Tiebreak: 10:20"
-DIEGO,camerun,3,13:54
+Tiebreak: 10:20",16,"16:00
+400 mts
+9:20"
+DIEGO,camerun,3,13:54,6,13:49
 GALLE,italia,4,"14:00
 1 Cluster (3 Ronda)
-Tiebreak 9:55"
+Tiebreak 9:55",7,13:54
 ALVIN,chile,13,"14:00
-3 RMU (3 Ronda)"
+3 RMU (3 Ronda)",13,"16:00
+600 mts
+8:41"
 SEBAS F,nigeria,14,"14:00
-2 Cluster (2 Ronda)"
+2 Cluster (2 Ronda)",17,"16:00
+400 mts
+10:05"
 JORDAN,suiza,10,"""14:00
-6 RMU (3 Ronda)"
+6 RMU (3 Ronda)",10,15:05
 CHRIS,senegal,15,"14:00
-1 Cluster (2 Ronda)"
-GERMAN CEBALLOS,jordania,1,9:51
+1 Cluster (2 Ronda)",15,"16:00
+600 mts
+9:20"
+GERMAN CEBALLOS,jordania,1,9:51,2,12:30
 JHOS,austria,5,"14:00
 1 Cluster (3 Ronda)
-Tiebreak 10:10"
+Tiebreak 10:10",4,12:51
 JUANPA,cabo verde,7,"14:00
 9 RMU (3 Ronda)
-Tiebreak: 8:35"
+Tiebreak: 8:35",1,12:28
 ARI,china,9,"14:00
 9 RMU (3 Ronda)
-Tiebreak: 10:39"
-JUANCHO,haiti,2,12:10
+Tiebreak: 10:39",12,15:56
+JUANCHO,haiti,2,12:10,3,12:44
 MORO,portugal,6,"14:00
 9 RMU (3 Ronda)
-Tiebreak: 8:29"
+Tiebreak: 8:29",5,13:33
 ANDRES LOPEZ,iraq,12,"14:00
 4 RMU (3 Ronda)
-Tiebreak: 9:40"
+Tiebreak: 9:40",8,14:40
 DUVAN LASSO,alemania,11,"14:00
-5 RMU (3 Ronda)"
+5 RMU (3 Ronda)",9,14:50

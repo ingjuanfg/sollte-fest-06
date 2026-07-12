@@ -1,23 +1,31 @@
-Atleta,Pais,WOD 1,
-,,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 2,
+,,Puntos,Detalle,Puntos,Detalle
 SABINA,bosnia,7,"11:00
-2 Cluster (2 Ronda)"
+2 Cluster (2 Ronda)",9,"14:00
+33 T2B"
 NATA TORO,australia,4,"11:00
 9 BMU (3 Ronda)
-Tiebreak 6:20"
+Tiebreak 6:20",8,"14:00
+400 mts
+Tiebreak 7:31"
 MAJO GIL,korea,6,"11:00
 9 HSPU (3 Ronda)
-Tiebreak 7:40 "
+Tiebreak 7:40 ",4,13:20
 VALEN PARRA,tunez,5,"11:00
 9 HSPU (3 Ronda)
-Tiebreak 5:54"
+Tiebreak 5:54",10,"14:00
+22 T2B"
 SARA MONTOYA,espana,4,"11:00
 9 BMU (3 Ronda)
-Tiebreak 6:20"
-TEFA SALAZAR,paraguay,2,8:19
+Tiebreak 6:20",6,"14:00
+600 mts
+7:05"
+TEFA SALAZAR,paraguay,2,8:19,1,11:52
 JULI MARTINEZ,congo,9,"11:00
-8 HSPU (2 Ronda)"
-PAU ZULUAGA,canada,1,7:58
+8 HSPU (2 Ronda)",3,12:45
+PAU ZULUAGA,canada,1,7:58,5,13:44
 TATI OROZCO,uzbekistan,8,"11:00
-10 HSPU (2 Ronda)"
-GLO VEGA,francia,3,8:35
+10 HSPU (2 Ronda)",7,"14:00
+400 mts
+Tiebreak 7:11"
+GLO VEGA,francia,3,8:35,2,12:37
