@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clasificación General — Sollte Fest 07</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Clasificación general — Sollte Fest 07 Mundialista" />
+  <meta name="theme-color" content="#0c4d35" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="score.css">
+</head>
+<body class="score-page">
+  <div class="score-shell">
+    <header class="score-header">
+      <img
+        src="../assets/sollte_logo_nombre_icono.png"
+        alt="Sollte Fest"
+        class="score-logo"
+        onerror="this.style.display='none'"
+      />
+      <div class="score-header__text">
+        <p class="score-kicker">Sollte Fest 07 — Mundialista</p>
+        <h1 class="score-title">Clasificación General</h1>
+        <p class="score-meta" id="scoreMeta">Pereira</p>
+      </div>
+    </header>
+
+    <main class="score-board" id="scoreBoard" aria-live="polite">
+      <p class="score-loading">Cargando clasificación…</p>
+    </main>
+  </div>
+
+  <script src="score.js"></script>
+</body>
+</html>
