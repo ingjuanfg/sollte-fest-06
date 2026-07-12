@@ -1,38 +1,39 @@
-Atleta,Pais,WOD 1,,WOD 2,
-,,Puntos,Detalle,Puntos,Detalle
+Atleta,Pais,WOD 1,,WOD 3,,WOD 4,
+,,Puntos,Detalle,Puntos,Detalle,Puntos,Detalle
 NICO RIOS,holanda,4,"11:00
 6 BMU (3 Ronda)",7,"14:00
 600 mts
-Tiebreak 7:20"
+Tiebreak 7:20",5,6:31
 SAMU FLOREZ,colombia,12,"11:00
 10 HSPU (1 ronda)",8,"14:00
 600 mts
-Tiebreak 8:25"
+Tiebreak 8:25",11,9:59
 TOÑO,austria,9,"11:00
 3 Cluster (2 Ronda)",10,"14:00
 200 mts
-Tiebreak: 10:01"
+Tiebreak: 10:01",12,"10:00
+13 Hang P S"
 JUANCA ROJAS,qatar,10,"11:00
 9 HSPU (2 Ronda)",6,"14:00
 600 mts
-Tiebreak 7:06"
+Tiebreak 7:06",10,8:58
 ALEJO RODAS,curazao,5,"11:00
 8 HSPU (8 Ronda)",12,"14:00
-20 Cal Ski"
+20 Cal Ski",4,5:28
 SANTI HOYOS,nueva zelanda,3,"11:00
 9 BMU (3 Ronda)
-",3,12:59
-JACOBO GIL,uruguay,2,9:20,5,13:59
-SANTI VALENCIA,ghana,1,8:35,1,12:04
+",3,12:59,7,7:12
+JACOBO GIL,uruguay,2,9:20,5,13:59,3,5:13
+SANTI VALENCIA,ghana,1,8:35,1,12:04,1,4:28
 EDGAR,argentina,11,"11:00
-9 Cluster (1 Ronda)",2,12:26
+9 Cluster (1 Ronda)",2,12:26,2,4:42
 JUAN ANDRES BRAVO,eeuu,8,"11:00
-5 Cluster (2 Ronda)",4,13:31
+5 Cluster (2 Ronda)",4,13:31,8,7:35
 JULIAN MURILLO,brasil,7,"11:00
 3 HSPU (3 Ronda)",9,"14:00
 200 mts
-Tiebreak: 10:00"
+Tiebreak: 10:00",6,6:59
 JUAN TRUJILLO,costa rica,6,"11:00
 4 HSPU (3 Ronda)",11,"14:00
 200 mts
-Tiebreak: 10:40"
+Tiebreak: 10:40",9,8:24
